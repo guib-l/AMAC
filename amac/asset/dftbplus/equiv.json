@@ -5,28 +5,59 @@
     "library": "https://dftbplus.org",
     "description": "Equivalence between dftb methods and DFTB+ input of code",
     "execution": ["composerIO"],
+    "default": {
+        "set": {
+            "ParserOptions.ParserVersion": 12,
+            "Options.WriteResultsTag": true,
+            "Analysis.CalculateForces": true
+        }
+    },
     "methods": {
-        "DFTB": {
+        "dftb-1": {
             "set": {"Hamiltonian.DFTB": {}},
             "attributes": {
-                "basis":        {"transform": "skf_type2filenames",
-                                 "target": "Hamiltonian.DFTB.SlaterKosterFiles"},
-                "diagonalizer": {"target": "Hamiltonian.DFTB.Solver",
-                                 "values": {"...": "..."}}}
-    },
-    "DFTB-2": {
-        "set": {"Hamiltonian.DFTB.Scc": true},
-        "attributes": {
-            "scc-tol":   {"target": "Hamiltonian.DFTB.SccTolerance"},
-            "scc-max":   {"target": "Hamiltonian.DFTB.MaxSccIterations"},
-            "shell-dep": {"target": "Hamiltonian.DFTB.OrbitalResolvedScc"},
-            "filling":   {"target": "Hamiltonian.DFTB.Filling.Fermi.Temperature", "unit": "K"},
-            "mixer":     {"target": "Hamiltonian.DFTB.Mixer",
-                          "values": {"simple": "Simple"},
-                          "children": {"mixing-parameter": {"target": "MixingParameter"}}}
+                "basis":{
+                    "transform": "skf_type2filenames",
+                    "target": "Hamiltonian.DFTB.SlaterKosterFiles"
+                },
+                "diagonalizer": {
+                    "target": "Hamiltonian.DFTB.Solver",
+                    "available":[]
+                }
             }
         },
-        "DFTB-3": {"set": {"Hamiltonian.DFTB.ThirdOrderFull": true}},
+        "dftb-2": {
+            "set": {"Hamiltonian.DFTB.Scc": true},
+            "attributes": {
+                "scc-tol":   {
+                    "target": "Hamiltonian.DFTB.SccTolerance"
+                },
+                "scc-max":   {
+                    "target": "Hamiltonian.DFTB.MaxSccIterations"
+                },
+                "shell-dep": {
+                    "target": "Hamiltonian.DFTB.OrbitalResolvedScc"
+                },
+                "filling":   {
+                    "target": "Hamiltonian.DFTB.Filling.Fermi.Temperature [K]",
+                    "unit": "K"
+                },
+                "mixer":     {
+                    "target": "Hamiltonian.DFTB.Mixer",
+                    "values": {
+                        "simple": "Broyden"
+                    },
+                    "children": {
+                        "mixing-parameter": {
+                            "target": "MixingParameter"
+                        }
+                    }
+                }
+            }
+        },
+        "dftb-3": {
+            "set": {"Hamiltonian.DFTB.ThirdOrderFull": true}
+        },
         "CI-DFTB": {"supported": false}
     },
     "module": {

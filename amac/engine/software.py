@@ -1,21 +1,20 @@
 
 from __future__ import annotations
-import sys
-import amac
-from amac import config
 
 import copy
+import sys
 from abc import ABC, abstractmethod
 from dataclasses import fields
-from typing import Any
-
-
 from pathlib import Path
-from typing import Any, ClassVar, Mapping, Sequence, Self
+from typing import Any, Callable, ClassVar, Mapping, Sequence, Self
 
-from dataclasses import dataclass
+from amac import config
+from amac.engine.equiv import Equivalence, set_path
+from amac.engine.handler import HandlerSet, HandlerSpec
+from amac.engine.profile import Program, checked_executable
 
-class Software:
+
+class Software(ABC):
     """
     Base class for every software supported by AMAC.
     """
@@ -23,81 +22,169 @@ class Software:
     name: ClassVar[str] = ""
     alias: ClassVar[tuple[str, ...]] = ()
     doc: ClassVar[str | None] = None
-    execute: ClassVar[str] = ""
-    process: ClassVar[str] = ""
     handlers: ClassVar[Mapping[str, Any]] = {}
     driver: ClassVar[tuple[str, ...]] = ()
     composer: ClassVar[Any | None] = None
     requires_executable: ClassVar[bool] = False
+    equiv: ClassVar[str] = "equiv.json"
+    transforms: ClassVar[Mapping[str, Callable]] = {}
 
-    def __init__(self, **kwargs) -> None:
-        """
-        Bind the software instance to a configuration file.
+    _registry: ClassVar[dict[str, type[Software]]] = {}
 
-        Args:
-            config_file: Path to the software configuration file.
-        """
-        for key,items in kwargs.items():
-            setattr(self, key, items)
+    # Kept on the class: used by assets (e.g. dftbplus ``self.set_path``).
+    set_path = staticmethod(set_path)
 
-        self.configure()
+    # ------------------------------------------------------------------
+    # Initialization
+    # ------------------------------------------------------------------
 
-        for key,item in type(self).__dict__.items():
-            if not key.startswith("__") and not callable(item):
-                setattr(self, key, getattr(type(self), key))
+    def __init_subclass__(cls, **kwargs):
+        """Register every asset under its name and aliases."""
+        super().__init_subclass__(**kwargs)
+        for key in (cls.name, *cls.alias):
+            Software._registry[key.upper()] = cls
 
+    @classmethod
+    def create(cls, name: str, **options) -> Software:
+        """Build the software registered under ``name`` or an alias, any case."""
+        try:
+            soft_cls = Software._registry[name.upper()]
+        except KeyError:
+            raise KeyError(
+                f"Unknown software {name!r}; available: {sorted(Software._registry)}"
+            ) from None
+        return soft_cls(**options)
 
-    def configure(self) -> None:
-        """Load and apply the software configuration."""
-        _config = config.CONFIGURE[self.name]
+    def __init__(
+            self,
+            *,
+            process: str = "inprocess",
+            process_unit: int = 1,
+            executable: str | Path | None = None,
+            env: Mapping[str, str] | None = None,
+            **options,
+        ) -> None:
+        section = self.config_section()
+        # Software-specific settings (e.g. deMonNano "basis"): config, then overrides.
+        self.options = {**section, **options}
+        self.parameters: dict = {}
+        env = env if env is not None else section.get("env", {})
+        self.program = Program(
+            name=self.name,
+            executable=checked_executable(
+                self.name, executable or section.get("executable"),
+                self.requires_executable,
+            ),
+            process=process,
+            process_unit=process_unit,
+            env={key: str(value) for key, value in env.items()},
+            launcher=list(self.options.get("launcher", [])),
+            timeout=self.options.get("timeout"),
+        )
+        self.equivalence = Equivalence(self.equiv_path(), self.transforms)
+        self.handler_set = HandlerSet((self.name, *self.alias))
 
-        if self.requires_executable:
-            self.execute = _config["EXECUTABLE"]
-
+    # Read-only access kept for assets (deMonNano uses self.executable).
     @property
-    def name(self) -> str:
-        """Name of the software."""
-        return type(self).name
+    def executable(self) -> Path | None:
+        return self.program.executable
+
+    # ------------------------------------------------------------------
+    # Configuration
+    # ------------------------------------------------------------------
+
+    @classmethod
+    def config_section(cls) -> dict:
+        """Return the software section of the configuration, empty if none."""
+        softwares = getattr(config, "CONFIGURE", {}).get("software", {})
+        for key in (cls.name, *cls.alias):
+            if key in softwares:
+                return dict(softwares[key])
+        return {}
+
+    # ------------------------------------------------------------------
+    # Basics functions
+    # ------------------------------------------------------------------
+
+    # Template: assets override only what differs.
+    def run(self, instance) -> dict:
+        self.parameters = self.collect(instance)
+        self.prepare(instance)
+        results = self.calculate(instance)
+        self.callback(instance, results)
+        return results
+
+    def collect(self, instance) -> dict:
+        return self.resolved_parameters(instance)
+
+    def prepare(self, instance) -> None:
+        pass
 
     @abstractmethod
-    def collect(self):
-        ...
+    def calculate(self, instance) -> dict:
+        """Run the program and return the raw results."""
 
-    @abstractmethod
-    def callback(self):
-        ...
+    def callback(self, instance, results) -> None:
+        self.apply_handlers(instance, results)
 
-    @abstractmethod
-    def prepare(self):
-        ...
+    def resolved_parameters(self, instance):
+        dct = instance.props.to_dict()
 
-    @abstractmethod
-    def calculate(self):
-        ...
-    
-    @abstractmethod
-    def run(self):
-        ...
+        dct.pop("image")
+        dct.pop("handler")
 
-    def resolved_executable(self):
-        raise NotImplementedError
+        params = self.build_parameters( **dct )
+        return params
 
+    # ------------------------------------------------------------------
+    # Delegations
+    # ------------------------------------------------------------------
+
+    def execute_program(
+            self, workdir: str | Path, *args: str, output: str = "output.log",
+    ):
+        """Run the executable in ``workdir`` (see :meth:`Program.execute`)."""
+        return self.program.execute(workdir, *args, output=output)
+
+    def build_parameters(
+            self,
+            method: str,
+            method_args: Mapping[str, Any] | None = None,
+            module: str | None = None,
+            module_args: Mapping[str, Any] | None = None,
+        ) -> dict:
+        """Translate the canonical parameters into the software parameters."""
+        return self.equivalence.build(method, method_args, module, module_args)
+
+    def resolved_handlers(
+            self,
+            names: Sequence[str],
+            module: str | None = None,
+        ) -> tuple[HandlerSpec, ...]:
+        """Return the handler specs of ``names`` (see :meth:`HandlerSet.resolve`)."""
+        return self.handler_set.resolve(names, module)
+
+    def apply_handlers(self, instance, results: dict[str, Any]) -> dict:
+        """Run the handlers of ``instance`` (see :meth:`HandlerSet.apply`)."""
+        return self.handler_set.apply(instance, results)
+
+    @classmethod
+    def equiv_path(cls) -> Path:
+        """Path of the equiv.json file next to the asset module."""
+        return Path(sys.modules[cls.__module__].__file__).with_name(cls.equiv)
 
     # ------------------------------------------------------------------
     # Serialization
     # ------------------------------------------------------------------
 
     def to_dict(self) -> dict[str, Any]:
-        """Return the result as a dict, without the context."""
-        results = {}
-        for key,item in self.__dict__.items():
-            value = copy.deepcopy(item)
-            if hasattr(item, "to_dict"):
-                value = item.to_dict()
-            results.update({
-                key:value
-            })
-        return results
+        program = self.program
+        return {
+            "name": self.name, "alias": self.alias,
+            "process": program.process, "process_unit": program.process_unit,
+            "executable": program.executable, "env": program.env,
+            "options": self.options,
+        }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Self:
@@ -139,20 +226,3 @@ class Software:
             ),
             file=files,
         )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

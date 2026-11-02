@@ -123,10 +123,11 @@ class Duration(base):
 
     date_begin: None = None
     date_end: None = None
-    date_steps: None = None
     duree: None = None
     _time_start: None = None
     _time_stop: None = None
+    # Wall time of the measured functions: {"function-name": seconds}.
+    steps: dict[str, float] = field(default_factory=dict)
 
     def _open(self):
         self._time_start = time.time()
@@ -136,6 +137,10 @@ class Duration(base):
         self._time_stop = time.time()
         self.date_end = date.today()
         self.duree = self._time_stop - self._time_start
+
+    def add_step(self, name: str, seconds: float) -> None:
+        """Record the wall time of the function ``name``."""
+        self.steps[name] = seconds
 
 
 @dataclass

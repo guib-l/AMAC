@@ -12,6 +12,10 @@ class ExecuteFailed(AmacError):
     """Raised when the software binary returns a non-zero exit code."""
 
 
+class ExecuteTimeout(ExecuteFailed):
+    """Raised when a calculation exceeds its configured wall time."""
+
+
 class InputError(AmacError):
     """Raised when the input file cannot be assembled."""
 

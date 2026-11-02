@@ -31,7 +31,7 @@ class Instance:
     def results(self, **kwargs):
         self.res(**kwargs)
 
-    def duree(self, **kwargs):
+    def duration(self, **kwargs):
         self.duree(**kwargs)
 
     def explorer(self, **kwargs):
@@ -332,7 +332,6 @@ class Instance:
         duree = Duration(
             date_begin=None,
             date_end=None,
-            date_steps=None,
             duree=0.0,
         )
 

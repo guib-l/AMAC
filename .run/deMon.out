@@ -1,0 +1,216 @@
+************************************************
+***                                          ***
+***     PROGRAM deMon-Nano Experiment 2009   ***
+***                                          ***
+*** Version September 1st 2009,              ***
+*** a poorly documented beta version         ***
+***                                          ***
+*** Copyrights (C)                           ***
+*** DFT    : CINVESTAV Mexico, Mexico        ***
+*** QMMM,MM: The National Research Council   ***
+***          (NRC) Ottawa, Canada            ***
+*** DFTB,MD: Jacobs University Bremen        ***
+*** OPT    : University of Toulouse          ***
+*** QMMM, MM, DFTB, MD, OPT parts are        ***
+*** published under the GNU public license   ***
+*** Version 2.0.                             ***
+***                                          ***
+*** AUTHORS: Thomas Heine, Mathias Rapacioli,***
+*** Serguei Patchkovskii, Johannes Frenzel,  ***
+*** Andreas M. Koester, P. Calaminici,       ***
+*** S. Escalante, Helio A. Duarte,           ***
+*** Roberto Flores, Gerald Geudtner,         ***
+*** Annick Goursot, J. Ulises Reveles,       ***
+*** Alberto Vela, Dennis R. Salahub          ***
+***                                          ***
+************************************************
+GIT VERSION : 
+NUM=                                        
+
+ FIRST TIMING           DATE: SUN NOV 01 23:07:05 2026  TOTAL TIME:       0.000
+
+ FIRST TIMING           DATE: SUN NOV 01 23:07:05 2026  REAL  TIME:       0.000
+
+ INITIALIZATION                   STEP TIME:     0.014  TOTAL TIME:       0.015  REAL TIME:     0.015
+ 
+DFTB calculation is carried out using full matrix forms (BLAS)
+ 
+ 
+ ************************
+ *** DFTB information ***
+ ************************
+ 
+ 
+ ATOM-RESOLVED SCC-DFTB
+ FERMI DISTRIBTION OF ELECTRONS REQUESTED
+Fermi distribution at a temperature of    50.0000
+ DFTB parameter files read:
+  Type A  Type B   parameter file
+ 
+       O       O  /home/vboxuser/Téléchargements/deMonNano/basis/./skf/bio-scc/oo.spl           
+       O       H  /home/vboxuser/Téléchargements/deMonNano/basis/./skf/bio-scc/oh.spl           
+       H       O  /home/vboxuser/Téléchargements/deMonNano/basis/./skf/bio-scc/ho.spl           
+       H       H  /home/vboxuser/Téléchargements/deMonNano/basis/./skf/bio-scc/hh.spl           
+ 
+ Representation of repulsive potential:
+ 
+  Type A  Type B   repulsive potential
+ 
+       O       O  spline fit representation
+       O       H  spline fit representation
+       H       O  spline fit representation
+       H       H  spline fit representation
+DFTB matrix diagonalisation routine :      DSYGV 
+ Broyden convergence accelerator for SCC
+ Hardness values of atomic orbitals
+ Type  Hardness
+   O    0.5222
+   H    0.4700
+Requested SCC tolerance :  0.10000E-04
+Maximum number of SCC cycles :  999
+SCC mixing paramter :   0.30
+ 
+ DFTB basic electronic information
+ 
+Number of DFTB atoms           :      3
+Number of DFTB atom types      :      2
+Dimension of DFTB matrices     :      6
+Number of DFTB electrons       :      8
+Number of DFTB shells          :      4
+Cutoff threshold for matrix values is set to           0.1000E-13.
+
+ DFTB INITIALIZATION              STEP TIME:     0.015  TOTAL TIME:       0.048  REAL TIME:     0.048
+ 
+ 
+ ***************************************************
+ *** SELECTING RUNNING MODE FOR AVAILABLE MEMORY ***
+ ***************************************************
+ 
+ 
+ DFTB REQUIRES      0.123 MBYTES OF ALLOCATABLE MEMORY.
+ MAXIMUM SIZE OF ALLOCATABLE MEMORY IS   8000.000 MBYTES.
+
+ ******************************************************************************
+
+  
+
+ ******************************************************************************
+
+THIS CALCULATION IS USING    1 OPENMP THREADS
+ 
+ *** MOLECULE DATA ***
+ 
+ MOLECULAR CHARGE: 0.000
+ MOLECULAR MULTIPLICITY: 1
+ NUMBER OF ATOMS: 3
+ NUMBER OF ELECTRONS: 10
+ 
+ *** SCF OPTIONS ***
+ 
+ DFTB COMPUTATION
+ 
+ DEMON HAS CHOSEN THE ERIS HANDLING MODE AND MATRIX
+ DIAGONALIZER TO GIVE BEST PERFORMANCE WITHIN THE MEMORY
+ USAGE LIMIT. THIS CHOICE AFFECTS THE FOLLOWING TECHNICAL
+ PARAMETERS:
+ 
+ THE GENERALIZED EIGEN VALUE SOLVER OF DFTB IS UNAFFECTED BY THIS CHANGE.
+ DEFAULT DIAGONALIZER: DSYEVD
+ EXPLICIT VALUES SUPPLIED WITH KEYWORDS MATDIA AND ERIS WILL
+ OVERRIDE THE DEFAULT CHOICE, BUT SHOULD LEAVE THE RESULTS
+ UNCHANGED.
+ 
+ SYMMETRY USE: OFF
+ PURE QM CALCULATION
+ 
+ 
+ *** GEOMETRY ***
+
+
+ INPUT ORIENTATION IN ANGSTROM (INPUT ORDER)
+
+   NO.   ELEMENT       X           Y           Z       Z-ATOM    MASS    OPTXYZ
+
+     1  O      8    0.000000    0.000000    0.119262      8     15.999    
+     2  H      1    0.000000    0.763239   -0.477047      1      1.008    
+     3  H      1    0.000000   -0.763239   -0.477047      1      1.008    
+
+
+
+ INPUT                            STEP TIME:     0.033  TOTAL TIME:       0.048  REAL TIME:     0.048
+ 
+ *** MOLECULAR SYMMETRY DETECTION SUPRESSED ***
+ 
+ 
+ *** THE INPUT ORIENTATION IS USED ***
+ 
+ POINT GROUP: C1
+ 
+ GROUP ORDER: 1
+
+
+ STANDARD ORIENTATION IN ANGSTROM (INPUT ORDER)
+
+   NO.   ELEMENT       X           Y           Z       Z-ATOM    MASS          
+
+     1  O      8    0.000000    0.000000    0.066726      8     15.999    
+     2  H      1    0.000000    0.763239   -0.529583      1      1.008    
+     3  H      1    0.000000   -0.763239   -0.529583      1      1.008    
+
+
+
+ SYMMETRY ANALYSIS                STEP TIME:     0.000  TOTAL TIME:       0.049  REAL TIME:     0.051
+ DFTB total energy         [Hartree] =        -4.07494896
+ DFTB electronic energy    [Hartree] =        -4.14675238
+ DFTB band energy          [Hartree] =        -4.16654785
+ DFTB repulsive energy     [Hartree] =         0.07180342
+ DFTB Coulomb energy       [Hartree] =         0.01979547
+ DFTB third order Coulomb energy [Hartree] =         0.00000000
+ DFTB electronic entropy   [Hartree] =         0.00000000
+ DFTB HOMO-LUMO gap        [eV]      =     17.419
+ DFTB (HOMO)-(HOMO-1) gap  [eV]      =      1.603
+ DFTB Fermi energy level   [Hartree] =         0.06104956
+ 
+ 
+ **************************************
+ ************    TENSORS   ************
+ **************************************
+  ALL ATOMS
+ mass center =       0.00000000      0.00000000      0.05253601
+ charge center =       0.00000000      0.00000000     -0.17889250
+ charge monopole =       0.00000000
+ charge dipole =       0.00000000      0.00000000     -0.63888372
+ norme dipole  =       0.63888372
+                 inertia            charge quadrupole
+ ( 1 , 1 ) =       6.46692313     -1.17942518
+ ( 1 , 2 ) =       0.00000000      0.00000000
+ ( 1 , 3 ) =       0.00000000      0.00000000
+ ( 2 , 1 ) =       0.00000000      0.00000000
+ ( 2 , 2 ) =       2.27335753      2.35885037
+ ( 2 , 3 ) =       0.00000000      0.00000000
+ ( 3 , 1 ) =       0.00000000      0.00000000
+ ( 3 , 2 ) =       0.00000000      0.00000000
+ ( 3 , 3 ) =       4.19356560     -1.17942518
+ Inertia eigenvalues =       2.27335753      4.19356560      6.46692313
+ Charges eigenvalues =      -1.17942518     -1.17942518      2.35885037
+ 
+ TIMING STATISTICS (SECONDS)
+ 
+ TIMER ENTRY                   No. OF CALLS       TOTAL CPU TIME   THREAD EFFICIENCY     REAL TIME
+                                                  [sec]      [%]       [sec]    [%]      [sec]     [%]
+ INITIALIZATION                           1         0.0     25.2         0.0  100.0         0.0   23.5
+ INPUT                                    1         0.0     58.6         0.0  100.0         0.0   54.7
+ DFTB INITIALIZATION                      1         0.0     26.9         0.0  100.0         0.0   25.2
+ SYMMETRY ANALYSIS                        1         0.0      0.5         0.0  100.0         0.0    2.4
+ DIAGONALIZATION                          1         0.0      0.1         0.0  100.0         0.0    0.1
+ DFTB                                     1         0.0     13.0         0.0  100.0         0.0   16.9
+ SCC INITIALISATION                       1         0.0      0.1         0.0  100.0         0.0    0.1
+ DFTB COMPUTE_GAMMA                       1         0.0      0.0         0.0  100.0         0.0    0.0
+ BUILD DFTB S/F MATRICES                  7         0.0      0.2         0.0  100.0         0.0    0.2
+ BUILD F FROM F0                          7         0.0      0.1         0.0  100.0         0.0    0.1
+ DFTB SECULAR EQS                         7         0.0     10.8         0.0  100.0         0.0   14.9
+ BUILD PWMAT                              7         0.0      1.1         0.0  100.0         0.0    1.1
+
+ FINAL TIMING           DATE: SUN NOV 01 23:07:05 2026  TOTAL TIME:       0.057
+
+ FINAL TIMING           DATE: SUN NOV 01 23:07:05 2026  REAL  TIME:       0.061

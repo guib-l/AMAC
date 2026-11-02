@@ -9,7 +9,7 @@ import ase
 
 import time
 from functools import wraps
-from amac.asset import resolved_software
+from amac.asset import Software
 
 from amac.context import Context,Result,Explorer,Duration,Properties
 from amac.instance import Instance
@@ -38,35 +38,25 @@ class AMAC:
         ):
         self.label = label
 
-        self._soft = resolved_software(
+        self._soft = Software.create(
             software,
             process=process,
             process_unit=process_unit,
         )
 
-        #_instance = Instance.factory_instance(
-        #    software = self._soft,
-        #    soft_spec = config_spec,
-        #    workdir = workdir,
-        #)
-        #self.__active_instance = _instance
+        self.__active_instance = Instance.factory_instance(
+            software = self._soft,
+            soft_spec = config_spec,
+            workdir = workdir,
+        )
 
 
     @property
     def instance(self):
         return self.__active_instance
 
-    #def new_instance(self, name=""):
-    #    _instance = self.__active_instance.new_instance()
-    #    
-    #    self.instances.append( 
-    #        self.__active_instance
-    #    )
-    #    self.__active_instance = _instance
-    
 
     def switch_instance(self, target):
-
         ...
         
     
@@ -75,11 +65,10 @@ class AMAC:
         @wraps(func)
         def wrapper(self, *args, **kwargs):
             self.instance.open_instance()
-            
-            _prod = func(self, *args, **kwargs)
-
-            self.instance.close_instance()
-            return _prod
+            try:
+                return func(self, *args, **kwargs)
+            finally:
+                self.instance.close_instance()
         return wrapper
 
     @staticmethod
@@ -97,7 +86,11 @@ class AMAC:
                     **self.instance.ctx.to_dict()
                 )
             else:
-                _instance = Instance.new_instance()
+                _instance = Instance.factory_instance(
+                    software = self._soft,
+                    soft_spec = self.config_spec,
+                    workdir = self.workdir,
+                )
             self.__active_instance = _instance
 
 
@@ -122,12 +115,22 @@ class AMAC:
         pass
 
 
+
+
     def resolved_handler(self):
         ...
 
     def handler_register(self, *handlers):
-        # récupère les handlers du software
-        ...
+        """Register the handlers to run after the calculation.
+
+        Args:
+            *handlers: Handler names of the software, e.g. "ground-energy".
+
+        Raises:
+            KeyError: If a handler is unknown to the software.
+        """
+        specs = self._soft.resolved_handlers(handlers)
+        self.instance.props(handler=tuple(spec.name for spec in specs))
 
     @new_instance
     def parameters_register(
@@ -146,6 +149,8 @@ class AMAC:
             method_args=method_args,
             module_args=module_args, 
         )
+
+
     
     def run(
             self,
@@ -160,12 +165,17 @@ class AMAC:
     @measure_runtime
     def execute(
             self,
+            instance = None,
             **kwargs
         ):
-        self.__active_instance.props(**kwargs)
+        if instance is None:
+            instance = self.__active_instance
+        instance.props(**kwargs)
 
+        # Run calculation on active instance
+        self._soft.run(instance)
 
-        self.__active_instance.res.complet = True
+        instance.res.complet = True
 
     def restart(self,):
         ...

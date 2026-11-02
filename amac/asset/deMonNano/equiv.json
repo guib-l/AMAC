@@ -7,7 +7,56 @@
     "methods":{
         "dftb":{
             "dftb-1":{
-                "basis":"basis"
+                "set": {
+                    "DEMON_PARAMETERS.ACTIVE.DFTB": {},
+                    "BASIS":{}
+                },
+                "attributes": {
+                    "basis":{
+                        "directory":{
+                            "target":"BASIS.SKFILE"
+                        },
+                        "ptype":{
+                            "target":"BASIS.PTYPE"
+                        }
+                    },
+                    "diagonalizer":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.DIAG"
+                    }
+                }
+            },
+            "dftb-2":{
+                "set": {
+                    "DEMON_PARAMETERS.ACTIVE.DFTB.SCC": true
+                },
+                "attributes": {
+                    "scc-tol":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.TOL"
+                    },
+                    "scc-max":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.MAX"
+                    },
+                    "mixer":{
+                        "target":null,
+                        "children": {
+                            "mixing-parameter":{
+                                "target":"DEMON_PARAMETERS.ACTIVE.DFTB.MIX"
+                            }
+                        }
+                    },
+                    "shell-dep":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.L-DEP"
+                    },
+                    "filling":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.FERMI"
+                    }
+                }
+            },
+            "dftb-3":{
+                "set":{},
+                "attribute":{
+
+                }
             }
         }
     },

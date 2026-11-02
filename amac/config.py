@@ -2,6 +2,9 @@
 import os
 import json
 
+# Process-wide configuration; empty until a configuration is given.
+CONFIGURE: dict = {}
+
 
 def configure(config = None):
     """Set global default values calculation.
