@@ -1,0 +1,34 @@
+ParserOptions {
+  ParserVersion = 12
+}
+Options {
+  WriteResultsTag = Yes
+}
+Analysis {
+  CalculateForces = Yes
+}
+Hamiltonian = DFTB {
+  Scc = Yes
+  SlaterKosterFiles = Type2FileNames {
+    Prefix = "/home/vboxuser/Téléchargements/mio-1-1/"
+    Separator = "-"
+    Suffix = ".skf"
+    LowerCaseTypeName = No
+  }
+  MaxSccIterations = 999
+  SccTolerance = 1e-05
+  Dispersion = DftD4 {
+    s6 = 1
+    s8 = 1.1948145
+    s9 = 0
+    a1 = 0.6074567
+    a2 = 4.9336133
+  }
+  MaxAngularMomentum {
+    O = "p"
+    H = "s"
+  }
+}
+Geometry = GenFormat {
+  <<< "geo.gen"
+}

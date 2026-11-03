@@ -1,0 +1,105 @@
+|===============================================================================
+|
+|  DFTB+ development version (commit: a23bfb2)
+|
+|  Copyright (C) 2006 - 2025  DFTB+ developers group
+|
+|===============================================================================
+|
+|  When publishing results obtained with DFTB+, please cite the following
+|  reference:
+|
+|    Recent Developments in DFTB+, a Software Package for Efficient Atomistic
+|    Quantum Mechanical Simulations, J. Phys. Chem. A 129, 5373−5390 (2025).
+|    [https://doi.org/10.1021/acs.jpca.5c01146]
+|
+|  You should also cite additional publications crediting the parametrization
+|  data you use. Please consult the documentation of the SK-files for the
+|  references.
+|
+|===============================================================================
+
+Reading input file 'dftb_in.hsd'
+Parser version: 14
+
+--------------------------------------------------------------------------------
+***  Converting input from parser version 12 to parser version 14 ...
+WARNING!
+-> Keyword renamed to 'PrintForces'.
+Path: dftbplusinput/Analysis/CalculateForces
+Line: 8-8 (File: dftb_in.hsd)
+
+***  Done.
+
+Reading SK-files:
+/home/vboxuser/Téléchargements/mio-1-1/O-O.skf
+/home/vboxuser/Téléchargements/mio-1-1/O-H.skf
+/home/vboxuser/Téléchargements/mio-1-1/H-H.skf
+Done.
+
+
+Processed input in HSD format written to 'dftb_pin.hsd'
+
+Starting initialization...
+--------------------------------------------------------------------------------
+OpenMP threads:              1
+Chosen random seed:          265792405
+Current stacksize:           8 [Mb] (recommended: unlimited)
+WARNING!
+-> Current stacksize not set to unlimited or hard limit, which might cause
+   random crashes (e.g. segmentation faults). It is advised to unlimit the
+   stacksize by issuing 'ulimit -s unlimited' (Linux) or setting it to the 
+   hard limit by 'ulimit -s hard' (Mac) in advance.
+Mode:                        Static calculation
+Self consistent charges:     Yes
+SCC-tolerance:                 0.100000E-04
+Max. scc iterations:                    999
+Shell resolved Hubbard:      No
+Spin polarisation:           No
+Nr. of up electrons:             8.000000
+Nr. of down electrons:           8.000000
+Periodic boundaries:         No
+Electronic solver:           Relatively robust
+Mixer:                       Broyden mixer
+Mixing parameter:                  0.200000
+Nr. of chrg. vec. in memory:            999
+Max. SCC-cycles:                        999
+Electronic temperature:              0.100000E-07 H      0.272114E-06 eV
+Initial charges:             Set automatically (system chrg:   0.000E+00)
+Included shells:             O:  s, p
+                             H:  s
+Using simple DFT-D3 dispersion corrections
+Extra options:
+                             Mulliken analysis
+                             Force calculation
+Force type                   original
+
+--------------------------------------------------------------------------------
+
+***  Geometry step: 0
+
+ iSCC Total electronic   Diff electronic      SCC error    
+    1   -0.82897244E+01    0.00000000E+00    0.76601208E+00
+    2   -0.82949294E+01   -0.82897244E+01    0.57251610E+00
+    3   -0.83016452E+01   -0.52050319E-02    0.37613270E-02
+    4   -0.83016454E+01   -0.67157889E-02    0.30114985E-03
+    5   -0.83016454E+01   -0.24368084E-06    0.92918254E-04
+    6   -0.83016454E+01   -0.10069865E-08    0.10916678E-04
+>> Charges saved for restart in charges.bin
+    7   -0.83016454E+01   -0.10158985E-09    0.15854466E-07
+
+Total Energy:                       -8.1598400638 H         -222.0405 eV
+Extrapolated to 0K:                 -8.1598400638 H         -222.0405 eV
+Total Mermin free energy:           -8.1598400638 H         -222.0405 eV
+Force related energy:               -8.1598400638 H         -222.0405 eV
+
+
+--------------------------------------------------------------------------------
+DFTB+ running times                          cpu [s]             wall clock [s]
+--------------------------------------------------------------------------------
+Pre-SCC initialisation                 +       0.01 ( 31.6%)       0.01 ( 24.4%)
+SCC                                    +       0.01 ( 42.0%)       0.02 ( 58.5%)
+--------------------------------------------------------------------------------
+Missing                                +       0.01 ( 26.5%)       0.01 ( 17.1%)
+Total                                  =       0.03 (100.0%)       0.04 (100.0%)
+--------------------------------------------------------------------------------

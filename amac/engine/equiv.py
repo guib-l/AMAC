@@ -110,9 +110,10 @@ def _apply_attributes(
         if "transform" in spec:
             value = transforms[spec["transform"]](value)
 
-        # A value with children becomes a node: Mixer = Broyden { ... }
-        if target and children:
-            set_path(params, target, {value: {}})
+        # A value of a spec with children becomes a node, even without
+        # children given: Mixer = Broyden { ... }
+        if target and value is not None and "children" in spec:
+            set_path(params, f"{target}.{value}", {})
             target = f"{target}.{value}"
         elif target and value is not None:
             set_path(params, target, value)

@@ -1,0 +1,92 @@
+ Fermi distribution function
+
+Calculation with static geometry
+
+
+********************************************************************************
+ iSCC Total electronic   Diff electronic      SCC error    
+    7   -0.83016454E+01   -0.10158985E-09    0.15854466E-07
+********************************************************************************
+
+ Total charge:     0.00000000
+
+ Atomic gross charges (e)
+ Atom           Charge
+    1      -0.59551511
+    2       0.30018247
+    3       0.30018247
+    4      -0.60351416
+    5       0.29933217
+    6       0.29933217
+
+Nr. of electrons (up):     16.00000000
+Atom populations (up)
+ Atom       Population
+    1       6.59551511
+    2       0.69981753
+    3       0.69981753
+    4       6.60351416
+    5       0.70066783
+    6       0.70066783
+
+l-shell populations (up)
+ Atom Sh.   l       Population
+    1   1   0       1.74023214
+    1   2   1       4.85528297
+    2   1   0       0.69981753
+    3   1   0       0.69981753
+    4   1   0       1.74156082
+    4   2   1       4.86195335
+    5   1   0       0.70066783
+    6   1   0       0.70066783
+
+Orbital populations (up)
+ Atom Sh.   l   m       Population  Label
+    1   1   0   0       1.74023214  s
+    1   2   1  -1       1.19218724  p_y
+    1   2   1   0       1.66313970  p_z
+    1   2   1   1       1.99995603  p_x
+    2   1   0   0       0.69981753  s
+    3   1   0   0       0.69981753  s
+    4   1   0   0       1.74156082  s
+    4   2   1  -1       1.19158933  p_y
+    4   2   1   0       1.67036443  p_z
+    4   2   1   1       1.99999959  p_x
+    5   1   0   0       0.70066783  s
+    6   1   0   0       0.70066783  s
+
+Fermi level:                         0.0656036096 H            1.7852 eV
+Band energy:                        -7.2941913852 H         -198.4850 eV
+TS:                                  0.0000000000 H            0.0000 eV
+Band free energy (E-TS):            -7.2941913852 H         -198.4850 eV
+Extrapolated E(0K):                 -7.2941913852 H         -198.4850 eV
+Input / Output electrons (q):     16.0000000000     16.0000000000
+
+Energy H0:                          -8.3369372420 H         -226.8596 eV
+Energy SCC:                          0.0352917935 H            0.9603 eV
+Total Electronic energy:            -8.3016454486 H         -225.8993 eV
+Repulsive energy:                    0.1436068163 H            3.9077 eV
+Dispersion energy:                  -0.0004666156 H           -0.0127 eV
+Total energy:                       -8.1585052479 H         -222.0042 eV
+Extrapolated to 0:                  -8.1585052479 H         -222.0042 eV
+Total Mermin free energy:           -8.1585052479 H         -222.0042 eV
+Force related energy:               -8.1585052479 H         -222.0042 eV
+
+Non-constrained calculation
+
+SCC converged
+
+Total Forces
+    1     -0.000194353037     -0.000000000000     -0.009122677743
+    2      0.000118014520      0.002715524181      0.002901320480
+    3      0.000118014520     -0.002715524181      0.002901320480
+    4     -0.000730473086     -0.000000000000      0.000950344691
+    5      0.000344398541      0.001113223527      0.001184846046
+    6      0.000344398541     -0.001113223527      0.001184846046
+
+Maximal derivative component:        0.912268E-02 au
+
+Dipole moment:    0.00183297   -0.00000000   -1.37588396 au
+Dipole moment:    0.00465895   -0.00000000   -3.49714848 Debye
+
+

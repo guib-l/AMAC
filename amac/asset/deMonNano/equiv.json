@@ -20,8 +20,19 @@
                             "target":"BASIS.PTYPE"
                         }
                     },
-                    "diagonalizer":{
-                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.DIAG"
+                    "charge":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.CHARGE"
+                    },
+                    "filling":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.FERMI",
+                        "unit":"K"
+                    },
+                    "dispersion":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.DISP",
+                        "values":{
+                            "model-1":1,
+                            "model-2":2
+                        }
                     }
                 }
             },
@@ -47,21 +58,44 @@
                     "shell-dep":{
                         "target":"DEMON_PARAMETERS.ACTIVE.DFTB.L-DEP"
                     },
-                    "filling":{
-                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.FERMI"
+                    "level-shift":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.DFTB.LEV_S"
                     }
                 }
             },
+            "ci-dftb":{
+                "set": {"DEMON_PARAMETERS.ACTIVE.CI": {}},
+                "attributes": {
+                    "size-ci":{"target":"DEMON_PARAMETERS.ACTIVE.CI.SIZECI"},
+                    "fragments":{"target":"DEMON_PARAMETERS.ACTIVE.CUTSYS.FRAGMENT"}
+                }
+            },
             "dftb-3":{
-                "set":{},
-                "attribute":{
-
+                "set":{
+                    "DEMON_PARAMETERS.ACTIVE.DFTB.THIRD": true
+                },
+                "attributes":{
+                    "h-correction":{
+                        "target":null,
+                        "children": {
+                            "exponent":{
+                                "target":"DEMON_PARAMETERS.ACTIVE.DFTB.GCOR"
+                            }
+                        }
+                    },
+                    "hubbard-derivs":{
+                        "target":"ORB_PARAMS"
+                    }
                 }
             }
         }
     },
     "module":{
-
+        "optimization-geometry":{
+            "set": {
+                "DEMON_MODULE.ACTIVE.OPT": {}
+            }
+        }
     },
     "options":{
 

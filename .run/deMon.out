@@ -27,11 +27,11 @@
 GIT VERSION : 
 NUM=                                        
 
- FIRST TIMING           DATE: SUN NOV 01 23:07:05 2026  TOTAL TIME:       0.000
+ FIRST TIMING           DATE: MON NOV 02 19:42:15 2026  TOTAL TIME:       0.000
 
- FIRST TIMING           DATE: SUN NOV 01 23:07:05 2026  REAL  TIME:       0.000
+ FIRST TIMING           DATE: MON NOV 02 19:42:15 2026  REAL  TIME:       0.000
 
- INITIALIZATION                   STEP TIME:     0.014  TOTAL TIME:       0.015  REAL TIME:     0.015
+ INITIALIZATION                   STEP TIME:     0.006  TOTAL TIME:       0.006  REAL TIME:     0.006
  
 DFTB calculation is carried out using full matrix forms (BLAS)
  
@@ -79,7 +79,7 @@ Number of DFTB electrons       :      8
 Number of DFTB shells          :      4
 Cutoff threshold for matrix values is set to           0.1000E-13.
 
- DFTB INITIALIZATION              STEP TIME:     0.015  TOTAL TIME:       0.048  REAL TIME:     0.048
+ DFTB INITIALIZATION              STEP TIME:     0.007  TOTAL TIME:       0.019  REAL TIME:     0.019
  
  
  ***************************************************
@@ -137,7 +137,7 @@ THIS CALCULATION IS USING    1 OPENMP THREADS
 
 
 
- INPUT                            STEP TIME:     0.033  TOTAL TIME:       0.048  REAL TIME:     0.048
+ INPUT                            STEP TIME:     0.013  TOTAL TIME:       0.019  REAL TIME:     0.019
  
  *** MOLECULAR SYMMETRY DETECTION SUPRESSED ***
  
@@ -159,7 +159,7 @@ THIS CALCULATION IS USING    1 OPENMP THREADS
 
 
 
- SYMMETRY ANALYSIS                STEP TIME:     0.000  TOTAL TIME:       0.049  REAL TIME:     0.051
+ SYMMETRY ANALYSIS                STEP TIME:     0.000  TOTAL TIME:       0.019  REAL TIME:     0.019
  DFTB total energy         [Hartree] =        -4.07494896
  DFTB electronic energy    [Hartree] =        -4.14675238
  DFTB band energy          [Hartree] =        -4.16654785
@@ -198,19 +198,19 @@ THIS CALCULATION IS USING    1 OPENMP THREADS
  
  TIMER ENTRY                   No. OF CALLS       TOTAL CPU TIME   THREAD EFFICIENCY     REAL TIME
                                                   [sec]      [%]       [sec]    [%]      [sec]     [%]
- INITIALIZATION                           1         0.0     25.2         0.0  100.0         0.0   23.5
- INPUT                                    1         0.0     58.6         0.0  100.0         0.0   54.7
- DFTB INITIALIZATION                      1         0.0     26.9         0.0  100.0         0.0   25.2
- SYMMETRY ANALYSIS                        1         0.0      0.5         0.0  100.0         0.0    2.4
- DIAGONALIZATION                          1         0.0      0.1         0.0  100.0         0.0    0.1
- DFTB                                     1         0.0     13.0         0.0  100.0         0.0   16.9
+ INITIALIZATION                           1         0.0     24.9         0.0  100.0         0.0   23.7
+ INPUT                                    1         0.0     57.4         0.0  100.0         0.0   54.6
+ DFTB INITIALIZATION                      1         0.0     29.7         0.0  100.0         0.0   28.3
+ SYMMETRY ANALYSIS                        1         0.0      1.2         0.0  100.0         0.0    1.1
+ DIAGONALIZATION                          1         0.0      0.1         0.0  100.0         0.0    0.0
+ DFTB                                     1         0.0     14.8         0.0  100.0         0.0   18.9
  SCC INITIALISATION                       1         0.0      0.1         0.0  100.0         0.0    0.1
  DFTB COMPUTE_GAMMA                       1         0.0      0.0         0.0  100.0         0.0    0.0
  BUILD DFTB S/F MATRICES                  7         0.0      0.2         0.0  100.0         0.0    0.2
- BUILD F FROM F0                          7         0.0      0.1         0.0  100.0         0.0    0.1
- DFTB SECULAR EQS                         7         0.0     10.8         0.0  100.0         0.0   14.9
- BUILD PWMAT                              7         0.0      1.1         0.0  100.0         0.0    1.1
+ BUILD F FROM F0                          7         0.0      0.2         0.0  100.0         0.0    0.1
+ DFTB SECULAR EQS                         7         0.0     12.0         0.0  100.0         0.0   16.1
+ BUILD PWMAT                              7         0.0      0.7         0.0  100.0         0.0    0.7
 
- FINAL TIMING           DATE: SUN NOV 01 23:07:05 2026  TOTAL TIME:       0.057
+ FINAL TIMING           DATE: MON NOV 02 19:42:15 2026  TOTAL TIME:       0.023
 
- FINAL TIMING           DATE: SUN NOV 01 23:07:05 2026  REAL  TIME:       0.061
+ FINAL TIMING           DATE: MON NOV 02 19:42:15 2026  REAL  TIME:       0.024

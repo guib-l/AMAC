@@ -17,7 +17,9 @@ def to_hsd(tree: Mapping[str, Any], indent: int = 0) -> str:
 
       A node holding a single sub-node is a method choice
       (``{"Hamiltonian": {"DFTB": {...}}}`` -> ``Hamiltonian = DFTB {...}``);
-      any other node is a plain block. The key ``<<<`` includes a file.
+      any other node is a plain block. The key ``<<<`` includes a file and
+      the empty key ``""`` writes its value bare (e.g. a SupercellFolding
+      matrix).
 
       Args:
           tree: Nested parameter dict.
@@ -31,6 +33,8 @@ def to_hsd(tree: Mapping[str, Any], indent: int = 0) -> str:
     for key, value in tree.items():
         if key == "<<<":
             lines.append(f'{pad}<<< "{value}"')
+        elif key == "":
+            lines.append(f"{pad}{format_value(value)}")
         elif isinstance(value, Mapping):
             children = list(value.items())
             if len(children) == 1 and isinstance(children[0][1], Mapping):

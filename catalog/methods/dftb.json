@@ -5,12 +5,12 @@
         "mandatory-attribute":{
             "basis":{
                 "type":"str",
-                "description": "",
+                "description": "Slater-Koster parameter set",
                 "children":{
                     "mandatory-attribute":{
                         "directory":{
                             "type":"str",
-                            "description": ""
+                            "description": "Directory holding the Slater-Koster files"
                         }
                     },
                     "allowed-attribute":{
@@ -21,6 +21,18 @@
                         "ptype":{
                             "type":"str",
                             "description": ""
+                        },
+                        "separator":{
+                            "type":"str",
+                            "description": "Separator between the two element names of a file"
+                        },
+                        "suffix":{
+                            "type":"str",
+                            "description": "Extension of the Slater-Koster files"
+                        },
+                        "lower-case":{
+                            "type":"bool",
+                            "description": "Element names written in lower case in the file names"
                         }
                     },
                     "forbidden-attribute":[]
@@ -28,9 +40,86 @@
             }
         },
         "allowed-attribute":{
+            "charge":{
+                "type":"float",
+                "description": "Total charge of the system (e)"
+            },
             "diagonalizer":{
                 "type":"str",
-                "description": ""
+                "choices":["qr","divide-and-conquer","relatively-robust"],
+                "description": "Dense eigensolver"
+            },
+            "filling":{
+                "type":"float",
+                "range":[0.0,null],
+                "description": "Electronic temperature of the level occupation (K)"
+            },
+            "smearing":{
+                "type":"str",
+                "choices":["fermi","gaussian","methfessel-paxton"],
+                "description": "Occupation function of the one-electron levels",
+                "children":{
+                    "mandatory-attribute":{},
+                    "allowed-attribute":{
+                        "order":{
+                            "type":"int",
+                            "range":[0,null],
+                            "authorized-with":["methfessel-paxton"],
+                            "description": "Order of the Methfessel-Paxton scheme"
+                        }
+                    },
+                    "forbidden-attribute":[]
+                }
+            },
+            "kpoints":{
+                "type":"list[int]",
+                "description": "Monkhorst-Pack grid l1 l2 l3 (periodic systems only)"
+            },
+            "dispersion":{
+                "type":"str",
+                "choices":["lj-uff","d3-bj","d3-zero","d4","model-1","model-2"],
+                "description": "Empirical dispersion correction",
+                "children":{
+                    "mandatory-attribute":{},
+                    "allowed-attribute":{
+                        "s6":{
+                            "type":"float",
+                            "authorized-with":["d3-bj","d3-zero","d4"]
+                        },
+                        "s8":{
+                            "type":"float",
+                            "authorized-with":["d3-bj","d3-zero","d4"]
+                        },
+                        "s9":{
+                            "type":"float",
+                            "authorized-with":["d4"],
+                            "description": "Three-body (non-additive) scaling"
+                        },
+                        "a1":{
+                            "type":"float",
+                            "authorized-with":["d3-bj","d4"]
+                        },
+                        "a2":{
+                            "type":"float",
+                            "authorized-with":["d3-bj","d4"],
+                            "description": "Becke-Johnson damping (bohr)"
+                        },
+                        "sr6":{
+                            "type":"float",
+                            "authorized-with":["d3-zero"]
+                        },
+                        "alpha6":{
+                            "type":"float",
+                            "authorized-with":["d3-zero"]
+                        },
+                        "hh-repulsion":{
+                            "type":"bool",
+                            "authorized-with":["d3-zero"],
+                            "description": "H-H repulsion of DFTB3-D3H5"
+                        }
+                    },
+                    "forbidden-attribute":[]
+                }
             }
         },
         "forbidden-attribute":[]
@@ -43,32 +132,86 @@
             "scc-tol":{
                 "type":"float",
                 "range":[0.0,1.0],
-                "description": ""
+                "description": "Maximum charge difference between two SCC cycles"
             },
             "scc-max":{
                 "type":"int",
-                "description": ""
+                "description": "Maximum number of SCC cycles"
+            },
+            "scc-strict":{
+                "type":"bool",
+                "description": "Stop the calculation when the SCC cycle does not converge"
+            },
+            "restart-charges":{
+                "type":"bool",
+                "description": "Build the first Hamiltonian from previously written charges"
             },
             "mixer":{
                 "type":"str",
-                "choices":["simple"],
+                "choices":["simple","broyden","anderson","diis"],
                 "children":{
                     "mandatory-attribute":{},
                     "allowed-attribute":{
                         "mixing-parameter":{
                             "type":"float",
                             "range":[0.0,1.0],
-                            "authorized-with":["simple"]
+                            "authorized-with":["simple","broyden","anderson"]
+                        },
+                        "generations":{
+                            "type":"int",
+                            "authorized-with":["anderson","diis"],
+                            "description": "Number of previous iterations used by the mixer"
                         }
                     },
                     "forbidden-attribute":[]
                 }
             },
             "shell-dep":{
-                "type":"bool"
+                "type":"bool",
+                "description": "Shell-resolved Hubbard U in the SCC contributions"
             },
-            "filling":{
-                "type":"float"
+            "level-shift":{
+                "type":"float",
+                "description": "Level shifting applied during the SCC cycles"
+            },
+            "spin":{
+                "type":"str",
+                "choices":["none","collinear"],
+                "description": "Spin polarisation",
+                "children":{
+                    "mandatory-attribute":{},
+                    "allowed-attribute":{
+                        "unpaired-electrons":{
+                            "type":"float",
+                            "authorized-with":["collinear"]
+                        },
+                        "relax-spin":{
+                            "type":"bool",
+                            "authorized-with":["collinear"],
+                            "description": "Let the total spin relax through a common Fermi level"
+                        }
+                    },
+                    "forbidden-attribute":[]
+                }
+            },
+            "spin-constants":{
+                "type":"dict[str,list[float]]",
+                "description": "Spin coupling constants per element (Hartree), required with spin = collinear"
+            },
+            "h-correction":{
+                "type":"str",
+                "choices":["damping","h5"],
+                "description": "Correction of the interactions involving hydrogen",
+                "children":{
+                    "mandatory-attribute":{},
+                    "allowed-attribute":{
+                        "exponent":{
+                            "type":"float",
+                            "authorized-with":["damping"]
+                        }
+                    },
+                    "forbidden-attribute":[]
+                }
             }
         },
         "forbidden-attribute":[]
@@ -78,19 +221,35 @@
         "inherits":["DFTB-2"],
         "mandatory-attribute":{
             "size-ci":{
-                "type":"int"
+                "type":"int",
+                "description": "Size of the configuration interaction space"
             },
             "fragments":{
-                "type":"list[int]"
+                "type":"list[int]",
+                "description": "Partition of the atoms into fragments"
             }
         },
-        "allowed-attribute":{},
+        "allowed-attribute":{
+            "constraints":{
+                "type":"list[float]",
+                "description": "To be confirmed (deMonNano CI.CONST)"
+            },
+            "no-slater":{
+                "type":"bool",
+                "description": "To be confirmed (deMonNano CI.NOSLAT)"
+            }
+        },
         "forbidden-attribute":["shell-dep"]
     },
     "DFTB-3":{
-        "alias":[],
+        "alias":["DFTB3"],
         "inherits":["DFTB-2"],
-        "mandatory-attribute":{},
+        "mandatory-attribute":{
+            "hubbard-derivs":{
+                "type":"dict[str,float|list[float]]",
+                "description": "Hubbard U derivatives per element (a.u.), one per shell with shell-dep"
+            }
+        },
         "allowed-attribute":{},
         "forbidden-attribute":[]
     }

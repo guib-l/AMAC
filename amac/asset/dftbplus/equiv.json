@@ -20,9 +20,57 @@
                     "transform": "skf_type2filenames",
                     "target": "Hamiltonian.DFTB.SlaterKosterFiles"
                 },
+                "charge": {
+                    "target": "Hamiltonian.DFTB.Charge"
+                },
                 "diagonalizer": {
                     "target": "Hamiltonian.DFTB.Solver",
-                    "available":[]
+                    "values": {
+                        "qr": "QR",
+                        "divide-and-conquer": "DivideAndConquer",
+                        "relatively-robust": "RelativelyRobust"
+                    },
+                    "children": {}
+                },
+                "filling":   {
+                    "target": "Hamiltonian.DFTB.Filling.Fermi.Temperature [K]",
+                    "unit": "K"
+                },
+                "smearing":  {
+                    "target": "Hamiltonian.DFTB.Filling",
+                    "values": {
+                        "fermi": "Fermi",
+                        "gaussian": "Gaussian",
+                        "methfessel-paxton": "MethfesselPaxton"
+                    },
+                    "children": {
+                        "order": {
+                            "target": "Order"
+                        }
+                    }
+                },
+                "kpoints":   {
+                    "transform": "kpoints_supercell_folding",
+                    "target": "Hamiltonian.DFTB.KPointsAndWeights"
+                },
+                "dispersion": {
+                    "target": "Hamiltonian.DFTB.Dispersion",
+                    "values": {
+                        "lj-uff": "LennardJones",
+                        "d3-bj": "SimpleDftD3",
+                        "d3-zero": "DftD3",
+                        "d4": "DftD4"
+                    },
+                    "children": {
+                        "s6": {"target": "s6"},
+                        "s8": {"target": "s8"},
+                        "s9": {"target": "s9"},
+                        "a1": {"target": "a1"},
+                        "a2": {"target": "a2"},
+                        "sr6": {"target": "Damping.ZeroDamping.sr6"},
+                        "alpha6": {"target": "Damping.ZeroDamping.alpha6"},
+                        "hh-repulsion": {"target": "HHRepulsion"}
+                    }
                 }
             }
         },
@@ -35,28 +83,71 @@
                 "scc-max":   {
                     "target": "Hamiltonian.DFTB.MaxSccIterations"
                 },
-                "shell-dep": {
-                    "target": "Hamiltonian.DFTB.OrbitalResolvedScc"
+                "scc-strict": {
+                    "target": "Hamiltonian.DFTB.ConvergentSccOnly"
                 },
-                "filling":   {
-                    "target": "Hamiltonian.DFTB.Filling.Fermi.Temperature [K]",
-                    "unit": "K"
+                "restart-charges": {
+                    "target": "Hamiltonian.DFTB.ReadInitialCharges"
+                },
+                "shell-dep": {
+                    "target": "Hamiltonian.DFTB.ShellResolvedScc"
                 },
                 "mixer":     {
                     "target": "Hamiltonian.DFTB.Mixer",
                     "values": {
-                        "simple": "Broyden"
+                        "simple": "Simple",
+                        "broyden": "Broyden",
+                        "anderson": "Anderson",
+                        "diis": "DIIS"
                     },
                     "children": {
                         "mixing-parameter": {
                             "target": "MixingParameter"
+                        },
+                        "generations": {
+                            "target": "Generations"
+                        }
+                    }
+                },
+                "spin":      {
+                    "target": "Hamiltonian.DFTB.SpinPolarisation",
+                    "values": {
+                        "none": null,
+                        "collinear": "Colinear"
+                    },
+                    "children": {
+                        "unpaired-electrons": {
+                            "target": "UnpairedElectrons"
+                        },
+                        "relax-spin": {
+                            "target": "RelaxTotalSpin"
+                        }
+                    }
+                },
+                "spin-constants": {
+                    "target": "Hamiltonian.DFTB.SpinConstants"
+                },
+                "h-correction": {
+                    "target": "Hamiltonian.DFTB.HCorrection",
+                    "values": {
+                        "damping": "Damping",
+                        "h5": "H5"
+                    },
+                    "children": {
+                        "exponent": {
+                            "target": "Exponent"
                         }
                     }
                 }
             }
         },
         "dftb-3": {
-            "set": {"Hamiltonian.DFTB.ThirdOrderFull": true}
+            "set": {"Hamiltonian.DFTB.ThirdOrderFull": true},
+            "attributes": {
+                "hubbard-derivs": {
+                    "target": "Hamiltonian.DFTB.HubbardDerivs"
+                }
+            }
         },
         "CI-DFTB": {"supported": false}
     },
