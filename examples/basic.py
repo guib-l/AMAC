@@ -17,7 +17,7 @@ calc = AMAC(
     process="inprocess"
 )
 
-calc.handler_register("ground-energy")
+calc.handler_register("lowest-energy")
 
 calc.parameters_register(
     method="dftb-2",

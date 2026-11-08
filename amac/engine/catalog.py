@@ -13,16 +13,30 @@ CATALOG_DIR = Path(amac.__file__).resolve().parents[1] / "catalog"
 def load_catalog(directory: str | Path = CATALOG_DIR) -> dict[str, dict[str, dict]]:
     """Read the canonical catalog, indexed by upper-case canonical name.
 
+    Only the files listed in ``catalog.json`` are read, e.g.
+    ``"methods": ["dftb"]`` reads ``methods/dftb.json``.
+
     Args:
         directory: The ``catalog/`` directory.
 
     Returns:
-        A dict ``{section: {NAME: entry}}`` for ``methods`` and ``module``.
+        A dict ``{section: {NAME: entry}}`` for ``methods``, ``module``
+        and ``options``.
+
+    Raises:
+        FileNotFoundError: If a file listed in ``catalog.json`` is missing.
     """
+    with open(Path(directory, "catalog.json"), encoding="utf-8") as stream:
+        index = json.load(stream)
     catalog = {}
-    for section in ("methods", "module"):
+    for section in ("methods", "module", "options"):
         entries = {}
-        for file in sorted(Path(directory, section).glob("*.json")):
+        for stem in index.get(section) or ():
+            file = Path(directory, section, f"{stem}.json")
+            if not file.is_file():
+                raise FileNotFoundError(
+                    f"{file} is listed in catalog.json but does not exist"
+                )
             with open(file, encoding="utf-8") as stream:
                 entries.update({
                     name.upper(): entry

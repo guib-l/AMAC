@@ -15,7 +15,7 @@ class HandlerSpec:
     """A registered handler: extracts one product from the raw results.
 
     Attributes:
-        name: Normalized handler name (``ground-energy``).
+        name: Normalized handler name (``lowest-energy``).
         function: Function taking the raw results, returning the product.
         software: Name of the software the handler belongs to.
         requires_files: Output files the handler needs.
@@ -115,6 +115,30 @@ class HandlerSet:
         for key in self.names:
             handlers.update(registered_handlers(key))
         return handlers
+
+    def check_module(self, module: str) -> None:
+        """Check that the software has the handlers required by ``module``.
+
+        Args:
+            module: Module of the calculation (name or alias).
+
+        Raises:
+            KeyError: If ``module`` is unknown to the catalog.
+            NotImplementedError: If a ``mandatory-handler`` of the module
+                is not registered for the software.
+        """
+        catalog = load_catalog(self.catalog_dir)["module"]
+        module = canonical_name(module, catalog)
+        required = catalog[module].get("mandatory-handler") or ()
+        available = self.available()
+        missing = [
+            name for name in required if normalize_name(name) not in available
+        ]
+        if missing:
+            raise NotImplementedError(
+                f"{self.names[0]} cannot run module {module}: "
+                f"missing handlers {missing}"
+            )
 
     def resolve(
             self, names: Sequence[str], module: str | None = None,

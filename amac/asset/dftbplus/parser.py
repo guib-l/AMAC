@@ -60,6 +60,39 @@ def read_results_tag(path: str | Path) -> dict[str, Any]:
     return entries
 
 
+# Energy line of detailed.out: "Repulsive energy:   0.0718034081 H   1.9539 eV"
+_DETAILED_LINE = re.compile(r"^([^:]+):\s+(\S+)\s+H\b")
+# detailed.out label -> key of results["energy"].
+_DETAILED_ENERGIES = {
+    "Band energy": "band_energy",
+    "Energy H0": "h0_energy",
+    "Energy SCC": "scc_energy",
+    "Total Electronic energy": "electronic_energy",
+    "Repulsive energy": "repulsive_energy",
+}
+
+
+def read_detailed_out(path: str | Path) -> dict[str, float]:
+    """Read the energies (Hartree) of a DFTB+ ``detailed.out`` file.
+
+    Args:
+        path: Path to the detailed.out file.
+
+    Returns:
+        The energies of :data:`_DETAILED_ENERGIES`, by key; empty if the
+        file does not exist.
+    """
+    path = Path(path)
+    if not path.is_file():
+        return {}
+    energies = {}
+    for line in path.read_text().splitlines():
+        match = _DETAILED_LINE.match(line.strip())
+        if match and match.group(1) in _DETAILED_ENERGIES:
+            energies[_DETAILED_ENERGIES[match.group(1)]] = float(match.group(2))
+    return energies
+
+
 def to_results(tag: dict[str, Any], workdir: Path, image) -> dict[str, Any]:
     """Arrange the ``results.tag`` entries as the handlers expect them.
 
@@ -73,6 +106,7 @@ def to_results(tag: dict[str, Any], workdir: Path, image) -> dict[str, Any]:
         "energy": {
             "energy": tag["mermin_energy"],
             **{key: tag[key] for key in energy_keys if key in tag},
+            **read_detailed_out(workdir / "detailed.out"),
         },
         "forces": tag.get("forces"),
         "properties": {

@@ -1,7 +1,7 @@
 {
     "optimization-geometry":{
         "alias":["Opt","optimization"],
-        "mandatory-handler":["lowest-energy","gradient"],
+        "mandatory-handler":["lowest-energy","forces"],
         "mandatory-attribute":null,
         "allowed-attribute":{
             "max-step":{

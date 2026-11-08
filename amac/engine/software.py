@@ -133,6 +133,8 @@ class Software(ABC):
         dct.pop("image")
         dct.pop("handler")
 
+        if dct.get("module"):
+            self.handler_set.check_module(dct["module"])
         params = self.build_parameters( **dct )
         return params
 

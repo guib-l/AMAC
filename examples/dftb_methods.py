@@ -59,7 +59,7 @@ for software, basis in BASIS.items():
             workdir=f".run/{software}/{method}",
             label=f"water-{method}",
         )
-        calc.handler_register("ground-energy")
+        calc.handler_register("lowest-energy")
         calc.parameters_register(
             method=method,
             method_args={"basis": basis, **method_args},

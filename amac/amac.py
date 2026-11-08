@@ -124,7 +124,7 @@ class AMAC:
         """Register the handlers to run after the calculation.
 
         Args:
-            *handlers: Handler names of the software, e.g. "ground-energy".
+            *handlers: Handler names of the software, e.g. "lowest-energy".
 
         Raises:
             KeyError: If a handler is unknown to the software.

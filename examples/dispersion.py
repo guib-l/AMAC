@@ -69,7 +69,7 @@ for software, dispersions in DISPERSIONS.items():
             workdir=f".run/{software}/dispersion-{name}",
             label=f"dimer-{name}",
         )
-        calc.handler_register("ground-energy")
+        calc.handler_register("lowest-energy")
         calc.parameters_register(
             method="dftb-2",
             method_args=method_args,

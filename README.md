@@ -1,175 +1,105 @@
 # AMAC
 
 **A**toms – **M**olecules – **A**ggregates **C**alculator: one Python syntax to
-describe and run quantum chemistry calculations, whatever the software behind them.
+describe and run quantum chemistry calculations, whatever the software behind
+them.
 
-A calculation is described once, in a software-independent form (method, module,
-parameters). AMAC validates it against the `doc.json` of the chosen software,
-writes the input, runs the program, extracts the requested properties with
-*handlers*, and stores the results with their provenance.
+A calculation is described once, in a software-independent form (method,
+module, parameters). AMAC checks it against the canonical catalog, translates
+it for the chosen software, runs the program and extracts the requested
+results with *handlers*.
 
-> **Status:** two software are registered, `DFTBP` (DFTB+, file based) and
-> `DEMON` (deMonNano, in process). See [Project status](#project-status).
+Supported software: **DFTB+** (`dftb+`) and **deMonNano** (`deMonNano`).
 
 ## Installation
 
-AMAC requires Python ≥ 3.12. It is not published on PyPI (no `pip install amac`):
-install it from a checkout of the repository.
+Python ≥ 3.12 is required. Install AMAC from a checkout of the repository:
 
 ```bash
-python -m pip install -e .              # numpy, ase
-python -m pip install -e ".[test]"      # the above, plus pytest
-python -m pip install -e ".[dftbplus]"  # the above, plus the hsd library of DFTB+
+pip install -e .          # numpy, ase
+pip install -e ".[dev]"   # adds pytest and ruff
 ```
 
-Run your scripts from the repository root with `python -m ...`, or add the root to
-`PYTHONPATH`. `examples/quickstart.py` does it by itself when needed.
+deMonNano runs in process through the
+[`deMonPy`](https://github.com/guib-l/DeMonNanoPy) library, which you install
+from its own repository.
 
-## Running the tests
+## Configuration
 
-```bash
-python -m pytest                                        # no program needed
-pytest -m real                                          # runs DFTB+ and deMonNano
-pytest -m real --amac-config=/path/to/config-amac.json  # another configuration
-ruff check amac test examples
+AMAC reads no environment variables and never searches `PATH`. All
+machine-specific settings come from a JSON file, `config-amac.json`:
+
+```json
+{
+  "software": {
+    "dftb+": {
+      "executable": "/absolute/path/to/dftb+",
+      "env": {}
+    },
+    "deMonNano": {
+      "executable": "/absolute/path/to/deMon.x",
+      "basis": "/absolute/path/to/basis",
+      "timeout": 60,
+      "launcher": ["/usr/bin/mpirun", "-np", "{process_unit}"]
+    }
+  }
+}
 ```
 
-The suite needs no quantum chemistry program: the generic chain is exercised on
-the DFTB+ asset driven by a stub program written by the tests (`test/conftest.py`).
-The tests marked `real` run the programs of the configuration file
-(`--amac-config=PATH`, else the `config-amac.json` of the repository) and are
-skipped when it gives none.
+Executables must be absolute paths. Load the file once per process:
 
+```python
+import amac
+amac.configure_from_file("config-amac.json")   # or amac.configure(config=dict)
+```
+
+If you don't load a file, the configuration is empty.
 
 ## Quickstart
-
-With the `AMAC` class:
 
 ```python
 from ase.build import molecule
 
 import amac
 from amac import AMAC
-from amac.assets import dftbplus
 
-water = molecule("H2O")
+amac.configure_from_file("config-amac.json")
 
-# Machine configuration of every calculator of this process; AMAC(config=...)
-# gives one calculator its own file.
-amac.set_config("config-amac.json")
-
-calc = AMAC(
-    software="DFTB+",
-    method="TIGHT_BINDING",
+calc = AMAC(software="dftb+", workdir=".run/water", label="water")
+calc.handler_register("lowest-energy")
+calc.parameters_register(
+    method="dftb-2",
     method_args={
-        "variant": "DFTB2",  # SCC-DFTB; the variant sets SCC = Yes by itself
-        "SCCTolerance": 1e-6,
-        "MaxAngularMomentum": {"O": "p", "H": "s"},
+        "basis": {"directory": "/path/to/mio-1-1"},
+        "scc-tol": 1e-5,
     },
-    module="SINGLE_POINT",
-    parameters={
-        # Prefix is written from BASIS in the configuration file, never here.
-        "SLATER_KOSTER_FILES": {"variant": "Type2FileNames"},
-        "ANALYSIS": {"MullikenAnalysis": True, "Printforces": True},
-        "OPTIONS": {"WriteResultsTag": True},
-    },
-    cpu=2,
-    workdir="runs",
-    label="water",
+    module="single-point",
 )
-calc.handler_properties(
-    dftbplus.energy,
-    dftbplus.forces,
-    ("atom_count", lambda ctx: len(ctx.atoms)),  # custom handler
-)
-result = calc.execute(water)  # runs in runs/water
-print(result.success, result.properties)
 
-path = calc.store("water-results")  # writes water-results.json
-[reloaded] = amac.load(path)
+calc.run(molecule("H2O"))
+print(calc.instance.res.product["lowest-energy"])
 ```
 
-The executable and `BASIS` come from the configuration file (see
-[Configuration and executables](docs/configuration.md)); AMAC reads no
-environment variable and never searches `PATH`.
+To switch to deMonNano, change only `software` and `basis`. The rest of the
+description stays the same.
 
-With the module facade:
+More examples are in [`examples/`](examples/). For instance,
+`examples/compare_dftb.py` runs the same DFTB-2 calculation with both programs
+and compares the energies.
 
-```python
-amac.configure(cpu=2, workdir="runs")
-amac.calculator(
-    parameters={
-        "method": "TIGHT_BINDING",
-        "method_args": {"variant": "DFTB2", "MaxAngularMomentum": {"O": "p", "H": "s"}},
-        "parameters": {"SLATER_KOSTER_FILES": {"variant": "Type2FileNames"}},
-    },
-    platform="DFTB+",
-    label="facade",
-    handlers=[dftbplus.energy],
-)
-results = amac.run([water, water])  # runs/facade/image_000 and image_001
-```
+## Project layout
 
-A complete script: `python examples/quickstart.py [WORKDIR]` (a temporary
-directory is used when `WORKDIR` is omitted).
+| Path | Content |
+|---|---|
+| [`catalog/`](catalog/README.md) | Canonical methods and modules, and the parameters they accept |
+| [`amac/asset/`](amac/asset/README.md) | One adapter per software, including its `equiv.json` translation table |
+| `amac/engine/` | Shared machinery: catalog loading, validation, translation, handlers, execution |
+| `amac/amac.py` | The `AMAC` user class |
+| `examples/` | Runnable scripts |
 
-Examples with the real programs (DFTB+, deMonNano): [`examples/`](examples/). They
-take their configuration file from `--config=PATH`, and from the
-`config-amac.json` of this repository without it; AMAC itself reads no
-environment variable:
+## Development
 
 ```bash
-python examples/quickstart.py
-python examples/dftbplus_02_molecular_optimisation.py ~/runs --config=/etc/amac.json
+pytest            # test suite
+ruff check amac   # linter
 ```
-
-Without a file giving the program they stop and print the command to run;
-nothing is guessed.
-
-## Documentation
-
-| Document | Content |
-|---|---|
-| [Describing a calculation](docs/calculations.md) | Spec (`method`, `module`, `parameters`, `raw`) and validation |
-| [Handlers](docs/handlers.md) | Extracting properties from a run |
-| [Runs, results and reprocessing](docs/runs.md) | Directories, failures, reprocessing, saving a calculator, stored results |
-| [Configuration and executables](docs/configuration.md) | `config-amac.json`, executables, `BASIS`, default `workdir` |
-| [Adding a software](docs/adding-a-software.md) | Writing a new `amac/assets/<software>/` package |
-| [Using a dedicated library](docs/drivers.md) | Drivers (`driver="auto"`, `Software.DRIVERS`) |
-| [Running the tests](docs/testing.md) | `pytest`, the `real` marker, `ruff` |
-| [`DOC_SCHEMA.md`](docs/DOC_SCHEMA.md) | Format of the `doc.json` of a software |
-| [`CATALOG_SCHEMA.md`](docs/CATALOG_SCHEMA.md) | Format of the canonical catalog |
-
-### Canonical catalog
-
-`catalog/`, at the repository root, names methods, modules and options independently
-of any software (`B3LYP`, `DFTB2`, `GEOMETRY_OPTIMISATION`, `D3(BJ)`, ...), with their
-aliases. Each top-level entry has its own directory,
-`catalog/<methods|modules|options>/<slug>/`, holding `entry.json` and a `README.md`
-(summary and references). Each `doc.json` links its nodes to these names with
-`CANONICAL`. Formats are described in [`docs/CATALOG_SCHEMA.md`](docs/CATALOG_SCHEMA.md)
-and in the `CANONICAL` section of [`docs/DOC_SCHEMA.md`](docs/DOC_SCHEMA.md); the
-`catalog-curator` agent (`.claude/agents/`) adds new entries.
-
-## Project status
-
-Implemented: canonical specs, `doc.json` loading and validation (variants, `SETS`,
-`COMPANION`, `COMMON_ARGUMENTS`), the intermediate tree, the local executor,
-handlers, the `AMAC` class with per-image overrides and reprocessing, the facade,
-JSON storage with provenance, optional library drivers (interface and selection),
-the canonical catalog and its equivalence tables.
-
-Not implemented yet:
-
-- concrete composers for the `NAMELIST` and `FLAT` syntaxes (`KEYWORD_BLOCK` and
-  `TREE` are implemented);
-- real software: DFTB+ and deMonNano are complete, with their `doc.json`;
-  deMonNano runs in process through the `deMonPy` library (`DeMonNanoPy`, installed
-  from its repository, not from PyPI); ORCA, Gaussian, PySCF and GPAW are not
-  started;
-- library drivers beyond DFTB+: it has its API and `hsd` drivers, the AbiPy one is
-  not started;
-- parallel images, HPC schedulers, restarts and chained calculations (chaining is
-  left to a workflow layer outside the core), so the external post-processing
-  programs (`modes`, `waveplot`, ...) are not run;
-- the free-text `CONDITION` fields of the `doc.json`.
