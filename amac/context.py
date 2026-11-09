@@ -64,6 +64,9 @@ class Properties(base):
         method_args: properties associated with method
         module: module used
         module_args: properties associated with module
+        handler: handlers to run after the calculation
+        software_args: raw software parameters, by software name:
+            ``{software: {dotted.path: value}}``
     """
 
     image: Atoms = None
@@ -72,6 +75,7 @@ class Properties(base):
     module: str = None
     module_args: dict[str, Any] = field(default_factory=dict)
     handler: tuple = ()
+    software_args: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 

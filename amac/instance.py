@@ -271,6 +271,7 @@ class Instance:
         module=None,
         module_args=None,
         handler=(),
+        software_args=None,
     ):
         """
         Build a new initialized Instance
@@ -307,6 +308,7 @@ class Instance:
             module,
             module_args,
             handler,
+            {} if software_args is None else software_args,
         )
 
         # Exploration of files

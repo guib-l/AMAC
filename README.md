@@ -87,6 +87,31 @@ More examples are in [`examples/`](examples/). For instance,
 `examples/compare_dftb.py` runs the same DFTB-2 calculation with both programs
 and compares the energies.
 
+## Raw software parameters
+
+When a keyword has no canonical equivalent in the catalog, `software_args`
+writes it directly into the software parameters. It is indexed by software
+(name or alias, any case), and only the section of the current software is
+used. The same description therefore still runs with every software:
+
+```python
+calc.parameters_register(
+    method="dftb-2",
+    method_args={...},
+    module="single-point",
+    software_args={
+        "deMonNano": {"DEMON_PARAMETERS.ACTIVE.DFTB.TOL": 1e-7},
+        "dftb+": {"Analysis.CalculateForces": True},
+    },
+)
+```
+
+Paths are dotted, as in the `set` blocks of `equiv.json`
+(see [`amac/asset/`](amac/asset/README.md)). The values are written after the
+translation of the canonical parameters, so they can override anything,
+including what the asset sets itself. They are not checked: a wrong path
+produces a wrong keyword in the input, with no error from AMAC.
+
 ## Store
 
 A `Store` saves the results of calculations in a file and reads them back.
@@ -109,7 +134,8 @@ records[0]["lowest-energy"]
 - **txt** writes one line per calculation: index, formula, then the scalar
   products listed in `columns` (`nan` when a product is missing). With
   `calc_file=True`, a `calc.json` file next to the txt file describes the
-  calculation (software, method, module and their arguments, handlers),
+  calculation (software, method, module and their arguments, handlers,
+  `software_args`),
   without the molecules.
 
 `load(**filters)` returns a list of flat dicts and keeps only the records

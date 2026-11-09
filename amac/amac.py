@@ -140,14 +140,23 @@ class AMAC:
             module = None,
             method_args = None,
             module_args = None,
+            software_args = None,
         ):
+        """Register the calculation parameters on a new instance.
 
+        Args:
+            software_args: Raw software parameters, written after the
+                translation of the canonical ones, without any check:
+                ``{software: {dotted.path: value}}``. Only the section of
+                the current software (name or alias, any case) is used.
+        """
         self.__active_instance.properties(
             image=image,
             method=method,
             module=module,
             method_args=method_args,
-            module_args=module_args, 
+            module_args=module_args,
+            software_args=software_args or {},
         )
 
 

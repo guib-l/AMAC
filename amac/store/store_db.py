@@ -183,6 +183,7 @@ class Store:
             "module": props.module,
             "module_args": props.module_args,
             "handler": props.handler,
+            "software_args": props.software_args,
             "columns": self.columns,
         }
         (self.path.parent / "calc.json").write_text(

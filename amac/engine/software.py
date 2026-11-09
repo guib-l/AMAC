@@ -109,6 +109,12 @@ class Software(ABC):
     # Template: assets override only what differs.
     def run(self, instance) -> dict:
         self.parameters = self.collect(instance)
+        # Raw user parameters of this software have the last word.
+        names = {key.upper() for key in (self.name, *self.alias)}
+        for software, args in (instance.props.software_args or {}).items():
+            if software.upper() in names:
+                for path, value in args.items():
+                    set_path(self.parameters, path, value)
         self.prepare(instance)
         results = self.calculate(instance)
         self.callback(instance, results)
@@ -132,6 +138,7 @@ class Software(ABC):
 
         dct.pop("image")
         dct.pop("handler")
+        dct.pop("software_args", None)
 
         if dct.get("module"):
             self.handler_set.check_module(dct["module"])
