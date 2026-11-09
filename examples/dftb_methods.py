@@ -19,10 +19,10 @@ amac.configure_from_file("config-amac.json")
 
 BASIS = {
     "dftb+": {
-        "directory": "/home/vboxuser/Téléchargements/mio-1-1",
+        "directory": "~/Téléchargements/parameters_dftb/mio-1.1.0/skfiles",
     },
     "deMonNano": {
-        "directory": "/home/vboxuser/Téléchargements/deMonNano/basis",
+        "directory": "~/Téléchargements/deMonNano/basis",
         "ptype": "BIO",
     },
 }
