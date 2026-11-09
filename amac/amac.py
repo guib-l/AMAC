@@ -180,8 +180,9 @@ class AMAC:
     def restart(self,):
         ...
 
-    def store(self):
-        raise NotImplementedError
+    def store(self, store):
+        """Save the active instance in ``store`` (an ``amac.store.Store``)."""
+        store.save(self.instance)
 
 
 
