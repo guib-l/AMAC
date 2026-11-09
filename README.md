@@ -87,6 +87,37 @@ More examples are in [`examples/`](examples/). For instance,
 `examples/compare_dftb.py` runs the same DFTB-2 calculation with both programs
 and compares the energies.
 
+## Store
+
+A `Store` saves the results of calculations in a file and reads them back.
+The format comes from the suffix: `.txt` (columns), `.json`, or `.db` /
+`.sqlite` (SQLite). Each save adds one record and never overwrites the file.
+
+```python
+from amac.store import Store
+
+calc.store(Store("results.json"))   # or "results.db"
+calc.store(Store("energies.txt", columns=["lowest-energy"], calc_file=True))
+
+records = Store("results.db").load(software="dftb+", formula="H2O")
+records[0]["lowest-energy"]
+```
+
+- **JSON and SQLite** keep everything: id, name, software, method, module,
+  formula, status, date, duration, the geometry, and every product of the
+  handlers. Nested products use dotted keys (`energy-resume.energy`).
+- **txt** writes one line per calculation: index, formula, then the scalar
+  products listed in `columns` (`nan` when a product is missing). With
+  `calc_file=True`, a `calc.json` file next to the txt file describes the
+  calculation (software, method, module and their arguments, handlers),
+  without the molecules.
+
+`load(**filters)` returns a list of flat dicts and keeps only the records
+whose values equal every filter. Geometries come back as `ase.Atoms`, arrays
+as lists, and SQLite returns booleans as `1`/`0`.
+
+See `examples/store.py`.
+
 ## Project layout
 
 | Path | Content |
@@ -95,6 +126,7 @@ and compares the energies.
 | [`amac/asset/`](amac/asset/README.md) | One adapter per software, including its `equiv.json` translation table |
 | `amac/engine/` | Shared machinery: catalog loading, validation, translation, handlers, execution |
 | `amac/amac.py` | The `AMAC` user class |
+| `amac/store/` | The `Store` class: save and read results (txt, JSON, SQLite) |
 | `examples/` | Runnable scripts |
 
 ## Development
