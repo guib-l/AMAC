@@ -93,6 +93,76 @@ def read_detailed_out(path: str | Path) -> dict[str, float]:
     return energies
 
 
+# EXC.DAT data line: "w Osc.Str. a -> b Weight KS Sym.", 8 tokens once the
+# Transition column ("a -> b") is split.
+_EXC_SYMMETRIES = {
+    "s": "singlet",
+    "singlet": "singlet",
+    "t": "triplet",
+    "triplet": "triplet",
+}
+
+
+def _parse_exc_line(tokens: list[str], path: Path) -> tuple[dict[str, Any], str]:
+    """Parse one EXC.DAT data line into its state dict and spin symmetry.
+
+    Raises:
+        OutputParseError: If the line is malformed or its symmetry unknown.
+    """
+    if len(tokens) != 8 or tokens[3] != "->":
+        raise OutputParseError(f"Malformed line in {path}: {tokens!r}")
+    try:
+        state = {
+            "w": float(tokens[0]),
+            "oscillator": float(tokens[1]),
+            "from": int(tokens[2]),
+            "to": int(tokens[4]),
+            "weight": float(tokens[5]),
+            "energy": float(tokens[6]),
+        }
+    except ValueError as error:
+        raise OutputParseError(f"Malformed line in {path}: {tokens!r}") from error
+    symmetry = _EXC_SYMMETRIES.get(tokens[7].lower())
+    if symmetry is None:
+        raise OutputParseError(f"Unrecognized symmetry in {path}: {tokens[7]!r}")
+    return state, symmetry
+
+
+def read_exc_dat(path: str | Path) -> dict[str, Any]:
+    """Read a DFTB+ ``EXC.DAT`` file of linear-response excited states.
+
+    Args:
+        path: Path to the EXC.DAT file.
+
+    Returns:
+        The states grouped by spin symmetry, e.g.
+        ``{"singlet": {"state_0": {...}, ...}}``; a symmetry key is present
+        only if at least one state of it is found. Each state carries
+        ``w`` (eV), ``oscillator``, ``from``/``to`` (1-based indices),
+        ``weight``, and ``energy`` (the KS transition energy, eV).
+
+    Raises:
+        OutputParseError: If the file is missing or a line is malformed.
+    """
+    path = Path(path)
+    if not path.is_file():
+        raise OutputParseError(f"Missing DFTB+ excitations file: {path}")
+
+    states: dict[str, dict[str, Any]] = {}
+    counts = {"singlet": 0, "triplet": 0}
+    for line in path.read_text().splitlines():
+        tokens = line.split()
+        if not tokens or set(line.strip()) == {"="}:
+            continue
+        if any(column in tokens for column in ("Osc.Str.", "Transition", "Sym.")):
+            continue
+        state, symmetry = _parse_exc_line(tokens, path)
+        index = counts[symmetry]
+        states.setdefault(symmetry, {})[f"state_{index}"] = state
+        counts[symmetry] += 1
+    return states
+
+
 def to_results(tag: dict[str, Any], workdir: Path, image) -> dict[str, Any]:
     """Arrange the ``results.tag`` entries as the handlers expect them.
 

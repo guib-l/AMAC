@@ -155,6 +155,22 @@
         "optimization-geometry": {
             "set": {"Driver.GeometryOptimization": {}},
             "attributes": {"max-step": {"target": "Driver.GeometryOptimization.MaxSteps"}}
-        }
+        },
+        "td-dftb": {
+            "set": {"ExcitedState.Casida": {}},
+            "attributes": {
+                "excitations": {"target": "ExcitedState.Casida.NrOfExcitations"},
+                "symmetry": {
+                    "target": "ExcitedState.Casida.Symmetry",
+                    "values": {"singlet": "singlet", "both": "both"}
+                },
+                "diagonalizer": {
+                    "target": "ExcitedState.Casida.Diagonaliser",
+                    "values": {"stratmann": "Stratmann","arpack": "Arpack" },
+                    "children": {}
+                }
+            }
+        },
+        "frequencies": {"supported": false}
     }
 }

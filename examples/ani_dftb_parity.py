@@ -33,7 +33,7 @@ import amac
 from amac.amac import AMAC
 
 
-NMAX = 999
+NMAX = 1999
 
 XYZ_PATH = Path("../ANI-1/xyz/ani1_xyz_01.xyz")
 
@@ -130,7 +130,6 @@ def make_figure(
         if not xs:
             continue
         axis.plot(xs, ys, marker="o", linestyle="none", markersize=3)
-        print(xs,ys)
         a,b = min(xs)*1.05,max(xs)*0.95
         c,d = min(ys)*1.05,max(ys)*0.95
         axis.plot([a,b], [c,d], color="red", linewidth=1)
@@ -169,6 +168,9 @@ for idx, (atoms, _) in enumerate(molecules[:NMAX]):
                 method_args={"basis": basis_args(software, method), **margs},
                 module="single-point",
                 module_args={},
+                software_args={
+                    "deMonNano": {"DEMON_PARAMETERS.ACTIVE.DFTB.FHUB": True},
+                },
             )
             try:
                 calc.run(atoms)

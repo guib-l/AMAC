@@ -4,7 +4,9 @@
     ],
     "module":[
         "single-point",
-        "optimization"
+        "optimization",
+        "td-dftb",
+        "frequencies"
     ],
     "options":[]
 }

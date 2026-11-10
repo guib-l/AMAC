@@ -27,6 +27,9 @@
                         "target":"DEMON_PARAMETERS.ACTIVE.DFTB.FERMI",
                         "unit":"K"
                     },
+                    "kpoints":{
+                        "target":"DEMON_PARAMETERS.ACTIVE.PBC.KPTS"
+                    },
                     "dispersion":{
                         "target":"DEMON_PARAMETERS.ACTIVE.DFTB.DISP",
                         "values":{
@@ -94,6 +97,25 @@
         "optimization-geometry":{
             "set": {
                 "DEMON_MODULE.ACTIVE.OPT": {}
+            }
+        },
+        "td-dftb":{
+            "set": {
+                "DEMON_PARAMETERS.ACTIVE.TD-DFTB": {}
+            },
+            "attributes": {
+                "excitations":{
+                    "target":"DEMON_PARAMETERS.ACTIVE.TD-DFTB.LRESP"
+                },
+                "symmetry":{
+                    "target":"DEMON_PARAMETERS.ACTIVE.TD-DFTB.NO_TRIP",
+                    "values":{"singlet":true,"both":null}
+                }
+            }
+        },
+        "frequencies":{
+            "set": {
+                "DEMON_PARAMETERS.ACTIVE.FREQ": true
             }
         }
     },

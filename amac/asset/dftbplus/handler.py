@@ -14,6 +14,8 @@ __all__ = [
     "fermi_level",
     "repulsive_energy",
     "electronic_energy",
+    "k_points",
+    "td_dftb",
 ]
 
 
@@ -81,3 +83,13 @@ def repulsive_energy(results):
 def electronic_energy(results):
     """Electronic energy (Hartree)."""
     return results["energy"]["electronic_energy"]
+
+@handler(software="dftb+", name="k_points")
+def k_points(results):
+    """Fractional k-point coordinates used, shape (N, 3)."""
+    return results["k-points"]
+
+@handler(software="dftb+", name="td_dftb")
+def td_dftb(results):
+    """Linear-response excited states (eV), same shape as deMonNanoPy."""
+    return results["td-dftb"]

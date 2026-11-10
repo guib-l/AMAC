@@ -58,6 +58,9 @@ def total_energy(software, label, image):
         method_args={"basis": BASIS[software], **SCC},
         module="single-point",
         module_args={},
+        software_args={
+            "deMonNano": {"DEMON_PARAMETERS.ACTIVE.DFTB.FHUB": True},
+        },
     )
     try:
         calc.run(image)

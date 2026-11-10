@@ -1,0 +1,25 @@
+{
+    "td-dftb":{
+        "alias":["td","excited-states"],
+        "mandatory-handler":["td-dftb"],
+        "mandatory-attribute":null,
+        "allowed-attribute":{
+            "excitations":{
+                "type":"int",
+                "range":[1,null],
+                "description":"Number of excited states to calculate"
+            },
+            "symmetry":{
+                "type":"str",
+                "choices":["singlet","both"],
+                "description":"Spin symmetry of the excited states"
+            },
+            "diagonalizer":{
+                "type":"str",
+                "choices":["arpack","stratmann"],
+                "description":"Diagonalizer of the linear-response eigenvalue problem"
+            }
+        },
+        "forbidden-attribute":null
+    }
+}
