@@ -113,13 +113,13 @@ for idx, atoms in enumerate(cells):
                 "kpoints": [10, 10, 1],
                 "scc-max": 999,
                 "scc-tol": 1e-5,
-                #"filling": 50,
+                # "filling": 50,
             },
             module="single-point",
             module_args={},
             software_args={
                 "deMonNano": {"DEMON_PARAMETERS.ACTIVE.DFTB.FHUB": True},
-            }
+            },
         )
         try:
             calc.run(atoms)
@@ -143,10 +143,7 @@ e_demon = np.array([data["deMonNano"][idx][0] for idx in idxs])
 f_dftb = np.concatenate([data["dftb+"][idx][1] for idx in idxs])
 f_demon = np.concatenate([-data["deMonNano"][idx][1] for idx in idxs])
 
-panels = (
-    ("E total (Ha)", e_dftb, e_demon),
-    ("F (Ha/Bohr)", f_dftb.ravel(), f_demon.ravel())
-)
+panels = (("E total (Ha)", e_dftb, e_demon), ("F (Ha/Bohr)", f_dftb.ravel(), f_demon.ravel()))
 
 fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 for axis, (quantity, xs, ys) in zip(axes.ravel(), panels):

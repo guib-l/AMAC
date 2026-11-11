@@ -35,14 +35,14 @@ differ from the default behavior:
 
    ```python
    class software_mysoftware(Software):
-       name = "mysoftware"            # key in config-amac.json
-       alias = ("my-software",)       # other accepted names (case ignored)
-       requires_executable = True     # an absolute executable is required
-       transforms = {}                # functions called by "transform"
+       name = "mysoftware"  # key in config-amac.json
+       alias = ("my-software",)  # other accepted names (case ignored)
+       requires_executable = True  # an absolute executable is required
+       transforms = {}  # functions called by "transform"
 
        def calculate(self, instance):
            self.execute_program(instance.ctx.workdir, output="out.log")
-           return {...}               # raw results
+           return {...}  # raw results
    ```
 
    The class registers itself when it is imported.
@@ -153,7 +153,7 @@ are written inside it.
 ```
 
 ```python
-method_args={"mixer": {"value": "broyden", "mixing-parameter": 0.2}}
+method_args = {"mixer": {"value": "broyden", "mixing-parameter": 0.2}}
 # -> Hamiltonian.DFTB.Mixer.Broyden.MixingParameter = 0.2
 ```
 

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import copy
@@ -6,7 +5,7 @@ import sys
 from abc import ABC, abstractmethod
 from dataclasses import fields
 from pathlib import Path
-from typing import Any, Callable, ClassVar, Mapping, Sequence, Self
+from typing import Any, Callable, ClassVar, Mapping, Self, Sequence
 
 from amac import config
 from amac.engine.equiv import Equivalence, set_path
@@ -56,14 +55,14 @@ class Software(ABC):
         return soft_cls(**options)
 
     def __init__(
-            self,
-            *,
-            process: str = "inprocess",
-            process_unit: int = 1,
-            executable: str | Path | None = None,
-            env: Mapping[str, str] | None = None,
-            **options,
-        ) -> None:
+        self,
+        *,
+        process: str = "inprocess",
+        process_unit: int = 1,
+        executable: str | Path | None = None,
+        env: Mapping[str, str] | None = None,
+        **options,
+    ) -> None:
         section = self.config_section()
         # Software-specific settings (e.g. deMonNano "basis"): config, then overrides.
         self.options = {**section, **options}
@@ -72,7 +71,8 @@ class Software(ABC):
         self.program = Program(
             name=self.name,
             executable=checked_executable(
-                self.name, executable or section.get("executable"),
+                self.name,
+                executable or section.get("executable"),
                 self.requires_executable,
             ),
             process=process,
@@ -142,7 +142,7 @@ class Software(ABC):
 
         if dct.get("module"):
             self.handler_set.check_module(dct["module"])
-        params = self.build_parameters( **dct )
+        params = self.build_parameters(**dct)
         return params
 
     # ------------------------------------------------------------------
@@ -150,26 +150,29 @@ class Software(ABC):
     # ------------------------------------------------------------------
 
     def execute_program(
-            self, workdir: str | Path, *args: str, output: str = "output.log",
+        self,
+        workdir: str | Path,
+        *args: str,
+        output: str = "output.log",
     ):
         """Run the executable in ``workdir`` (see :meth:`Program.execute`)."""
         return self.program.execute(workdir, *args, output=output)
 
     def build_parameters(
-            self,
-            method: str,
-            method_args: Mapping[str, Any] | None = None,
-            module: str | None = None,
-            module_args: Mapping[str, Any] | None = None,
-        ) -> dict:
+        self,
+        method: str,
+        method_args: Mapping[str, Any] | None = None,
+        module: str | None = None,
+        module_args: Mapping[str, Any] | None = None,
+    ) -> dict:
         """Translate the canonical parameters into the software parameters."""
         return self.equivalence.build(method, method_args, module, module_args)
 
     def resolved_handlers(
-            self,
-            names: Sequence[str],
-            module: str | None = None,
-        ) -> tuple[HandlerSpec, ...]:
+        self,
+        names: Sequence[str],
+        module: str | None = None,
+    ) -> tuple[HandlerSpec, ...]:
         """Return the handler specs of ``names`` (see :meth:`HandlerSet.resolve`)."""
         return self.handler_set.resolve(names, module)
 
@@ -189,9 +192,12 @@ class Software(ABC):
     def to_dict(self) -> dict[str, Any]:
         program = self.program
         return {
-            "name": self.name, "alias": self.alias,
-            "process": program.process, "process_unit": program.process_unit,
-            "executable": program.executable, "env": program.env,
+            "name": self.name,
+            "alias": self.alias,
+            "process": program.process,
+            "process_unit": program.process_unit,
+            "executable": program.executable,
+            "env": program.env,
             "options": self.options,
         }
 
@@ -206,8 +212,6 @@ class Software(ABC):
         if unknown := data.keys() - known:
             raise ValueError(f"Unknown Result keys: {sorted(unknown)}")
         return cls(**copy.deepcopy(data))
-
-
 
     # ------------------------------------------------------------------
     # Representation
@@ -224,6 +228,7 @@ class Software(ABC):
                 Defaults to :data:`sys.stdout`.
         """
         import json
+
         from amac.utils.encoder import AseEncoder
 
         print(

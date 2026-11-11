@@ -35,8 +35,15 @@ from ase import Atoms
 import amac
 from amac.amac import AMAC
 
-
-SIZES = (1, 2, 4, 8, 16, 32, 64, )#100, 200, 400)
+SIZES = (
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+)  # 100, 200, 400)
 
 SOFTWARES = ("dftb+", "deMonNano")
 
@@ -99,21 +106,17 @@ def build_water_cluster(n_waters: int, rng: np.random.Generator) -> Atoms:
     occupied sites are centered on the origin.
     """
     side = int(np.ceil(n_waters ** (1.0 / 3.0)))
-    sites = np.array(
-        [
-            [i, j, k]
-            for i in range(side)
-            for j in range(side)
-            for k in range(side)
-        ][:n_waters],
-        dtype=float,
-    ) * LATTICE_SPACING
+    sites = (
+        np.array(
+            [[i, j, k] for i in range(side) for j in range(side) for k in range(side)][:n_waters],
+            dtype=float,
+        )
+        * LATTICE_SPACING
+    )
     sites -= sites.mean(axis=0)
 
     reference = reference_water()
-    positions = np.vstack(
-        [reference @ random_rotation(rng).T + site for site in sites]
-    )
+    positions = np.vstack([reference @ random_rotation(rng).T + site for site in sites])
     return Atoms(symbols=["O", "H", "H"] * n_waters, positions=positions)
 
 
@@ -128,7 +131,7 @@ def wall_time(software: str, units: int, n: int, atoms: Atoms) -> float | None:
         label=f"timing-{software}-{n:03d}-{units}",
         process_unit=units,
     )
-    calc.handler_register("lowest-energy","forces")
+    calc.handler_register("lowest-energy", "forces")
     calc.parameters_register(
         method="dftb-2",
         method_args={"basis": BASIS[software], "scc-max": 999, "scc-tol": 1e-5},
@@ -146,7 +149,9 @@ def wall_time(software: str, units: int, n: int, atoms: Atoms) -> float | None:
 def print_summary(sizes: list[int], times: dict[tuple[str, int], dict[int, float | None]]) -> None:
     """Print the wall-time table and the per-column success counts."""
     columns = [(software, units) for software in SOFTWARES for units in UNITS]
-    print(f"{'n':>4s} {'atoms':>6s}" + "".join(f" {software} {units}t" for software, units in columns))
+    print(
+        f"{'n':>4s} {'atoms':>6s}" + "".join(f" {software} {units}t" for software, units in columns)
+    )
     for n in sizes:
         row = f"{n:4d} {3 * n:6d}"
         for software, units in columns:

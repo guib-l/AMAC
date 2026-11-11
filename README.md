@@ -50,7 +50,8 @@ Executables must be absolute paths. Load the file once per process:
 
 ```python
 import amac
-amac.configure_from_file("config-amac.json")   # or amac.configure(config=dict)
+
+amac.configure_from_file("config-amac.json")  # or amac.configure(config=dict)
 ```
 
 If you don't load a file, the configuration is empty.
@@ -121,7 +122,7 @@ The format comes from the suffix: `.txt` (columns), `.json`, or `.db` /
 ```python
 from amac.store import Store
 
-calc.store(Store("results.json"))   # or "results.db"
+calc.store(Store("results.json"))  # or "results.db"
 calc.store(Store("energies.txt", columns=["lowest-energy"], calc_file=True))
 
 records = Store("results.db").load(software="dftb+", formula="H2O")

@@ -91,7 +91,9 @@
                     }
                 }
             }
-        }
+        },
+        "HF":{"supported":false},
+        "xTB":{"supported":false}
     },
     "module":{
         "optimization-geometry":{
@@ -109,7 +111,8 @@
                 },
                 "symmetry":{
                     "target":"DEMON_PARAMETERS.ACTIVE.TD-DFTB.NO_TRIP",
-                    "values":{"singlet":true,"both":null}
+                    "values":{"singlet":true,"both":null},
+                    "strict-values":true
                 }
             }
         },

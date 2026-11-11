@@ -24,6 +24,7 @@ def time_limited(method):
     Raises:
         ExecuteTimeout: If the method runs longer than the timeout.
     """
+
     @functools.wraps(method)
     def wrapper(self, instance, *args, **kwargs):
         timeout = self.program.timeout
@@ -34,14 +35,13 @@ def time_limited(method):
             if threading.current_thread() is not threading.main_thread():
                 warnings.warn(
                     f"{self.name}: timeout ignored outside the main thread",
-                    RuntimeWarning, stacklevel=2,
+                    RuntimeWarning,
+                    stacklevel=2,
                 )
                 return method(self, instance, *args, **kwargs)
 
             def on_alarm(signum, frame):
-                raise ExecuteTimeout(
-                    f"{self.name}: {method.__name__} exceeded {timeout} s"
-                )
+                raise ExecuteTimeout(f"{self.name}: {method.__name__} exceeded {timeout} s")
 
             previous = signal.signal(signal.SIGALRM, on_alarm)
             signal.setitimer(signal.ITIMER_REAL, timeout)
@@ -52,6 +52,8 @@ def time_limited(method):
                 signal.signal(signal.SIGALRM, previous)
         finally:
             instance.duree.add_step(
-                method.__name__, time.perf_counter() - start,
+                method.__name__,
+                time.perf_counter() - start,
             )
+
     return wrapper

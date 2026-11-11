@@ -72,24 +72,19 @@ def total_energy(software, label, image):
 
 path = Path(sys.argv[1]) if len(sys.argv) > 1 else DATA
 images = read(path, index=":")
-labels = [
-    str(image.info.get("name", image.get_chemical_formula()))
-    for image in images
-]
+labels = [str(image.info.get("name", image.get_chemical_formula())) for image in images]
 
 amac.configure_from_file("config-amac.json")
 
 energies = {
-    software: np.array([
-        total_energy(software, label, image)
-        for label, image in zip(labels, images)
-    ])
+    software: np.array(
+        [total_energy(software, label, image) for label, image in zip(labels, images)]
+    )
     for software in BASIS
 }
 e_dftbplus, e_demon = energies["dftb+"], energies["deMonNano"]
 
-print(f"\n{'structure':12s} {'E dftb+ (Ha)':>16s} {'E deMonNano (Ha)':>18s}"
-      f" {'diff (Ha)':>12s}")
+print(f"\n{'structure':12s} {'E dftb+ (Ha)':>16s} {'E deMonNano (Ha)':>18s} {'diff (Ha)':>12s}")
 for label, a, b in zip(labels, e_dftbplus, e_demon):
     print(f"{label:12s} {a:16.8f} {b:18.8f} {b - a:12.6f}")
 
@@ -99,14 +94,12 @@ if ok.sum() < 2:
 
 mae = np.mean(np.abs(e_demon[ok] - e_dftbplus[ok]))
 r = np.corrcoef(e_dftbplus[ok], e_demon[ok])[0, 1]
-print(f"\nMAE = {mae:.6f} Ha   Pearson r = {r:.6f}   "
-      f"({ok.sum()}/{len(labels)} structures)")
+print(f"\nMAE = {mae:.6f} Ha   Pearson r = {r:.6f}   ({ok.sum()}/{len(labels)} structures)")
 
 fig, ax = plt.subplots(figsize=(5, 5))
 ax.scatter(e_dftbplus[ok], e_demon[ok])
 for label, a, b in zip(np.array(labels)[ok], e_dftbplus[ok], e_demon[ok]):
-    ax.annotate(label, (a, b), textcoords="offset points", xytext=(4, 4),
-                fontsize=8)
+    ax.annotate(label, (a, b), textcoords="offset points", xytext=(4, 4), fontsize=8)
 low = min(e_dftbplus[ok].min(), e_demon[ok].min())
 high = max(e_dftbplus[ok].max(), e_demon[ok].max())
 ax.plot([low, high], [low, high], "k--", linewidth=1, label="y = x")

@@ -1,0 +1,29 @@
+{
+    "xTB":{
+        "alias":[],
+        "inherits":null,
+        "mandatory-attribute":{},
+        "allowed-attribute":{
+            "level":{
+                "type":"str",
+                "choices":["gfn1","gfn2"],
+                "description": "GFN-xTB parametrisation"
+            },
+            "charge":{
+                "type":"float",
+                "description": "Total charge of the system (e), converted to int by the software"
+            },
+            "multiplicity":{
+                "type":"int",
+                "range":[1,null],
+                "description": "Spin multiplicity 2S+1"
+            },
+            "filling":{
+                "type":"float",
+                "range":[0.0,null],
+                "description": "Electronic temperature of the level occupation (K)"
+            }
+        },
+        "forbidden-attribute":[]
+    }
+}

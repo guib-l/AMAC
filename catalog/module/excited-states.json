@@ -1,7 +1,7 @@
 {
-    "td-dftb":{
-        "alias":["td","excited-states"],
-        "mandatory-handler":["td-dftb"],
+    "excited-states":{
+        "alias":["td-dftb","td"],
+        "mandatory-handler":["excited-states"],
         "mandatory-attribute":null,
         "allowed-attribute":{
             "excitations":{
@@ -11,7 +11,7 @@
             },
             "symmetry":{
                 "type":"str",
-                "choices":["singlet","both"],
+                "choices":["singlet","triplet","both"],
                 "description":"Spin symmetry of the excited states"
             },
             "diagonalizer":{

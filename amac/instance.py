@@ -1,18 +1,14 @@
-
+import copy
 import sys
 import uuid
-from typing import *
-
-import copy
-
 from dataclasses import dataclass, field, fields
-from amac.context import Context,Result,Explorer,Duration,Properties
-from dataclasses import dataclass
+from typing import Any
+
+from amac.context import Context, Duration, Explorer, Properties, Result
 
 
 @dataclass
 class Instance:
-
     name: str = "default_name"
     id: uuid.UUID = field(default_factory=uuid.uuid4)
     ctx: Context = None
@@ -20,7 +16,6 @@ class Instance:
     res: Result = None
     duree: Duration = None
     expl: Explorer = None
-
 
     def properties(self, **kwargs):
         self.props(**kwargs)
@@ -37,8 +32,6 @@ class Instance:
     def explorer(self, **kwargs):
         self.expl(**kwargs)
 
-
-    
     # ------------------------------------------------------------------
     # Life cycle
     # ------------------------------------------------------------------
@@ -47,10 +40,7 @@ class Instance:
         """Start Instance."""
 
         if self.duree is None:
-            raise RuntimeError(
-                "Impossible d'ouvrir l'instance : "
-                "la durée n'est pas initialisée."
-            )
+            raise RuntimeError("Impossible d'ouvrir l'instance : la durée n'est pas initialisée.")
 
         return self.duree._open()
 
@@ -58,17 +48,14 @@ class Instance:
         """Clode Instance"""
 
         if self.duree is None:
-            raise RuntimeError(
-                "Impossible de fermer l'instance : "
-                "la durée n'est pas initialisée."
-            )
+            raise RuntimeError("Impossible de fermer l'instance : la durée n'est pas initialisée.")
 
         return self.duree._closed()
 
     # ------------------------------------------------------------------
     # Creat a new Instance
     # ------------------------------------------------------------------
-    
+
     def new_instance(self, name="default_name"):
         """
         Create a new Instance of calculation
@@ -96,7 +83,6 @@ class Instance:
 
         return resultat
 
-    
     # ------------------------------------------------------------------
     # Comparizon
     # ------------------------------------------------------------------
@@ -166,17 +152,15 @@ class Instance:
     def to_dict(self) -> dict[str, Any]:
         """Return the result as a dict, without the context."""
         results = {}
-        for key,item in self.__dict__.items():
+        for key, item in self.__dict__.items():
             value = copy.deepcopy(item)
             if hasattr(item, "to_dict"):
                 value = item.to_dict()
-            results.update({
-                key:value
-            })
+            results.update({key: value})
         return results
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> Self:
+    def from_dict(cls, data: dict[str, Any]):
         """Build a result from the output of :meth:`to_dict`.
 
         Raises:
@@ -186,7 +170,6 @@ class Instance:
         if unknown := data.keys() - known:
             raise ValueError(f"Unknown Result keys: {sorted(unknown)}")
         return cls(**copy.deepcopy(data))
-
 
     # ------------------------------------------------------------------
     # Representation
@@ -222,6 +205,7 @@ class Instance:
                 Defaults to :data:`sys.stdout`.
         """
         import json
+
         from amac.utils.encoder import AseEncoder
 
         print(
@@ -233,9 +217,6 @@ class Instance:
             ),
             file=files,
         )
-
-
-
 
     # ------------------------------------------------------------------
     # Factory
@@ -283,22 +264,12 @@ class Instance:
         errors = {} if errors is None else errors
         product = {} if product is None else product
 
-        input_files = (
-            {} if input_files is None else input_files
-        )
-        output_files = (
-            {} if output_files is None else output_files
-        )
-        annexe_files = (
-            {} if annexe_files is None else annexe_files
-        )
+        input_files = {} if input_files is None else input_files
+        output_files = {} if output_files is None else output_files
+        annexe_files = {} if annexe_files is None else annexe_files
 
-        method_args = (
-            {} if method_args is None else method_args
-        )
-        module_args = (
-            {} if module_args is None else module_args
-        )
+        method_args = {} if method_args is None else method_args
+        module_args = {} if module_args is None else module_args
 
         # Properties
         props = Properties(
@@ -355,14 +326,3 @@ class Instance:
             duree=duree,
             res=res,
         )
-
-
-
-
-
-
-
-
-
-
-

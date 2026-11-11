@@ -32,12 +32,11 @@ from ase import Atoms
 import amac
 from amac.amac import AMAC
 
-
 NMAX = 1999
 
 XYZ_PATH = Path("../ANI-1/xyz/ani1_xyz_01.xyz")
 
-SOFTWARES = ("deMonNano","dftb+")
+SOFTWARES = ("deMonNano", "dftb+")
 METHODS = ("dftb-2", "dftb-3")
 
 BASIS = {
@@ -51,7 +50,7 @@ BASIS = {
 
 SCC = {
     "scc-max": 999,
-    #"filling": 50,
+    # "filling": 50,
 }
 
 # Hubbard derivatives of the 3OB mio-1-1 parameter set (a.u.).
@@ -121,7 +120,7 @@ def make_figure(
 ) -> None:
     """Save one 1x3 parity figure; subplots without points stay blank."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    fig, axes = plt.subplots(1, len(METHODS), figsize=(5*len(METHODS), 5))
+    fig, axes = plt.subplots(1, len(METHODS), figsize=(5 * len(METHODS), 5))
     for axis, method in zip(axes, METHODS):
         axis.set_title(method)
         axis.set_xlabel(x_label)
@@ -130,9 +129,9 @@ def make_figure(
         if not xs:
             continue
         axis.plot(xs, ys, marker="o", linestyle="none", markersize=3)
-        a,b = min(xs)*1.05,max(xs)*0.95
-        c,d = min(ys)*1.05,max(ys)*0.95
-        axis.plot([a,b], [c,d], color="red", linewidth=1)
+        a, b = min(xs) * 1.05, max(xs) * 0.95
+        c, d = min(ys) * 1.05, max(ys) * 0.95
+        axis.plot([a, b], [c, d], color="red", linewidth=1)
     fig.suptitle(suptitle)
     fig.tight_layout()
     fig.savefig(path)
@@ -160,9 +159,11 @@ for idx, (atoms, _) in enumerate(molecules[:NMAX]):
             )
             calc.handler_register("lowest-energy")
             margs = method_args(method)
-            if method=="dftb-3":
+            if method == "dftb-3":
                 keys = list(set(atoms.symbols))
-                margs['hubbard-derivs'] = {k: HUBBARD_DERIVS[k] for k in keys if k in HUBBARD_DERIVS}
+                margs["hubbard-derivs"] = {
+                    k: HUBBARD_DERIVS[k] for k in keys if k in HUBBARD_DERIVS
+                }
             calc.parameters_register(
                 method=method,
                 method_args={"basis": basis_args(software, method), **margs},

@@ -149,7 +149,9 @@
                 }
             }
         },
-        "CI-DFTB": {"supported": false}
+        "CI-DFTB": {"supported": false},
+        "HF": {"supported": false},
+        "xTB": {"supported": false}
     },
     "module": {
         "optimization-geometry": {
@@ -162,7 +164,7 @@
                 "excitations": {"target": "ExcitedState.Casida.NrOfExcitations"},
                 "symmetry": {
                     "target": "ExcitedState.Casida.Symmetry",
-                    "values": {"singlet": "singlet", "both": "both"}
+                    "values": {"singlet": "singlet", "triplet": "triplet", "both": "both"}
                 },
                 "diagonalizer": {
                     "target": "ExcitedState.Casida.Diagonaliser",

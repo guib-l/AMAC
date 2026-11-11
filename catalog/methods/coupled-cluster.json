@@ -1,0 +1,31 @@
+{
+    "CCSD":{
+        "alias":[],
+        "inherits":["HF"],
+        "mandatory-attribute":{},
+        "allowed-attribute":{
+            "frozen-core":{
+                "type":"bool",
+                "description": "Freeze the core orbitals in the correlation treatment"
+            },
+            "cc-tol":{
+                "type":"float",
+                "range":[0.0,null],
+                "description": "Coupled-cluster energy convergence threshold (Hartree)"
+            },
+            "cc-max":{
+                "type":"int",
+                "range":[1,null],
+                "description": "Maximum number of coupled-cluster iterations"
+            }
+        },
+        "forbidden-attribute":[]
+    },
+    "CCSD(T)":{
+        "alias":["CCSD-T"],
+        "inherits":["CCSD"],
+        "mandatory-attribute":{},
+        "allowed-attribute":{},
+        "forbidden-attribute":[]
+    }
+}

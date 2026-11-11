@@ -1,5 +1,3 @@
-
-
 class AmacError(Exception):
     """Base class for every AMAC-specific error."""
 
@@ -22,13 +20,3 @@ class InputError(AmacError):
 
 class OutputParseError(AmacError):
     """Raised when output cannot be parsed."""
-
-
-
-    
-
-
-
-
-
-

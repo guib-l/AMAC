@@ -56,7 +56,7 @@ for software in ("dftb+", "deMonNano"):
             workdir=f".run/tddftb/{software}",
             label="water",
         )
-        calc.handler_register("td-dftb", "lowest-energy")
+        calc.handler_register("excited-states", "lowest-energy")
         calc.parameters_register(
             method="dftb-2",
             method_args={"basis": BASIS[software], **SCC},
@@ -67,7 +67,7 @@ for software in ("dftb+", "deMonNano"):
         product = calc.instance.res.product
         results[software] = (
             float(product["lowest-energy"]),
-            product["td-dftb"],
+            product["excited-states"],
         )
     except Exception as error:
         print(f"{software:10s} failed: {error}")

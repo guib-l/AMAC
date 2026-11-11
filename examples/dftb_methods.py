@@ -13,13 +13,13 @@ from amac.amac import AMAC
 
 water = molecule("H2O")
 dimer = water + water.copy()
-dimer.positions[3:] += [-0.2, 0., 2.7]
+dimer.positions[3:] += [-0.2, 0.0, 2.7]
 
 amac.configure_from_file("config-amac.json")
 
 BASIS = {
     "dftb+": {
-        "directory": "~/Téléchargements/parameters_dftb/mio-1.1.0/skfiles",
+        "directory": "~/Téléchargements/mio-1-1",
     },
     "deMonNano": {
         "directory": "~/Téléchargements/deMonNano/basis",
@@ -29,7 +29,7 @@ BASIS = {
 
 SCC = {
     "scc-max": 999,
-    #"scc-tol": 1e-5,
+    # "scc-tol": 1e-5,
     "filling": 50,
 }
 
@@ -37,18 +37,24 @@ SCC = {
 HUBBARD_DERIVS = {"H": -0.1857, "O": -0.1575}
 
 METHODS = {
-    #"dftb-1": (water, {}),
+    # "dftb-1": (water, {}),
     "dftb-2": (water, SCC),
-    "dftb-3": (water, {
-        **SCC,
-        "h-correction": {"value": "damping", "exponent": 4.0},
-        "hubbard-derivs": HUBBARD_DERIVS,
-    }),
-    "ci-dftb": (dimer, {
-        **SCC,
-        "size-ci": 2,
-        "fragments": [3, 3],
-    }),
+    "dftb-3": (
+        water,
+        {
+            **SCC,
+            "h-correction": {"value": "damping", "exponent": 4.0},
+            "hubbard-derivs": HUBBARD_DERIVS,
+        },
+    ),
+    "ci-dftb": (
+        dimer,
+        {
+            **SCC,
+            "size-ci": 2,
+            "fragments": [3, 3],
+        },
+    ),
 }
 
 

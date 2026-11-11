@@ -34,7 +34,7 @@ KP = [25, 25, 2]
 SCC = {
     "scc-max": 999,
     "scc-tol": 1e-5,
-    #"filling": 50,
+    # "filling": 50,
 }
 
 # Same 1x1 graphene as DeMonNanoPy's example_periodic.py.

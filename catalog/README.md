@@ -13,7 +13,8 @@ these canonical names and parameters into its own syntax.
 catalog/
 ├── catalog.json     # index of the files to read, by section
 ├── methods/*.json   # one or more methods per file
-└── module/*.json    # one or more modules per file
+├── module/*.json    # one or more modules per file
+└── data/*.json      # value lists (functionals, basis sets), one list per file
 ```
 
 Only the files listed in `catalog.json` are loaded. Names are
@@ -53,6 +54,29 @@ An attribute accepts the following keys:
 | `range`           | `[min, max]`, `null` for an open bound                        |
 | `children`        | Sub-attributes (same format: mandatory/allowed/forbidden)     |
 | `authorized-with` | The sub-attribute is only valid with these parent values      |
+| `choices-from`    | Values taken from a `data/` list (see below)                  |
+| `forbidden-if`    | Refused when a sibling value has a property (see below)       |
+
+## Value lists (`data/`)
+
+Each file of `data/` is one list, `{name: {"alias": [...], ...properties}}`,
+listed under `"data"` in `catalog.json`. Names and aliases are
+case-insensitive; a value is turned into its canonical name before
+translation.
+
+- `functionals.json`: `family`, `builtin-dispersion`.
+- `basis-sets.json`: `family`, `role` (`orbital`, `auxiliary-j`,
+  `auxiliary-jk`, `auxiliary-c`), `ecp`.
+
+```json
+"functional": {"type": "str", "choices-from": {"list": "functionals", "strict": true}},
+"basis": {"type": "str", "choices-from": {"list": "basis-sets", "role": ["orbital"], "strict": false}},
+"dispersion": {"type": "str", "forbidden-if": {"attribute": "functional", "property": "builtin-dispersion"}}
+```
+
+`strict: true` refuses a value missing from the list; `strict: false`
+passes it unchanged to the software. In an `equiv.json`, a spec with
+`"strict-values": true` refuses any value missing from its `values`.
 
 ## Adding a method or a module
 

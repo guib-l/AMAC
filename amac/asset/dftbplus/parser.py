@@ -168,8 +168,13 @@ def to_results(tag: dict[str, Any], workdir: Path, image) -> dict[str, Any]:
 
     Energies are in Hartree, forces in Hartree/Bohr.
     """
-    energy_keys = ("total_energy", "mermin_energy", "extrapolated0_energy",
-                   "forcerelated_energy", "fermi_level")
+    energy_keys = (
+        "total_energy",
+        "mermin_energy",
+        "extrapolated0_energy",
+        "forcerelated_energy",
+        "fermi_level",
+    )
     final = workdir / "geo_end.gen"
     return {
         "errors": [],
@@ -180,11 +185,8 @@ def to_results(tag: dict[str, Any], workdir: Path, image) -> dict[str, Any]:
         },
         "forces": tag.get("forces"),
         "properties": {
-            key: value for key, value in tag.items()
-            if key not in energy_keys and key != "forces"
+            key: value for key, value in tag.items() if key not in energy_keys and key != "forces"
         },
         "input_geometry": image.copy(),
-        "output_geometry": (
-            ase.io.read(final, format="gen") if final.is_file() else image.copy()
-        ),
+        "output_geometry": (ase.io.read(final, format="gen") if final.is_file() else image.copy()),
     }

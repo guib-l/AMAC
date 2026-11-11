@@ -105,12 +105,12 @@ class Store:
     """
 
     def __init__(
-            self,
-            path: str | Path,
-            format: str | None = None,
-            columns: list[str] | None = None,
-            calc_file: bool = False,
-        ):
+        self,
+        path: str | Path,
+        format: str | None = None,
+        columns: list[str] | None = None,
+        calc_file: bool = False,
+    ):
         self.path = Path(path)
         self.format = format or FORMATS.get(self.path.suffix.lower())
         if self.format not in FORMATS.values():
@@ -134,7 +134,8 @@ class Store:
             return []
         records = getattr(self, f"_load_{self.format}")()
         return [
-            record for record in records
+            record
+            for record in records
             if all(record.get(key) == value for key, value in filters.items())
         ]
 
@@ -158,8 +159,7 @@ class Store:
             if new:
                 header = "".join(f"{column:>20s}" for column in self.columns)
                 file.write(f"# {'index':>6s}  {'formula':<16s}{header}\n")
-            file.write(f"{index:>8d}  {record['formula'] or '-':<16s}"
-                       f"{''.join(values)}\n")
+            file.write(f"{index:>8d}  {record['formula'] or '-':<16s}{''.join(values)}\n")
 
     def _load_txt(self) -> list[dict[str, Any]]:
         lines = self.path.read_text().splitlines()
@@ -167,11 +167,13 @@ class Store:
         records = []
         for line in lines[1:]:
             index, formula, *values = line.split()
-            records.append({
-                "index": int(index),
-                "formula": formula,
-                **{key: float(value) for key, value in zip(header[2:], values)},
-            })
+            records.append(
+                {
+                    "index": int(index),
+                    "formula": formula,
+                    **{key: float(value) for key, value in zip(header[2:], values)},
+                }
+            )
         return records
 
     def _save_calc(self, instance) -> None:
@@ -212,7 +214,8 @@ class Store:
     def _save_sqlite(self, record: dict[str, Any]) -> None:
         # Numbers and strings are stored as is, the rest as JSON text.
         row = {
-            key: value if isinstance(value, (int, float, str)) or value is None
+            key: value
+            if isinstance(value, (int, float, str)) or value is None
             else json.dumps(value)
             for key, value in record.items()
         }
@@ -223,8 +226,7 @@ class Store:
                 db.execute(f'ALTER TABLE results ADD COLUMN "{key}"')
             keys = ", ".join(f'"{key}"' for key in row)
             marks = ", ".join("?" for _ in row)
-            db.execute(f"INSERT INTO results ({keys}) VALUES ({marks})",
-                       list(row.values()))
+            db.execute(f"INSERT INTO results ({keys}) VALUES ({marks})", list(row.values()))
         db.close()
 
     def _load_sqlite(self) -> list[dict[str, Any]]:
@@ -233,6 +235,5 @@ class Store:
             rows = db.execute("SELECT * FROM results").fetchall()
         db.close()
         return [
-            {key: _decode(row[key]) for key in row.keys() if row[key] is not None}
-            for row in rows
+            {key: _decode(row[key]) for key in row.keys() if row[key] is not None} for row in rows
         ]

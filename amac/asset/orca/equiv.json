@@ -1,0 +1,112 @@
+{
+    "software": "ORCA",
+    "version": "6.1",
+    "library": "https://www.faccts.de/orca",
+    "description": "Equivalence between the catalog and the ORCA input file",
+    "execution": ["composerIO"],
+    "default": {
+        "set": {"*.charge": 0, "*.mult": 1}
+    },
+    "methods": {
+        "HF": {
+            "set": {"!.method": "HF"},
+            "attributes": {
+                "basis": {"target": "!.basis"},
+                "charge": {"target": "*.charge"},
+                "multiplicity": {"target": "*.mult"},
+                "reference": {
+                    "target": "%scf.HFTyp",
+                    "values": {"restricted": "RHF", "unrestricted": "UHF", "restricted-open": "ROHF"},
+                    "strict-values": true
+                },
+                "scf-tol": {"target": "%scf.TolE"},
+                "scf-max": {"target": "%scf.MaxIter"},
+                "level-shift": {"target": "%scf.Shift.Shift"},
+                "density-fitting": {"target": "!.ri", "transform": "ri"},
+                "aux-basis": {"target": "!.aux-basis"}
+            }
+        },
+        "DFT": {
+            "attributes": {
+                "functional": {
+                    "target": "!.method",
+                    "values": {
+                        "lda": "LDA", "svwn3": "VWN3",
+                        "blyp": "BLYP", "bp86": "BP86", "pbe": "PBE", "revpbe": "REVPBE",
+                        "rpbe": "RPBE", "pw91": "PW91", "olyp": "OLYP",
+                        "tpss": "TPSS", "revtpss": "REVTPSS", "scan": "SCANFUNC",
+                        "r2scan": "R2SCAN", "m06-l": "M06L",
+                        "b3lyp": "B3LYP", "b3lyp-g": "B3LYP/G", "pbe0": "PBE0",
+                        "revpbe0": "REVPBE0", "b3pw91": "B3PW91", "bhandhlyp": "BHANDHLYP",
+                        "x3lyp": "X3LYP", "o3lyp": "O3LYP",
+                        "tpssh": "TPSSH", "m06": "M06", "m06-2x": "M062X", "pw6b95": "PW6B95",
+                        "cam-b3lyp": "CAM-B3LYP", "wb97": "WB97", "wb97x": "WB97X",
+                        "wb97x-d3": "WB97X-D3", "wb97x-d4": "WB97X-D4",
+                        "wb97x-v": "WB97X-V", "wb97m-v": "WB97M-V",
+                        "b2plyp": "B2PLYP", "pwpb95": "PWPB95"
+                    },
+                    "strict-values": true
+                },
+                "grid": {
+                    "target": "!.grid",
+                    "values": {"coarse": "DefGrid1", "default": "DefGrid2", "fine": "DefGrid3"},
+                    "strict-values": true
+                },
+                "dispersion": {
+                    "target": "!.dispersion",
+                    "values": {"d3-bj": "D3BJ", "d3-zero": "D3ZERO", "d4": "D4"},
+                    "strict-values": true
+                }
+            }
+        },
+        "MP2": {
+            "set": {"!.method": "MP2"},
+            "attributes": {
+                "frozen-core": {"target": "!.frozen-core", "transform": "frozen_core"}
+            }
+        },
+        "CCSD": {
+            "set": {"!.method": "CCSD"},
+            "attributes": {
+                "frozen-core": {"target": "!.frozen-core", "transform": "frozen_core"},
+                "cc-tol": {"target": "%mdci.STol"},
+                "cc-max": {"target": "%mdci.MaxIter"}
+            }
+        },
+        "CCSD(T)": {
+            "set": {"!.method": "CCSD(T)"}
+        },
+        "CASSCF": {
+            "attributes": {
+                "active-electrons": {"target": "%casscf.nel"},
+                "active-orbitals": {"target": "%casscf.norb"},
+                "roots": {"target": "%casscf.nroots"},
+                "weights": {"target": "%casscf.weights[0]"}
+            }
+        },
+        "xTB": {
+            "set": {"!.method": "XTB2"},
+            "attributes": {
+                "level": {
+                    "target": "!.method",
+                    "values": {"gfn1": "XTB1", "gfn2": "XTB2"},
+                    "strict-values": true
+                },
+                "charge": {"target": "*.charge"},
+                "multiplicity": {"target": "*.mult"}
+            }
+        },
+        "DFTB": {"supported": false}
+    },
+    "module": {
+        "single-point": {
+            "set": {"!.run": "SP"}
+        },
+        "optimization-geometry": {
+            "set": {"!.run": "Opt"},
+            "attributes": {"max-step": {"target": "%geom.MaxIter"}}
+        },
+        "frequencies": {"supported": false},
+        "excited-states": {"supported": false}
+    }
+}

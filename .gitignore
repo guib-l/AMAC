@@ -5,7 +5,8 @@ archive/
 config-amac.json
 *.pdf
 .run/
-.figures/
+figures/
+documentation/
 *.png
 
 # AI

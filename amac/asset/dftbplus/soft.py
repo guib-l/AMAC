@@ -3,7 +3,7 @@ from pathlib import Path
 import ase.io
 import numpy as np
 
-from amac.asset.dftbplus import handler  # noqa: F401
+import amac.asset.dftbplus.handler  # noqa: F401
 from amac.asset.dftbplus.hsd import to_hsd
 from amac.asset.dftbplus.parser import read_exc_dat, read_results_tag, to_results
 from amac.engine.software import Software
@@ -12,10 +12,27 @@ from amac.engine.timeout import time_limited
 # Highest angular momentum per element (3ob-like default). Overridden by
 # the "max-angular-momenta" option of the configuration.
 DEFAULT_ANGULAR_MOM = {
-    "H": "s", "He": "s",
-    "Li": "p", "Be": "p", "B": "p", "C": "p", "N": "p", "O": "p", "F": "p",
-    "Na": "p", "Mg": "p", "Al": "p", "Si": "p", "P": "d", "S": "d", "Cl": "d",
-    "K": "p", "Ca": "p", "Zn": "d", "Br": "d", "I": "d",
+    "H": "s",
+    "He": "s",
+    "Li": "p",
+    "Be": "p",
+    "B": "p",
+    "C": "p",
+    "N": "p",
+    "O": "p",
+    "F": "p",
+    "Na": "p",
+    "Mg": "p",
+    "Al": "p",
+    "Si": "p",
+    "P": "d",
+    "S": "d",
+    "Cl": "d",
+    "K": "p",
+    "Ca": "p",
+    "Zn": "d",
+    "Br": "d",
+    "I": "d",
 }
 
 
@@ -64,28 +81,21 @@ def supercell_folding_kpoints(matrix: list[float]) -> np.ndarray:
     """
     values = list(matrix)
     if len(values) != 12:
-        raise ValueError(
-            f"SupercellFolding matrix needs 12 numbers, got {len(values)}"
-        )
+        raise ValueError(f"SupercellFolding matrix needs 12 numbers, got {len(values)}")
     if any(values[i] != 0 for i in (1, 2, 3, 5, 6, 7)):
         raise ValueError(f"SupercellFolding matrix is not diagonal: {matrix!r}")
     sizes = [values[0], values[4], values[8]]
     shifts = values[9:12]
     for size, shift in zip(sizes, shifts):
         if int(size) != size or size < 1:
-            raise ValueError(
-                f"SupercellFolding grid sizes must be positive integers: {matrix!r}"
-            )
+            raise ValueError(f"SupercellFolding grid sizes must be positive integers: {matrix!r}")
         # The original Monkhorst-Pack scheme shifts 0.5 along an even
         # direction, but DFTB+ also documents a hexagonal variant with
         # 0.0 shifts there; both are accepted.
         if shift not in (0.0, 0.5):
             raise ValueError(f"SupercellFolding shifts must be 0.0 or 0.5: {matrix!r}")
     sizes = [int(size) for size in sizes]
-    axes = [
-        [(index + shift) / size for index in range(size)]
-        for size, shift in zip(sizes, shifts)
-    ]
+    axes = [[(index + shift) / size for index in range(size)] for size, shift in zip(sizes, shifts)]
     return np.array([[x, y, z] for x in axes[0] for y in axes[1] for z in axes[2]])
 
 
@@ -102,7 +112,6 @@ def merge_filling(params: dict) -> None:
 
 
 class software_dftbplus(Software):
-
     name = "dftb+"
     alias = ("dftbplus", "DFTB+", "DFTBplus")
     requires_executable = True
@@ -125,7 +134,8 @@ class software_dftbplus(Software):
         symbols = dict.fromkeys(instance.props.image.get_chemical_symbols())
         params["Geometry"] = {"GenFormat": {"<<<": self.geometry_file}}
         self.set_path(
-            params, "Hamiltonian.DFTB.MaxAngularMomentum",
+            params,
+            "Hamiltonian.DFTB.MaxAngularMomentum",
             {symbol: momenta[symbol] for symbol in symbols},
         )
         merge_filling(params)
@@ -140,8 +150,7 @@ class software_dftbplus(Software):
             raise ValueError("kpoints requires a periodic image (cell and periodic directions)")
         if periodic and "KPointsAndWeights" not in dftb:
             raise ValueError(
-                "a periodic image requires a kpoints grid, e.g. [1, 1, 1] "
-                "for the gamma point"
+                "a periodic image requires a kpoints grid, e.g. [1, 1, 1] for the gamma point"
             )
         casida = params.get("ExcitedState", {}).get("Casida")
         if casida is not None and not dftb.get("Scc"):
@@ -162,7 +171,9 @@ class software_dftbplus(Software):
         workdir = Path(instance.ctx.workdir)
         workdir.mkdir(parents=True, exist_ok=True)
         ase.io.write(
-            workdir / self.geometry_file, instance.props.image, format="gen",
+            workdir / self.geometry_file,
+            instance.props.image,
+            format="gen",
         )
         (workdir / self.input_file).write_text(to_hsd(self.parameters) + "\n")
 
