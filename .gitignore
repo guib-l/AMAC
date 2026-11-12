@@ -1,6 +1,5 @@
 # AMAC directory
 .env/
-data/
 archive/
 config-amac.json
 *.pdf
