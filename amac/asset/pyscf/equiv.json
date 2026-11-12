@@ -93,7 +93,15 @@
             "set": {"run": "optimization"},
             "attributes": {"max-step": {"target": "opt.maxsteps"}}
         },
-        "frequencies": {"supported": false},
-        "excited-states": {"supported": false}
+        "frequencies": {
+            "set": {"run": "frequencies"}
+        },
+        "excited-states": {
+            "set": {"run": "excited-states"},
+            "attributes": {
+                "excitations": {"target": "td.nstates"},
+                "symmetry": {"target": "td.symmetry"}
+            }
+        }
     }
 }

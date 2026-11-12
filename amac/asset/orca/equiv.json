@@ -106,7 +106,19 @@
             "set": {"!.run": "Opt"},
             "attributes": {"max-step": {"target": "%geom.MaxIter"}}
         },
-        "frequencies": {"supported": false},
-        "excited-states": {"supported": false}
+        "frequencies": {
+            "set": {"!.run": "Freq"}
+        },
+        "excited-states": {
+            "set": {"!.run": "SP", "%tddft.TDA": false},
+            "attributes": {
+                "excitations": {"target": "%tddft.NRoots"},
+                "symmetry": {
+                    "target": "%tddft.Triplets",
+                    "values": {"singlet": false, "both": true},
+                    "strict-values": true
+                }
+            }
+        }
     }
 }

@@ -7,6 +7,8 @@ __all__ = [
     "final_geometry",
     "charges",
     "dipole",
+    "frequencies",
+    "excited_states",
 ]
 
 
@@ -42,3 +44,19 @@ def charges(results):
 def dipole(results):
     """Dipole moment (e.Bohr)."""
     return results["dipole"]
+
+
+@handler(software="orca", name="frequencies")
+def frequencies(results):
+    """Vibrational frequencies (cm^-1) and IR intensities (km/mol), shape (n, 2)."""
+    if results["frequencies"] is None:
+        raise KeyError("no IR SPECTRUM block in the ORCA output")
+    return results["frequencies"]
+
+
+@handler(software="orca", name="excited_states")
+def excited_states(results):
+    """Excited states by spin symmetry: ``w`` (eV) and ``oscillator``."""
+    if results["excited-states"] is None:
+        raise KeyError("no excited states in the ORCA output")
+    return results["excited-states"]

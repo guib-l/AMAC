@@ -72,6 +72,36 @@ def _last_block(lines: list[str], title: str, pattern: str, skip: int) -> list[r
     return matches
 
 
+def _excited_states(text: str) -> dict[str, dict] | None:
+    """TD-DFT/CIS states by spin symmetry: ``w`` (eV) and ``oscillator``.
+
+    Energies come from the ``STATE n: E= ... au ... eV`` lines of the
+    SINGLETS/TRIPLETS sections; oscillator strengths from the absorption
+    spectrum rows ``0-1A -> n-1A  eV  cm-1  nm  fosc`` (0.0 if absent).
+    """
+    states: dict[str, dict] = {}
+    symmetry = None
+    for line in text.splitlines():
+        if "EXCITED STATES" in line:
+            symmetry = "triplet" if "TRIPLETS" in line else "singlet"
+        match = re.match(rf"\s*STATE\s+(\d+):\s+E=\s+{_NUMBER}\s+au\s+({_NUMBER})\s+eV", line)
+        if match and symmetry:
+            index = int(match.group(1)) - 1
+            states.setdefault(symmetry, {})[f"state_{index}"] = {
+                "w": float(match.group(2)),
+                "oscillator": 0.0,
+            }
+    rows = re.findall(
+        rf"\s*0-\S+\s+->\s+(\d+)-(\d)\S*\s+{_NUMBER}\s+{_NUMBER}\s+{_NUMBER}\s+({_NUMBER})", text
+    )
+    for number, mult, fosc in rows:
+        symmetry = "triplet" if mult == "3" else "singlet"
+        state = states.get(symmetry, {}).get(f"state_{int(number) - 1}")
+        if state is not None:
+            state["oscillator"] = float(fosc)
+    return states or None
+
+
 def read_output(path: str | Path, image: Atoms) -> dict[str, Any]:
     """Read the ORCA text output (energy in Hartree, gradient in Hartree/Bohr).
 
@@ -99,6 +129,11 @@ def read_output(path: str | Path, image: Atoms) -> dict[str, Any]:
     )
     dipole = re.findall(rf"Total Dipole Moment\s*:\s*({_NUMBER})\s+({_NUMBER})\s+({_NUMBER})", text)
 
+    # IR SPECTRUM rows: "  6:   1623.45   0.0123   62.39 ..." (cm-1, eps, km/mol)
+    infrared = _last_block(
+        lines, "IR SPECTRUM", rf"\s*\d+:\s+({_NUMBER})\s+{_NUMBER}\s+({_NUMBER})", 6
+    )
+
     final = image.copy()
     if len(coords) == len(image):
         final.positions = [[float(value) for value in match.groups()[1:]] for match in coords]
@@ -108,6 +143,8 @@ def read_output(path: str | Path, image: Atoms) -> dict[str, Any]:
         "forces": -np.array([[float(v) for v in m.groups()] for m in gradient]) if gradient else None,
         "charges": [float(m.group(1)) for m in charges] or None,
         "dipole": [float(value) for value in dipole[-1]] if dipole else None,
+        "frequencies": np.array([[float(v) for v in m.groups()] for m in infrared]) if infrared else None,
+        "excited-states": _excited_states(text),
         "input_geometry": image.copy(),
         "output_geometry": final,
     }

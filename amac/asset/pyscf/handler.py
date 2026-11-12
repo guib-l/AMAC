@@ -7,6 +7,8 @@ __all__ = [
     "final_geometry",
     "charges",
     "dipole",
+    "frequencies",
+    "excited_states",
 ]
 
 
@@ -42,3 +44,15 @@ def charges(results):
 def dipole(results):
     """Dipole moment (e.Bohr), from the mean-field density."""
     return results["dipole"]
+
+
+@handler(software="pyscf", name="frequencies")
+def frequencies(results):
+    """Harmonic frequencies (cm^-1) and IR intensities (NaN), shape (n, 2)."""
+    return results["frequencies"]
+
+
+@handler(software="pyscf", name="excited_states")
+def excited_states(results):
+    """Excited states by spin symmetry: ``w`` (eV) and ``oscillator``."""
+    return results["excited-states"]

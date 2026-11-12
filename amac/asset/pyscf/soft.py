@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import numpy as np
 from ase import Atoms
 
 import amac.asset.pyscf.handler  # noqa: F401
@@ -13,12 +14,13 @@ def build_mol(image: Atoms, params: dict, output: Path):
 
     mol = params["mol"]
     basis = mol["basis"]
+    # def2 bases carry ECPs beyond Kr (Z > 36): PySCF needs them explicitly.
+    heavy = any(number > 36 for number in image.numbers)
     return gto.M(
         atom=[(symbol, tuple(xyz)) for symbol, xyz in zip(image.get_chemical_symbols(), image.positions)],
         unit="Angstrom",
         basis=basis,
-        # def2 bases carry ECPs beyond Kr: PySCF needs them explicitly.
-        ecp=basis if basis.lower().startswith("def2") else None,
+        ecp=basis if heavy and basis.lower().startswith("def2") else None,
         charge=int(round(mol["charge"])),
         spin=mol["multiplicity"] - 1,
         output=str(output),
@@ -83,6 +85,42 @@ def solve(mol, params: dict):
     raise ValueError(f"unknown post-HF method: {method!r}")
 
 
+def frequencies(mf, mol) -> np.ndarray:
+    """Harmonic frequencies (cm^-1, imaginary ones negative), shape (n, 2).
+
+    The second column (IR intensity) is NaN: PySCF core does not compute it.
+    """
+    from pyscf.hessian import thermo
+
+    wavenumbers = thermo.harmonic_analysis(mol, mf.Hessian().kernel())["freq_wavenumber"]
+    wavenumbers = np.asarray(wavenumbers)
+    # Imaginary modes come back as complex numbers.
+    values = np.where(np.abs(wavenumbers.imag) > 0, -np.abs(wavenumbers.imag), wavenumbers.real)
+    return np.column_stack([values, np.full(len(values), np.nan)])
+
+
+def excited_states(mf, settings: dict) -> dict:
+    """Linear-response TDHF/TDDFT states: ``w`` (eV) and ``oscillator``."""
+    from pyscf import tdscf
+    from pyscf.data.nist import HARTREE2EV
+
+    symmetry = settings.get("symmetry", "singlet")
+    singlets = {"singlet": [True], "triplet": [False], "both": [True, False]}[symmetry]
+    states = {}
+    for singlet in singlets:
+        td = tdscf.TDDFT(mf)
+        td.nstates = settings.get("nstates", 3)
+        td.singlet = singlet
+        td.kernel()
+        # Triplets have no oscillator strength from a closed-shell ground state.
+        oscillator = td.oscillator_strength() if singlet else np.zeros(len(td.e))
+        states["singlet" if singlet else "triplet"] = {
+            f"state_{index}": {"w": float(energy * HARTREE2EV), "oscillator": float(strength)}
+            for index, (energy, strength) in enumerate(zip(td.e, oscillator))
+        }
+    return states
+
+
 class software_pyscf(Software):
     name = "pyscf"
     alias = ("PySCF",)
@@ -108,6 +146,9 @@ class software_pyscf(Software):
             _, solver, _ = solve(mol, params)
             mol = geometric_solver.optimize(solver, **params.get("opt", {}))
         mf, solver, energy = solve(mol, params)
+        run = params.get("run")
+        if run in ("frequencies", "excited-states") and solver is not mf:
+            raise ValueError(f"PySCF asset: {run} is available for HF and DFT only")
 
         forces = None
         if "forces" in instance.props.handler:
@@ -118,8 +159,10 @@ class software_pyscf(Software):
             "errors": [],
             "energy": {"energy": float(energy), "scf_energy": float(mf.e_tot)},
             "forces": forces,
-            "charges": list(mf.mulliken_pop(verbose=0)[1]),
-            "dipole": list(mf.dip_moment(unit="AU", verbose=0)),
+            "charges": mf.mulliken_pop(verbose=0)[1].tolist(),
+            "dipole": mf.dip_moment(unit="AU", verbose=0).tolist(),
+            "frequencies": frequencies(mf, mol) if run == "frequencies" else None,
+            "excited-states": excited_states(mf, params.get("td", {})) if run == "excited-states" else None,
             "input_geometry": image.copy(),
             "output_geometry": final,
         }
