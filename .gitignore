@@ -5,6 +5,7 @@ archive/
 config-amac.json
 *.pdf
 .run/
+documentation/
 
 # AI
 audit*.md
