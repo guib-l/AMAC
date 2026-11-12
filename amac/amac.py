@@ -1,41 +1,32 @@
-
-import sys
-import uuid
 import copy
+import sys
+from functools import wraps
 from pathlib import Path
-from typing import *
+from typing import List
 
 import ase
 
-import time
-from functools import wraps
 from amac.asset import Software
-
-from amac.context import Context,Result,Explorer,Duration,Properties
 from amac.instance import Instance
-from dataclasses import dataclass
-
-
 
 
 class AMAC:
-
     label: str = "AMAC.calculator"
     instances: List[Instance] = []
     __active_instance: Instance | None = None
 
     def __init__(
-            self,
-            *,
-            software: str | None = None,
-            process_unit: int = 1,
-            workdir: str | Path = '.',
-            label: str | None = "AMAC.calculator",
-            process: str | None = "inprocess",
-            config_spec: dict = {},
-            stdout = sys.stdout,
-            stderr = sys.stderr,
-        ):
+        self,
+        *,
+        software: str | None = None,
+        process_unit: int = 1,
+        workdir: str | Path = ".",
+        label: str | None = "AMAC.calculator",
+        process: str | None = "inprocess",
+        config_spec: dict = {},
+        stdout=sys.stdout,
+        stderr=sys.stderr,
+    ):
         self.label = label
 
         self._soft = Software.create(
@@ -45,21 +36,17 @@ class AMAC:
         )
 
         self.__active_instance = Instance.factory_instance(
-            software = self._soft,
-            soft_spec = config_spec,
-            workdir = workdir,
+            software=self._soft,
+            soft_spec=config_spec,
+            workdir=workdir,
         )
-
 
     @property
     def instance(self):
         return self.__active_instance
 
+    def switch_instance(self, target): ...
 
-    def switch_instance(self, target):
-        ...
-        
-    
     @staticmethod
     def measure_runtime(func):
         @wraps(func)
@@ -69,6 +56,7 @@ class AMAC:
                 return func(self, *args, **kwargs)
             finally:
                 self.instance.close_instance()
+
         return wrapper
 
     @staticmethod
@@ -77,29 +65,24 @@ class AMAC:
         def wrapper(self, *args, **kwargs):
 
             if self.__active_instance is not None:
-                self.instances.append(
-                    copy.deepcopy(self.__active_instance)
-                )
+                self.instances.append(copy.deepcopy(self.__active_instance))
 
                 _instance = Instance.factory_instance(
-                    **self.instance.props.to_dict(),
-                    **self.instance.ctx.to_dict()
+                    **self.instance.props.to_dict(), **self.instance.ctx.to_dict()
                 )
             else:
                 _instance = Instance.factory_instance(
-                    software = self._soft,
-                    soft_spec = self.config_spec,
-                    workdir = self.workdir,
+                    software=self._soft,
+                    soft_spec=self.config_spec,
+                    workdir=self.workdir,
                 )
             self.__active_instance = _instance
-
 
             _prod = func(self, *args, **kwargs)
 
             return _prod
-        return wrapper
 
-    
+        return wrapper
 
     def __repr__(self):
         pass
@@ -107,18 +90,13 @@ class AMAC:
     def __call__(self, *args, **kwds):
         pass
 
-
     def to_dict(self):
         pass
 
     def from_dict(self):
         pass
 
-
-
-
-    def resolved_handler(self):
-        ...
+    def resolved_handler(self): ...
 
     def handler_register(self, *handlers):
         """Register the handlers to run after the calculation.
@@ -134,14 +112,14 @@ class AMAC:
 
     @new_instance
     def parameters_register(
-            self, 
-            image = None,
-            method = None,
-            module = None,
-            method_args = None,
-            module_args = None,
-            software_args = None,
-        ):
+        self,
+        image=None,
+        method=None,
+        module=None,
+        method_args=None,
+        module_args=None,
+        software_args=None,
+    ):
         """Register the calculation parameters on a new instance.
 
         Args:
@@ -159,24 +137,12 @@ class AMAC:
             software_args=software_args or {},
         )
 
+    def run(self, image: ase.Atoms = None, erase_instance: bool = True):
 
-    
-    def run(
-            self,
-            image: ase.Atoms = None,
-            erase_instance: bool = True
-        ):
-        
-        self.execute(
-            image=image
-        )
+        self.execute(image=image)
 
     @measure_runtime
-    def execute(
-            self,
-            instance = None,
-            **kwargs
-        ):
+    def execute(self, instance=None, **kwargs):
         if instance is None:
             instance = self.__active_instance
         instance.props(**kwargs)
@@ -186,25 +152,10 @@ class AMAC:
 
         instance.res.complet = True
 
-    def restart(self,):
-        ...
+    def restart(
+        self,
+    ): ...
 
     def store(self, store):
         """Save the active instance in ``store`` (an ``amac.store.Store``)."""
         store.save(self.instance)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

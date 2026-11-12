@@ -32,16 +32,16 @@ class ExecProcess:
     """
 
     def __init__(
-            self,
-            executable: str | Path,
-            workdir: str | Path = ".",
-            args: tuple[str, ...] = (),
-            launcher: tuple[str, ...] = (),
-            env: dict[str, str] | None = None,
-            output: str = "output.log",
-            timeout: float | None = None,
-            prefix: str = "",
-        ):
+        self,
+        executable: str | Path,
+        workdir: str | Path = ".",
+        args: tuple[str, ...] = (),
+        launcher: tuple[str, ...] = (),
+        env: dict[str, str] | None = None,
+        output: str = "output.log",
+        timeout: float | None = None,
+        prefix: str = "",
+    ):
         self.executable = Path(executable)
         self.workdir = Path(workdir)
         self.args = tuple(args)
@@ -72,9 +72,7 @@ class ExecProcess:
                 with a non-zero code.
         """
         if not self.workdir.is_dir():
-            raise ExecuteFailed(
-                f"{self.prefix}: working directory missing: {self.workdir}"
-            )
+            raise ExecuteFailed(f"{self.prefix}: working directory missing: {self.workdir}")
 
         try:
             with (
@@ -95,9 +93,7 @@ class ExecProcess:
                 f"{self.prefix}: exceeded {self.timeout} s in {self.workdir}"
             ) from error
         except OSError as error:
-            raise ExecuteFailed(
-                f"{self.prefix}: cannot execute {self.command[0]}"
-            ) from error
+            raise ExecuteFailed(f"{self.prefix}: cannot execute {self.command[0]}") from error
 
         if result.returncode != 0:
             raise ExecuteFailed(
@@ -149,24 +145,21 @@ class Program:
         """Check the settings as soon as the software is created."""
         if self.process not in PROCESSES:
             raise ValueError(
-                f"{self.name}: process must be one of {PROCESSES}, "
-                f"got {self.process!r}"
+                f"{self.name}: process must be one of {PROCESSES}, got {self.process!r}"
             )
         if self.timeout is not None and not (
-                isinstance(self.timeout, (int, float)) and self.timeout > 0):
+            isinstance(self.timeout, (int, float)) and self.timeout > 0
+        ):
             raise ValueError(
-                f"{self.name}: timeout must be a positive number of seconds, "
-                f"got {self.timeout!r}"
+                f"{self.name}: timeout must be a positive number of seconds, got {self.timeout!r}"
             )
         if self.process == "mpi":
             self.launcher = [
-                str(part).format(process_unit=self.process_unit)
-                for part in self.launcher
+                str(part).format(process_unit=self.process_unit) for part in self.launcher
             ]
             if not self.launcher or not Path(self.launcher[0]).is_absolute():
                 raise ValueError(
-                    f"{self.name}: launcher must start with an absolute path, "
-                    f"got {self.launcher}"
+                    f"{self.name}: launcher must start with an absolute path, got {self.launcher}"
                 )
         else:
             self.launcher = []
@@ -179,7 +172,12 @@ class Program:
             **{key: str(value) for key, value in self.env.items()},
         }
         return ExecProcess(
-            self.executable, workdir=workdir, args=args,
-            launcher=self.launcher, env=env, output=output,
-            timeout=self.timeout, prefix=self.name,
+            self.executable,
+            workdir=workdir,
+            args=args,
+            launcher=self.launcher,
+            env=env,
+            output=output,
+            timeout=self.timeout,
+            prefix=self.name,
         ).execute()

@@ -1,12 +1,11 @@
-
-import os
 import json
+import os
 
 # Process-wide configuration; empty until a configuration is given.
 CONFIGURE: dict = {}
 
 
-def configure(config = None):
+def configure(config=None):
     """Set global default values calculation.
 
     Args:
@@ -16,7 +15,6 @@ def configure(config = None):
 
     if config is not None:
         CONFIGURE = config
-
 
 
 def configure_from_file(path="amac-config.json"):
@@ -31,13 +29,3 @@ def configure_from_file(path="amac-config.json"):
         config = json.load(f)
 
     configure(config)
-
-
-
-
-
-
-
-
-
-

@@ -1,0 +1,57 @@
+{
+    "HF":{
+        "alias":["SCF"],
+        "inherits":null,
+        "mandatory-attribute":{
+            "basis":{
+                "type":"str",
+                "choices-from":{"list":"basis-sets","role":["orbital"],"strict":false},
+                "description": "Orbital basis set name"
+            }
+        },
+        "allowed-attribute":{
+            "charge":{
+                "type":"float",
+                "description": "Total charge of the system (e), converted to int by the software"
+            },
+            "multiplicity":{
+                "type":"int",
+                "range":[1,null],
+                "description": "Spin multiplicity 2S+1"
+            },
+            "reference":{
+                "type":"str",
+                "choices":["restricted","unrestricted","restricted-open"],
+                "description": "Reference wavefunction"
+            },
+            "scf-tol":{
+                "type":"float",
+                "range":[0.0,null],
+                "description": "SCF energy convergence threshold (Hartree)"
+            },
+            "scf-max":{
+                "type":"int",
+                "range":[1,null],
+                "description": "Maximum number of SCF cycles"
+            },
+            "level-shift":{
+                "type":"float",
+                "description": "Level shift of the virtual orbitals (Hartree)"
+            },
+            "density-fitting":{
+                "type":"bool",
+                "description": "Density fitting (RI) of the two-electron integrals"
+            },
+            "aux-basis":{
+                "type":"str",
+                "choices-from":{
+                    "list":"basis-sets",
+                    "role":["auxiliary-j","auxiliary-jk","auxiliary-c"],
+                    "strict":false
+                },
+                "description": "Auxiliary basis set for density fitting"
+            }
+        },
+        "forbidden-attribute":[]
+    }
+}

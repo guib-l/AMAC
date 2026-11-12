@@ -1,10 +1,22 @@
 {
     "methods":[
-        "dftb"
+        "dftb",
+        "hf",
+        "dft",
+        "mp2",
+        "coupled-cluster",
+        "casscf",
+        "xtb"
     ],
     "module":[
         "single-point",
-        "optimization"
+        "optimization",
+        "excited-states",
+        "frequencies"
     ],
-    "options":[]
+    "options":[],
+    "data":[
+        "functionals",
+        "basis-sets"
+    ]
 }

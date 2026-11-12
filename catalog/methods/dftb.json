@@ -44,6 +44,11 @@
                 "type":"float",
                 "description": "Total charge of the system (e)"
             },
+            "multiplicity":{
+                "type":"int",
+                "range":[1,null],
+                "description": "Spin multiplicity 2S+1"
+            },
             "diagonalizer":{
                 "type":"str",
                 "choices":["qr","divide-and-conquer","relatively-robust"],
@@ -173,30 +178,6 @@
             "level-shift":{
                 "type":"float",
                 "description": "Level shifting applied during the SCC cycles"
-            },
-            "spin":{
-                "type":"str",
-                "choices":["none","collinear"],
-                "description": "Spin polarisation",
-                "children":{
-                    "mandatory-attribute":{},
-                    "allowed-attribute":{
-                        "unpaired-electrons":{
-                            "type":"float",
-                            "authorized-with":["collinear"]
-                        },
-                        "relax-spin":{
-                            "type":"bool",
-                            "authorized-with":["collinear"],
-                            "description": "Let the total spin relax through a common Fermi level"
-                        }
-                    },
-                    "forbidden-attribute":[]
-                }
-            },
-            "spin-constants":{
-                "type":"dict[str,list[float]]",
-                "description": "Spin coupling constants per element (Hartree), required with spin = collinear"
             },
             "h-correction":{
                 "type":"str",

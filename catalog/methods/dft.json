@@ -1,0 +1,27 @@
+{
+    "DFT":{
+        "alias":["KS"],
+        "inherits":["HF"],
+        "mandatory-attribute":{
+            "functional":{
+                "type":"str",
+                "choices-from":{"list":"functionals","strict":true},
+                "description": "Exchange-correlation functional name"
+            }
+        },
+        "allowed-attribute":{
+            "grid":{
+                "type":"str",
+                "choices":["coarse","default","fine"],
+                "description": "Integration grid quality"
+            },
+            "dispersion":{
+                "type":"str",
+                "choices":["d3-bj","d3-zero","d4"],
+                "forbidden-if":{"attribute":"functional","property":"builtin-dispersion"},
+                "description": "Empirical dispersion correction"
+            }
+        },
+        "forbidden-attribute":[]
+    }
+}

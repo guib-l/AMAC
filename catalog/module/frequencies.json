@@ -1,0 +1,9 @@
+{
+    "frequencies":{
+        "alias":["freq","ir"],
+        "mandatory-handler":["frequencies"],
+        "mandatory-attribute":null,
+        "allowed-attribute":null,
+        "forbidden-attribute":null
+    }
+}

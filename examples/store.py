@@ -46,5 +46,4 @@ print((OUTPUT / "energies.txt").read_text())
 
 # Read back: every store returns a list of flat dicts.
 for record in Store(OUTPUT / "results.db").load(software="dftb+"):
-    print(f"{record['formula']:6s} {record['lowest-energy']:14.8f} Ha  "
-          f"{record['image']}")
+    print(f"{record['formula']:6s} {record['lowest-energy']:14.8f} Ha  {record['image']}")

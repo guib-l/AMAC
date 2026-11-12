@@ -1,0 +1,30 @@
+{
+    "CASSCF":{
+        "alias":[],
+        "inherits":["HF"],
+        "mandatory-attribute":{
+            "active-orbitals":{
+                "type":"int",
+                "range":[1,null],
+                "description": "Number of active orbitals"
+            },
+            "active-electrons":{
+                "type":"int",
+                "range":[0,null],
+                "description": "Number of active electrons"
+            }
+        },
+        "allowed-attribute":{
+            "roots":{
+                "type":"int",
+                "range":[1,null],
+                "description": "Number of CI roots"
+            },
+            "weights":{
+                "type":"list[float]",
+                "description": "State-averaging weights, one per root"
+            }
+        },
+        "forbidden-attribute":[]
+    }
+}

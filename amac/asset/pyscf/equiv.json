@@ -1,0 +1,107 @@
+{
+    "software": "PySCF",
+    "version": "2.x",
+    "library": "https://pyscf.org",
+    "description": "Equivalence between the catalog and the arguments read by the PySCF asset",
+    "execution": ["inprocess"],
+    "default": {
+        "set": {"mol.charge": 0, "mol.multiplicity": 1}
+    },
+    "methods": {
+        "HF": {
+            "attributes": {
+                "basis": {"target": "mol.basis"},
+                "charge": {"target": "mol.charge"},
+                "multiplicity": {"target": "mol.multiplicity"},
+                "reference": {
+                    "target": "scf.reference",
+                    "values": {"restricted": "R", "unrestricted": "U", "restricted-open": "RO"},
+                    "strict-values": true
+                },
+                "scf-tol": {"target": "scf.conv_tol"},
+                "scf-max": {"target": "scf.max_cycle"},
+                "level-shift": {"target": "scf.level_shift"},
+                "density-fitting": {"target": "scf.density_fit"},
+                "aux-basis": {"target": "scf.auxbasis"}
+            }
+        },
+        "DFT": {
+            "attributes": {
+                "functional": {
+                    "target": "dft.xc",
+                    "values": {
+                        "lda": "lda,vwn", "svwn3": "lda,vwn_rpa",
+                        "blyp": "blyp", "bp86": "bp86", "pbe": "pbe", "revpbe": "revpbe",
+                        "rpbe": "rpbe", "pw91": "pw91", "olyp": "olyp",
+                        "tpss": "tpss", "revtpss": "revtpss", "scan": "scan",
+                        "r2scan": "r2scan", "m06-l": "m06l",
+                        "b3lyp": "b3lyp5", "b3lyp-g": "b3lypg", "pbe0": "pbe0",
+                        "revpbe0": "revpbe0", "b3pw91": "b3pw91", "bhandhlyp": "bhandhlyp",
+                        "x3lyp": "x3lyp", "o3lyp": "o3lyp", "b97": "b97",
+                        "tpssh": "tpssh", "m06": "m06", "m06-2x": "m062x", "scan0": "scan0",
+                        "pw6b95": "pw6b95",
+                        "cam-b3lyp": "camb3lyp", "wb97": "wb97", "wb97x": "wb97x",
+                        "lc-wpbe": "lc_wpbe", "hse06": "hse06",
+                        "wb97x-d3": "wb97x_d3", "wb97x-v": "wb97x_v", "wb97m-v": "wb97m_v"
+                    },
+                    "strict-values": true
+                },
+                "grid": {
+                    "target": "dft.grids_level",
+                    "values": {"coarse": 2, "default": 5, "fine": 8},
+                    "strict-values": true
+                },
+                "dispersion": {
+                    "target": "dft.disp",
+                    "values": {"d3-bj": "d3bj", "d3-zero": "d3zero", "d4": "d4"},
+                    "strict-values": true
+                }
+            }
+        },
+        "MP2": {
+            "set": {"post.method": "mp2"},
+            "attributes": {"frozen-core": {"target": "post.frozen_core"}}
+        },
+        "CCSD": {
+            "set": {"post.method": "ccsd"},
+            "attributes": {
+                "frozen-core": {"target": "post.frozen_core"},
+                "cc-tol": {"target": "post.conv_tol"},
+                "cc-max": {"target": "post.max_cycle"}
+            }
+        },
+        "CCSD(T)": {
+            "set": {"post.method": "ccsd(t)"}
+        },
+        "CASSCF": {
+            "set": {"post.method": "casscf"},
+            "attributes": {
+                "active-orbitals": {"target": "post.ncas"},
+                "active-electrons": {"target": "post.nelecas"},
+                "roots": {"target": "post.nroots"},
+                "weights": {"target": "post.weights"}
+            }
+        },
+        "xTB": {"supported": false},
+        "DFTB": {"supported": false}
+    },
+    "module": {
+        "single-point": {
+            "set": {"run": "single-point"}
+        },
+        "optimization-geometry": {
+            "set": {"run": "optimization"},
+            "attributes": {"max-step": {"target": "opt.maxsteps"}}
+        },
+        "frequencies": {
+            "set": {"run": "frequencies"}
+        },
+        "excited-states": {
+            "set": {"run": "excited-states"},
+            "attributes": {
+                "excitations": {"target": "td.nstates"},
+                "symmetry": {"target": "td.symmetry"}
+            }
+        }
+    }
+}

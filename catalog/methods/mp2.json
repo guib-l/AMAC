@@ -1,0 +1,14 @@
+{
+    "MP2":{
+        "alias":[],
+        "inherits":["HF"],
+        "mandatory-attribute":{},
+        "allowed-attribute":{
+            "frozen-core":{
+                "type":"bool",
+                "description": "Freeze the core orbitals in the correlation treatment"
+            }
+        },
+        "forbidden-attribute":[]
+    }
+}

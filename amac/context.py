@@ -3,40 +3,34 @@
 from __future__ import annotations
 
 import copy
-
 import time
-from datetime import date
-
-from collections.abc import Callable
 from dataclasses import dataclass, field, fields
+from datetime import date
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Self
+from typing import Any, Self
 
 from ase import Atoms
 
 from amac.asset import resolved_software
-from amac.engine.software import Software
 from amac.engine.execute import Execute
+from amac.engine.software import Software
 
 
 @dataclass
 class base:
-
     def __call__(self, **kwargs):
-        for key,item in kwargs.items():
+        for key, item in kwargs.items():
             if key in self.__dict__.keys():
                 self.__setattr__(key, item)
 
     def to_dict(self) -> dict[str, Any]:
         """Return the result as a dict, without the context."""
         results = {}
-        for key,item in self.__dict__.items():
+        for key, item in self.__dict__.items():
             value = copy.deepcopy(item)
             if hasattr(item, "to_dict"):
                 value = item.to_dict()
-            results.update({
-                key:value
-            })
+            results.update({key: value})
         return results
 
     @classmethod
@@ -50,8 +44,6 @@ class base:
         if unknown := data.keys() - known:
             raise ValueError(f"Unknown Result keys: {sorted(unknown)}")
         return cls(**copy.deepcopy(data))
-
-
 
 
 @dataclass
@@ -78,15 +70,11 @@ class Properties(base):
     software_args: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
-
-
 @dataclass
 class Explorer(base):
-
     input_files: dict[str, Path] = field(default_factory=dict)
     output_files: dict[str, Path] = field(default_factory=dict)
     annexe_files: dict[str, Path] = field(default_factory=dict)
-
 
 
 @dataclass
@@ -117,14 +105,13 @@ class Context(base):
     def __post_init__(self) -> None:
         self.workdir = Path(self.workdir)
 
-        if isinstance(self.software,str):
+        if isinstance(self.software, str):
             _soft = resolved_software(self.software, **self.soft_spec)
             self.software = _soft
 
 
 @dataclass
 class Duration(base):
-
     date_begin: None = None
     date_end: None = None
     duree: None = None
@@ -156,32 +143,11 @@ class Result(base):
         success: Final state of calculation.
         errors: Errors collected during the run.
         product: production of calculation according to handler
-        return_code: error code 
+        return_code: error code
     """
+
     complet: bool = False
     success: bool = False
     errors: list[Any] = field(default_factory=list)
     return_code: int | None = None
     product: dict[str, Any] = field(default_factory=dict)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

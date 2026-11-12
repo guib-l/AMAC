@@ -149,12 +149,30 @@
                 }
             }
         },
-        "CI-DFTB": {"supported": false}
+        "CI-DFTB": {"supported": false},
+        "HF": {"supported": false},
+        "xTB": {"supported": false}
     },
     "module": {
         "optimization-geometry": {
             "set": {"Driver.GeometryOptimization": {}},
             "attributes": {"max-step": {"target": "Driver.GeometryOptimization.MaxSteps"}}
-        }
+        },
+        "td-dftb": {
+            "set": {"ExcitedState.Casida": {}},
+            "attributes": {
+                "excitations": {"target": "ExcitedState.Casida.NrOfExcitations"},
+                "symmetry": {
+                    "target": "ExcitedState.Casida.Symmetry",
+                    "values": {"singlet": "singlet", "triplet": "triplet", "both": "both"}
+                },
+                "diagonalizer": {
+                    "target": "ExcitedState.Casida.Diagonaliser",
+                    "values": {"stratmann": "Stratmann","arpack": "Arpack" },
+                    "children": {}
+                }
+            }
+        },
+        "frequencies": {"supported": false}
     }
 }

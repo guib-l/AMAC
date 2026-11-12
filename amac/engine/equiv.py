@@ -8,13 +8,23 @@ from typing import Any, Callable, Mapping
 from amac.engine.catalog import (
     CATALOG_DIR,
     canonical_name,
+    canonical_value,
     inheritance_chain,
     load_catalog,
 )
+from amac.engine.validate import merged_attributes, validate
 
 # Keys describing how an attribute is translated. A spec holding none of
 # them is a group: its keys are sub-attributes (e.g. deMonNano "basis").
-_SPEC_KEYS = {"target", "transform", "values", "unit", "children", "available"}
+_SPEC_KEYS = {
+    "target",
+    "transform",
+    "values",
+    "strict-values",
+    "unit",
+    "children",
+    "available",
+}
 # Keys describing an equiv entry. A node holding none of them is a family
 # grouping several entries (e.g. deMonNano "dftb" -> "dftb-1", "dftb-2").
 _ENTRY_KEYS = {"set", "attributes", "supported"}
@@ -48,8 +58,7 @@ def load_equiv(path: str | Path) -> dict[str, dict[str, dict]]:
 
     return {
         **{
-            section: flatten(raw.get(section) or {})
-            for section in ("methods", "module", "options")
+            section: flatten(raw.get(section) or {}) for section in ("methods", "module", "options")
         },
         "default": raw.get("default") or {},
     }
@@ -79,12 +88,12 @@ def _find_equiv(name: str, aliases, equiv: Mapping[str, dict]) -> dict:
 
 
 def _apply_attributes(
-        params: dict,
-        specs: Mapping[str, dict],
-        args: Mapping[str, Any],
-        transforms: Mapping[str, Callable],
-        prefix: str | None = None,
-    ) -> None:
+    params: dict,
+    specs: Mapping[str, dict],
+    args: Mapping[str, Any],
+    transforms: Mapping[str, Callable],
+    prefix: str | None = None,
+) -> None:
     """Write each user argument at the target given by its spec."""
     for key, value in args.items():
         if key not in specs:
@@ -106,6 +115,11 @@ def _apply_attributes(
             value = value.get("value")
 
         if "values" in spec:
+            # strict-values: a value without translation is refused.
+            if spec.get("strict-values") and value not in spec["values"]:
+                raise ValueError(
+                    f"{key} = {value!r} is not supported (supported: {sorted(spec['values'])})"
+                )
             value = spec["values"].get(value, value)
         if "transform" in spec:
             value = transforms[spec["transform"]](value)
@@ -119,18 +133,23 @@ def _apply_attributes(
             set_path(params, target, value)
         if children:
             _apply_attributes(
-                params, spec["children"], children, transforms, target,
+                params,
+                spec["children"],
+                children,
+                transforms,
+                target,
             )
 
 
 def build_entry_parameters(
-        name: str,
-        args: Mapping[str, Any] | None,
-        equiv: Mapping[str, dict],
-        catalog: Mapping[str, dict],
-        transforms: Mapping[str, Callable] | None = None,
-        params: dict | None = None,
-    ) -> dict:
+    name: str,
+    args: Mapping[str, Any] | None,
+    equiv: Mapping[str, dict],
+    catalog: Mapping[str, dict],
+    transforms: Mapping[str, Callable] | None = None,
+    params: dict | None = None,
+    data: Mapping[str, dict] | None = None,
+) -> dict:
     """Build the software parameter dict of a method or a module.
 
     Every entry of the inheritance chain (e.g. ``DFTB`` then ``DFTB-2``)
@@ -144,6 +163,9 @@ def build_entry_parameters(
         catalog: The same section of :func:`load_catalog`.
         transforms: Functions named by the ``transform`` key of a spec.
         params: Existing parameter dict to complete; a new one if None.
+        data: The ``data`` section of :func:`load_catalog`; values of
+            attributes with ``choices-from`` are first turned into their
+            canonical name.
 
     Returns:
         The nested parameter dict, ready for the software composer.
@@ -151,6 +173,7 @@ def build_entry_parameters(
     Raises:
         KeyError: Unknown name or argument without equivalence.
         NotImplementedError: Entry marked ``"supported": false``.
+        ValueError: Value refused by a ``strict-values`` spec.
     """
     params = {} if params is None else params
     specs: dict = {}
@@ -164,8 +187,34 @@ def build_entry_parameters(
             set_path(params, path, value)
         specs.update(entry.get("attributes") or {})
 
-    _apply_attributes(params, specs, args or {}, transforms or {})
+    args = _canonical_args(name, args or {}, catalog, data or {})
+    _apply_attributes(params, specs, args, transforms or {})
     return params
+
+
+def _canonical_args(
+    name: str,
+    args: Mapping[str, Any],
+    catalog: Mapping[str, dict],
+    data: Mapping[str, dict],
+) -> dict:
+    """Replace values of ``choices-from`` attributes by their canonical name.
+
+    Values unknown to the data list (allowed by a non-strict list) are
+    kept as given.
+    """
+    rules = merged_attributes(name, catalog)
+    specs = {**rules["mandatory-attribute"], **rules["allowed-attribute"]}
+    result = dict(args)
+    for key, value in args.items():
+        source = (specs.get(key) or {}).get("choices-from")
+        if source is None:
+            continue
+        entries = data.get(source["list"].upper()) or {}
+        canonical = canonical_value(value, entries)
+        if canonical is not None:
+            result[key] = canonical
+    return result
 
 
 class Equivalence:
@@ -178,36 +227,56 @@ class Equivalence:
     """
 
     def __init__(
-            self,
-            path: str | Path,
-            transforms: Mapping[str, Callable] | None = None,
-            catalog_dir: str | Path = CATALOG_DIR,
-        ):
+        self,
+        path: str | Path,
+        transforms: Mapping[str, Callable] | None = None,
+        catalog_dir: str | Path = CATALOG_DIR,
+    ):
         self.path = Path(path)
         self.transforms = dict(transforms or {})
         self.catalog_dir = Path(catalog_dir)
 
     def build(
-            self,
-            method: str,
-            method_args: Mapping[str, Any] | None = None,
-            module: str | None = None,
-            module_args: Mapping[str, Any] | None = None,
-        ) -> dict:
-        """Return the nested parameter dict of the method and the module."""
+        self,
+        method: str,
+        method_args: Mapping[str, Any] | None = None,
+        module: str | None = None,
+        module_args: Mapping[str, Any] | None = None,
+    ) -> dict:
+        """Return the nested parameter dict of the method and the module.
+
+        The arguments are first checked against the catalog.
+
+        Raises:
+            amac.engine.validate.CatalogError: Arguments not allowed by
+                the catalog.
+        """
         equiv = load_equiv(self.path)
         catalog = load_catalog(self.catalog_dir)
+        validate(method, method_args, catalog["methods"], catalog["data"])
+        if module:
+            validate(module, module_args, catalog["module"], catalog["data"])
         # Written first: method, module and user arguments override it.
         params: dict = {}
         for path, value in (equiv["default"].get("set") or {}).items():
             set_path(params, path, value)
         build_entry_parameters(
-            method, method_args, equiv["methods"], catalog["methods"],
-            self.transforms, params=params,
+            method,
+            method_args,
+            equiv["methods"],
+            catalog["methods"],
+            self.transforms,
+            params=params,
+            data=catalog["data"],
         )
         if module:
             build_entry_parameters(
-                module, module_args, equiv["module"], catalog["module"],
-                self.transforms, params=params,
+                module,
+                module_args,
+                equiv["module"],
+                catalog["module"],
+                self.transforms,
+                params=params,
+                data=catalog["data"],
             )
         return params

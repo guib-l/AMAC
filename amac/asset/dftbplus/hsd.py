@@ -15,18 +15,18 @@ def format_value(value: Any) -> str:
 def to_hsd(tree: Mapping[str, Any], indent: int = 0) -> str:
     """Write a nested parameter dict as HSD text.
 
-      A node holding a single sub-node is a method choice
-      (``{"Hamiltonian": {"DFTB": {...}}}`` -> ``Hamiltonian = DFTB {...}``);
-      any other node is a plain block. The key ``<<<`` includes a file and
-      the empty key ``""`` writes its value bare (e.g. a SupercellFolding
-      matrix).
+    A node holding a single sub-node is a method choice
+    (``{"Hamiltonian": {"DFTB": {...}}}`` -> ``Hamiltonian = DFTB {...}``);
+    any other node is a plain block. The key ``<<<`` includes a file and
+    the empty key ``""`` writes its value bare (e.g. a SupercellFolding
+    matrix).
 
-      Args:
-          tree: Nested parameter dict.
-          indent: Indentation level of the first line.
+    Args:
+        tree: Nested parameter dict.
+        indent: Indentation level of the first line.
 
-      Returns:
-          The HSD text.
+    Returns:
+        The HSD text.
     """
     pad = "  " * indent
     lines = []
@@ -49,6 +49,3 @@ def to_hsd(tree: Mapping[str, Any], indent: int = 0) -> str:
         else:
             lines.append(f"{pad}{key} = {format_value(value)}")
     return "\n".join(lines)
-
-
-
