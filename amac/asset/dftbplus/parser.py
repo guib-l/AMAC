@@ -190,3 +190,41 @@ def to_results(tag: dict[str, Any], workdir: Path, image) -> dict[str, Any]:
         "input_geometry": image.copy(),
         "output_geometry": (ase.io.read(final, format="gen") if final.is_file() else image.copy()),
     }
+
+
+def read_md(workdir: Path, image, time_step: float) -> list:
+    """Read a VelocityVerlet run: ``geo_end.xyz`` frames and ``md.out`` energies.
+
+    Args:
+        workdir: Directory of the run (MDRestartFrequency = 1).
+        image: Input geometry (symbols, cell).
+        time_step: MD time step (fs).
+
+    Returns:
+        One ase.Atoms per step with ``info`` time (fs), epot and ekin (Hartree).
+
+    Raises:
+        OutputParseError: If a file is missing or frames and energies differ.
+    """
+    log, xyz = Path(workdir, "md.out"), Path(workdir, "geo_end.xyz")
+    for path in (log, xyz):
+        if not path.is_file():
+            raise OutputParseError(f"Missing DFTB+ MD file: {path}")
+    text = log.read_text()
+    steps = [int(step) for step in re.findall(r"MD step:\s+(\d+)", text)]
+    epot = [float(e) for e in re.findall(r"Potential Energy:\s+(\S+)\s+H", text)]
+    ekin = [float(e) for e in re.findall(r"MD Kinetic Energy:\s+(\S+)\s+H", text)]
+
+    lines = xyz.read_text().splitlines()
+    natoms = len(image)
+    frames = []
+    for start in range(0, len(lines), natoms + 2):
+        block = lines[start + 2 : start + 2 + natoms]
+        atoms = image.copy()
+        atoms.positions = [[float(value) for value in line.split()[1:4]] for line in block]
+        frames.append(atoms)
+    if not (len(frames) == len(steps) == len(epot) == len(ekin)):
+        raise OutputParseError(f"DFTB+ MD: {len(frames)} frames but {len(steps)} logged steps")
+    for atoms, step, potential, kinetic in zip(frames, steps, epot, ekin):
+        atoms.info.update(time=step * time_step, epot=potential, ekin=kinetic)
+    return frames

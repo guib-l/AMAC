@@ -242,8 +242,10 @@ class Equivalence:
         method_args: Mapping[str, Any] | None = None,
         module: str | None = None,
         module_args: Mapping[str, Any] | None = None,
+        options: Mapping[str, Mapping[str, Any]] | None = None,
     ) -> dict:
-        """Return the nested parameter dict of the method and the module.
+        """Return the nested parameter dict of the method, the module and
+        the options (``{option: arguments}``).
 
         The arguments are first checked against the catalog.
 
@@ -256,6 +258,9 @@ class Equivalence:
         validate(method, method_args, catalog["methods"], catalog["data"])
         if module:
             validate(module, module_args, catalog["module"], catalog["data"])
+        options = options or {}
+        for name, args in options.items():
+            validate(name, args, catalog["options"], catalog["data"])
         # Written first: method, module and user arguments override it.
         params: dict = {}
         for path, value in (equiv["default"].get("set") or {}).items():
@@ -275,6 +280,20 @@ class Equivalence:
                 module_args,
                 equiv["module"],
                 catalog["module"],
+                self.transforms,
+                params=params,
+                data=catalog["data"],
+            )
+        for name, args in options.items():
+            canonical = canonical_name(name, catalog["options"])
+            aliases = catalog["options"][canonical].get("alias") or ()
+            if not _find_equiv(canonical, aliases, equiv["options"]):
+                raise NotImplementedError(f"option {canonical} is not supported by this software")
+            build_entry_parameters(
+                name,
+                args,
+                equiv["options"],
+                catalog["options"],
                 self.transforms,
                 params=params,
                 data=catalog["data"],

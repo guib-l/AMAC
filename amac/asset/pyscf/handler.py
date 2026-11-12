@@ -9,7 +9,14 @@ __all__ = [
     "dipole",
     "frequencies",
     "excited_states",
+    "trajectory",
 ]
+
+
+@handler(software="pyscf", name="trajectory")
+def trajectory(results):
+    """MD frames (ase.Atoms) with ``info`` time (fs), epot and ekin (Hartree)."""
+    return results["trajectory"]
 
 
 @handler(software="pyscf", name="lowest_energy")

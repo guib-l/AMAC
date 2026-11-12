@@ -96,11 +96,48 @@
         "frequencies": {
             "set": {"run": "frequencies"}
         },
+        "molecular-dynamics": {
+            "set": {"run": "md"},
+            "attributes": {
+                "steps": {"target": "md.steps"},
+                "time-step": {"target": "md.dt"},
+                "temperature": {"target": "md.temperature"},
+                "thermostat": {"target": "md.thermostat", "children": {"time-constant": {"target": "time_constant"}}}
+            }
+        },
         "excited-states": {
             "set": {"run": "excited-states"},
             "attributes": {
                 "excitations": {"target": "td.nstates"},
                 "symmetry": {"target": "td.symmetry"}
+            }
+        }
+    },
+    "options": {
+        "solvation": {
+            "attributes": {
+                "model": {"target": "solvation.model"},
+                "epsilon": {"target": "solvation.epsilon"},
+                "solvent": {
+                    "target": "solvation.solvent",
+                    "values": {
+                        "water": "water",
+                        "methanol": "methanol",
+                        "ethanol": "ethanol",
+                        "acetonitrile": "acetonitrile",
+                        "dmso": "dimethylsulfoxide",
+                        "thf": "tetrahydrofuran",
+                        "toluene": "toluene",
+                        "benzene": "benzene",
+                        "chloroform": "chloroform",
+                        "dichloromethane": "dichloromethane",
+                        "acetone": "acetone",
+                        "hexane": "n-hexane",
+                        "dmf": "N,N-dimethylformamide",
+                        "diethyl-ether": "diethylether",
+                        "carbon-tetrachloride": "carbon tetrachloride"
+                    }
+                }
             }
         }
     }

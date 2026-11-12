@@ -14,6 +14,7 @@ catalog/
 ├── catalog.json     # index of the files to read, by section
 ├── methods/*.json   # one or more methods per file
 ├── module/*.json    # one or more modules per file
+├── options/*.json   # cross-cutting options (solvation), usable with any module
 └── data/*.json      # value lists (functionals, basis sets), one list per file
 ```
 
@@ -77,6 +78,19 @@ translation.
 `strict: true` refuses a value missing from the list; `strict: false`
 passes it unchanged to the software. In an `equiv.json`, a spec with
 `"strict-values": true` refuses any value missing from its `values`.
+
+## Options (`options/`)
+
+An option adds to any method and module. It is given as
+`options={"<option>": {arguments}}` to `parameters_register`, checked like a
+method, and translated by the `"options"` section of each `equiv.json`; a
+software without that entry refuses the option.
+
+`solvation`: `model` (`cpcm|smd|gbsa`) with either `solvent` or `epsilon`
+(cpcm only). The solvent list is open and kept per software: the `values` of
+the `solvent` spec in each `equiv.json` map a canonical name to the software
+name, and a name missing there is passed unchanged. To add a solvent, add a
+line to those `values`.
 
 ## Adding a method or a module
 

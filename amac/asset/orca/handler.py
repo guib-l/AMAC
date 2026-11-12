@@ -9,6 +9,7 @@ __all__ = [
     "dipole",
     "frequencies",
     "excited_states",
+    "trajectory",
 ]
 
 
@@ -60,3 +61,9 @@ def excited_states(results):
     if results["excited-states"] is None:
         raise KeyError("no excited states in the ORCA output")
     return results["excited-states"]
+
+
+@handler(software="orca", name="trajectory")
+def trajectory(results):
+    """MD frames (ase.Atoms) with ``info`` time (fs), epot and ekin (Hartree or None)."""
+    return results["trajectory"]

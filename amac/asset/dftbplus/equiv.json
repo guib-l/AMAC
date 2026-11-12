@@ -151,7 +151,19 @@
         },
         "CI-DFTB": {"supported": false},
         "HF": {"supported": false},
-        "xTB": {"supported": false}
+        "xTB": {
+            "set": {"Hamiltonian.xTB.Method": "GFN2-xTB"},
+            "attributes": {
+                "level": {
+                    "target": "Hamiltonian.xTB.Method",
+                    "values": {"gfn1": "GFN1-xTB", "gfn2": "GFN2-xTB"},
+                    "strict-values": true
+                },
+                "charge": {"target": "Hamiltonian.xTB.Charge"},
+                "multiplicity": {"target": "spin.multiplicity"},
+                "filling": {"target": "Hamiltonian.xTB.Filling.Fermi.Temperature [K]"}
+            }
+        }
     },
     "module": {
         "optimization-geometry": {
@@ -173,6 +185,39 @@
                 }
             }
         },
-        "frequencies": {"supported": false}
+        "frequencies": {"supported": false},
+        "molecular-dynamics": {
+            "attributes": {
+                "steps": {"target": "md.steps"},
+                "time-step": {"target": "md.dt"},
+                "temperature": {"target": "md.temperature"},
+                "thermostat": {"target": "md.thermostat", "children": {"time-constant": {"target": "time_constant"}}}
+            }
+        }
+    },
+    "options": {
+        "solvation": {
+            "attributes": {
+                "model": {"target": "solvation.model"},
+                "epsilon": {"target": "solvation.epsilon"},
+                "solvent": {
+                    "target": "solvation.solvent",
+                    "values": {
+                        "water": "water",
+                        "acetonitrile": "acetonitrile",
+                        "dmso": "dmso",
+                        "thf": "thf",
+                        "toluene": "toluene",
+                        "benzene": "benzene",
+                        "chloroform": "chcl3",
+                        "dichloromethane": "ch2cl2",
+                        "acetone": "acetone",
+                        "dmf": "dmf",
+                        "diethyl-ether": "ether",
+                        "carbon-disulfide": "cs2"
+                    }
+                }
+            }
+        }
     }
 }

@@ -119,6 +119,7 @@ class AMAC:
         method_args=None,
         module_args=None,
         software_args=None,
+        options=None,
     ):
         """Register the calculation parameters on a new instance.
 
@@ -127,6 +128,9 @@ class AMAC:
                 translation of the canonical ones, without any check:
                 ``{software: {dotted.path: value}}``. Only the section of
                 the current software (name or alias, any case) is used.
+            options: Cross-cutting options checked against the catalog,
+                ``{option: arguments}``, e.g.
+                ``{"solvation": {"model": "cpcm", "solvent": "water"}}``.
         """
         self.__active_instance.properties(
             image=image,
@@ -135,6 +139,7 @@ class AMAC:
             method_args=method_args,
             module_args=module_args,
             software_args=software_args or {},
+            options=options or {},
         )
 
     def run(self, image: ase.Atoms = None, erase_instance: bool = True):

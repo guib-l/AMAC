@@ -1,0 +1,43 @@
+{
+    "molecular-dynamics":{
+        "alias":["md"],
+        "mandatory-handler":["trajectory"],
+        "mandatory-attribute":{
+            "steps":{
+                "type":"int",
+                "range":[1,null],
+                "description":"Number of MD steps"
+            },
+            "time-step":{
+                "type":"float",
+                "range":[0.0,null],
+                "description":"Integration time step (fs)"
+            }
+        },
+        "allowed-attribute":{
+            "temperature":{
+                "type":"float",
+                "range":[0.0,null],
+                "description":"Maxwell-Boltzmann initial velocities and thermostat target (K)"
+            },
+            "thermostat":{
+                "type":"str",
+                "choices":["none","berendsen"],
+                "description":"Thermostat (none: NVE)",
+                "children":{
+                    "mandatory-attribute":{},
+                    "allowed-attribute":{
+                        "time-constant":{
+                            "type":"float",
+                            "range":[0.0,null],
+                            "authorized-with":["berendsen"],
+                            "description":"Berendsen coupling time (fs), 100 if not given"
+                        }
+                    },
+                    "forbidden-attribute":[]
+                }
+            }
+        },
+        "forbidden-attribute":null
+    }
+}

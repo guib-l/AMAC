@@ -5,7 +5,9 @@ import numpy as np
 
 import amac.asset.dftbplus.handler  # noqa: F401
 from amac.asset.dftbplus.hsd import to_hsd
-from amac.asset.dftbplus.parser import read_exc_dat, read_results_tag, to_results
+from amac.asset.dftbplus.parser import read_exc_dat, read_md, read_results_tag, to_results
+from amac.asset.md import MDSettings, md_settings
+from amac.asset.solvation import SolvationSettings, solvation_settings
 from amac.engine.software import Software
 from amac.engine.timeout import time_limited
 
@@ -111,6 +113,55 @@ def merge_filling(params: dict) -> None:
         next(iter(filling.values())).update(temperature)
 
 
+def cosmo(solv: SolvationSettings) -> dict:
+    """DFTB+ ddCOSMO solvation block (cpcm model only)."""
+    if solv.model != "cpcm":
+        raise ValueError(
+            f"DFTB+ asset: solvation model {solv.model} is not supported, use cpcm "
+            "(gbsa needs a GBSA parameter file)"
+        )
+    if solv.solvent is not None:
+        solvent = {"FromName": solv.solvent}
+    else:
+        # Only the dielectric constant enters the COSMO energy (no SASA term);
+        # DFTB+ still requires a mass and a density.
+        solvent = {
+            "FromConstants": {
+                "Epsilon": solv.epsilon,
+                "MolecularMass [amu]": 1.0,
+                "Density [kg/l]": 1.0,
+            }
+        }
+    return {
+        "Cosmo": {
+            "Solvent": solvent,
+            "AngularGrid": 110,
+            # Scaling recommended for the default D3 radii (1.3-1.5).
+            "RadiiScaling": 1.4,
+            "Solver": {
+                "DomainDecomposition": {"MaxMoment": 10, "Regularisation": 0.2, "Accuracy": 1e-8}
+            },
+        }
+    }
+
+
+def velocity_verlet(md: MDSettings) -> dict:
+    """DFTB+ VelocityVerlet driver, every step written (MDRestartFrequency 1)."""
+    if md.thermostat == "berendsen":
+        thermostat = {
+            "Berendsen": {"Temperature [K]": md.temperature, "Timescale [fs]": md.time_constant}
+        }
+    else:
+        # DFTB+ requires InitialTemperature; 0 K starts at rest (as PySCF).
+        thermostat = {"None": {"InitialTemperature [K]": md.temperature or 0.0}}
+    return {
+        "Steps": md.steps,
+        "TimeStep [fs]": md.time_step,
+        "MDRestartFrequency": 1,
+        "Thermostat": thermostat,
+    }
+
+
 class software_dftbplus(Software):
     name = "dftb+"
     alias = ("dftbplus", "DFTB+", "DFTBplus")
@@ -127,12 +178,26 @@ class software_dftbplus(Software):
     @time_limited
     def collect(self, instance):
         params = super().collect(instance)
+        params["Geometry"] = {"GenFormat": {"<<<": self.geometry_file}}
+        md = params.pop("md", None)
+        if md is not None:
+            params["Driver"] = {"VelocityVerlet": velocity_verlet(md_settings(md))}
+        solvation = params.pop("solvation", None)
+        if solvation is not None:
+            hamiltonian = next(iter(params["Hamiltonian"].values()))
+            hamiltonian["Solvation"] = cosmo(solvation_settings(solvation))
+        multiplicity = params.pop("spin", {}).get("multiplicity", 1)
+        if "xTB" in params["Hamiltonian"]:
+            if multiplicity != 1:
+                raise ValueError("xTB with DFTB+: only multiplicity 1 is supported for now")
+            if is_periodic(instance.props.image):
+                raise ValueError("xTB with DFTB+: periodic images are not supported for now")
+            return params
         momenta = {
             **DEFAULT_ANGULAR_MOM,
             **self.options.get("max-angular-momenta", {}),
         }
         symbols = dict.fromkeys(instance.props.image.get_chemical_symbols())
-        params["Geometry"] = {"GenFormat": {"<<<": self.geometry_file}}
         self.set_path(
             params,
             "Hamiltonian.DFTB.MaxAngularMomentum",
@@ -183,7 +248,7 @@ class software_dftbplus(Software):
         self.execute_program(workdir, output=self.output_file)
         tag = read_results_tag(workdir / "results.tag")
         results = to_results(tag, workdir, instance.props.image)
-        dftb = self.parameters["Hamiltonian"]["DFTB"]
+        dftb = self.parameters["Hamiltonian"].get("DFTB", {})
         if "KPointsAndWeights" in dftb:
             kpw = dftb["KPointsAndWeights"]
             folding = kpw.get("SupercellFolding") if isinstance(kpw, dict) else None
@@ -196,4 +261,7 @@ class software_dftbplus(Software):
         exc_dat = workdir / "EXC.DAT"
         if exc_dat.is_file():
             results["td-dftb"] = read_exc_dat(exc_dat)
+        verlet = self.parameters.get("Driver", {}).get("VelocityVerlet")
+        if verlet is not None:
+            results["trajectory"] = read_md(workdir, instance.props.image, verlet["TimeStep [fs]"])
         return results

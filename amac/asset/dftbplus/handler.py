@@ -1,6 +1,7 @@
 from amac.engine.handler import handler
 
 __all__ = [
+    "trajectory",
     "properties",
     "lowest_energy",
     "energy_resume",
@@ -107,3 +108,9 @@ def k_points(results):
 def excited_states(results):
     """Linear-response excited states (eV), same shape as deMonNanoPy."""
     return results["td-dftb"]
+
+
+@handler(software="dftb+", name="trajectory")
+def trajectory(results):
+    """MD frames (ase.Atoms) with ``info`` time (fs), epot and ekin (Hartree)."""
+    return results["trajectory"]

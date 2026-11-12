@@ -12,9 +12,12 @@
         "single-point",
         "optimization",
         "excited-states",
-        "frequencies"
+        "frequencies",
+        "molecular-dynamics"
     ],
-    "options":[],
+    "options":[
+        "solvation"
+    ],
     "data":[
         "functionals",
         "basis-sets"

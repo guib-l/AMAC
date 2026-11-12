@@ -164,9 +164,10 @@ class Software(ABC):
         method_args: Mapping[str, Any] | None = None,
         module: str | None = None,
         module_args: Mapping[str, Any] | None = None,
+        options: Mapping[str, Mapping[str, Any]] | None = None,
     ) -> dict:
         """Translate the canonical parameters into the software parameters."""
-        return self.equivalence.build(method, method_args, module, module_args)
+        return self.equivalence.build(method, method_args, module, module_args, options)
 
     def resolved_handlers(
         self,

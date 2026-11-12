@@ -96,6 +96,7 @@
         "xTB":{"supported":false}
     },
     "module":{
+        "molecular-dynamics":{"supported":false},
         "optimization-geometry":{
             "set": {
                 "DEMON_MODULE.ACTIVE.OPT": {}

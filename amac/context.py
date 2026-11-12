@@ -59,6 +59,8 @@ class Properties(base):
         handler: handlers to run after the calculation
         software_args: raw software parameters, by software name:
             ``{software: {dotted.path: value}}``
+        options: cross-cutting options, ``{option: arguments}``
+            (e.g. ``{"solvation": {"model": "cpcm", "solvent": "water"}}``)
     """
 
     image: Atoms = None
@@ -68,6 +70,7 @@ class Properties(base):
     module_args: dict[str, Any] = field(default_factory=dict)
     handler: tuple = ()
     software_args: dict[str, dict[str, Any]] = field(default_factory=dict)
+    options: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass

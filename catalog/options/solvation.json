@@ -1,0 +1,24 @@
+{
+    "solvation":{
+        "alias":["solvent"],
+        "mandatory-attribute":{
+            "model":{
+                "type":"str",
+                "choices":["cpcm","smd","gbsa"],
+                "description":"Implicit solvent model"
+            }
+        },
+        "allowed-attribute":{
+            "solvent":{
+                "type":"str",
+                "description":"Solvent name; the names known by a software are listed in its equiv.json, any other name is passed as given"
+            },
+            "epsilon":{
+                "type":"float",
+                "range":[1.0,null],
+                "description":"Dielectric constant of a solvent not listed (cpcm only)"
+            }
+        },
+        "forbidden-attribute":null
+    }
+}

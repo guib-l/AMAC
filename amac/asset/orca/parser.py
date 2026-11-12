@@ -148,3 +148,34 @@ def read_output(path: str | Path, image: Atoms) -> dict[str, Any]:
         "input_geometry": image.copy(),
         "output_geometry": final,
     }
+
+
+def read_md_trajectory(path: str | Path, image: Atoms, time_step: float) -> list[Atoms]:
+    """Read the ``Dump Position`` xyz trajectory of an ORCA MD run.
+
+    ``info["time"]`` is ``index * time_step`` (fs); ``epot`` comes from the
+    ``E_Pot=`` field of the comment line (Hartree), ``ekin`` from ``E_Kin=``,
+    both None when absent.
+
+    Raises:
+        OutputParseError: If the trajectory file is missing.
+    """
+    path = Path(path)
+    if not path.is_file():
+        raise OutputParseError(f"Missing ORCA MD trajectory: {path}")
+    lines = path.read_text().splitlines()
+    natoms = len(image)
+    frames = []
+    for index, start in enumerate(range(0, len(lines) - natoms - 1, natoms + 2)):
+        comment = lines[start + 1]
+        epot = re.search(rf"E_Pot\s*=\s*({_NUMBER})", comment)
+        ekin = re.search(rf"E_Kin\s*=\s*({_NUMBER})", comment)
+        atoms = image.copy()
+        atoms.positions = [[float(v) for v in line.split()[1:4]] for line in lines[start + 2 : start + 2 + natoms]]
+        atoms.info.update(
+            time=index * time_step,
+            epot=float(epot.group(1)) if epot else None,
+            ekin=float(ekin.group(1)) if ekin else None,
+        )
+        frames.append(atoms)
+    return frames
