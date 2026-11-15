@@ -186,6 +186,7 @@
             }
         },
         "frequencies": {"supported": false},
+        "transition-state": {"supported": false},
         "molecular-dynamics": {
             "attributes": {
                 "steps": {"target": "md.steps"},

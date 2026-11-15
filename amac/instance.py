@@ -76,7 +76,6 @@ class Instance:
             duree=Duration(
                 date_begin=None,
                 date_end=None,
-                date_steps=None,
                 duree=0.0,
             ),
         )

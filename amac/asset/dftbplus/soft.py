@@ -113,6 +113,36 @@ def merge_filling(params: dict) -> None:
         next(iter(filling.values())).update(temperature)
 
 
+# Parameters DFTB+ needs for each D3/D4 model: it has no default for them,
+# they depend on the Slater-Koster set (DFTB+ manual, Appendix H).
+# DFTB+ block -> (canonical name, required keys).
+DISPERSION_REQUIRED = {
+    "SimpleDftD3": ("d3-bj", ("s8", "a1", "a2")),
+    "DftD3": ("d3-zero", ("s6", "s8", "sr6", "alpha6")),
+    "DftD4": ("d4", ("s8", "a1", "a2")),
+}
+
+
+def check_dispersion(dispersion: dict) -> None:
+    """Refuse a D3/D4 dispersion block without its damping parameters.
+
+    Raises:
+        ValueError: If a parameter DFTB+ requires is missing.
+    """
+    for block, (name, required) in DISPERSION_REQUIRED.items():
+        if block not in dispersion:
+            continue
+        settings = dispersion[block]
+        # Zero damping: sr6 and alpha6 sit in Damping.ZeroDamping.
+        damping = settings.get("Damping", {}).get("ZeroDamping", {})
+        missing = [key for key in required if key not in settings and key not in damping]
+        if missing:
+            raise ValueError(
+                f"DFTB+ asset: dispersion {name} needs {missing}; DFTB+ has no default, "
+                "they depend on the Slater-Koster set (DFTB+ manual, Appendix H)"
+            )
+
+
 def cosmo(solv: SolvationSettings) -> dict:
     """DFTB+ ddCOSMO solvation block (cpcm model only)."""
     if solv.model != "cpcm":
@@ -208,6 +238,7 @@ class software_dftbplus(Software):
         dispersion = params["Hamiltonian"]["DFTB"].get("Dispersion", {})
         if dispersion.get("LennardJones") == {}:
             dispersion["LennardJones"] = {"Parameters": {"UFFParameters": {}}}
+        check_dispersion(dispersion)
         image = instance.props.image
         periodic = is_periodic(image)
         dftb = params["Hamiltonian"]["DFTB"]
@@ -218,6 +249,11 @@ class software_dftbplus(Software):
                 "a periodic image requires a kpoints grid, e.g. [1, 1, 1] for the gamma point"
             )
         casida = params.get("ExcitedState", {}).get("Casida")
+        if casida is not None:
+            # DFTB+ refuses forces with Casida unless a StateOfInterest is set.
+            if "forces" in instance.props.handler:
+                raise ValueError("TD-DFTB (Casida) with DFTB+: forces are not available")
+            params.setdefault("Analysis", {})["CalculateForces"] = False
         if casida is not None and not dftb.get("Scc"):
             raise ValueError("TD-DFTB (Casida) requires SCC: use method dftb-2 or dftb-3")
         if casida is not None and dftb.get("SpinPolarisation"):

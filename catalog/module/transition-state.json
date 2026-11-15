@@ -1,0 +1,20 @@
+{
+    "transition-state":{
+        "alias":["ts"],
+        "mandatory-handler":["lowest-energy","final-geometry"],
+        "mandatory-attribute":null,
+        "allowed-attribute":{
+            "max-step":{
+                "type":"int",
+                "range":[1,null],
+                "description":"Maximum number of optimisation steps"
+            },
+            "hessian":{
+                "type":"str",
+                "choices":["calculate","approximate"],
+                "description":"Initial Hessian: exact (calculate) or model guess (approximate)"
+            }
+        },
+        "forbidden-attribute":null
+    }
+}

@@ -124,7 +124,7 @@ def frequencies(mf, mol) -> np.ndarray:
 
 
 def excited_states(mf, settings: dict) -> dict:
-    """Linear-response TDHF/TDDFT states: ``w`` (eV) and ``oscillator``."""
+    """Linear-response TDHF/TDDFT (or TDA) states: ``w`` (eV) and ``oscillator``."""
     from pyscf import tdscf
     from pyscf.data.nist import HARTREE2EV
 
@@ -132,7 +132,7 @@ def excited_states(mf, settings: dict) -> dict:
     singlets = {"singlet": [True], "triplet": [False], "both": [True, False]}[symmetry]
     states = {}
     for singlet in singlets:
-        td = tdscf.TDDFT(mf)
+        td = tdscf.TDA(mf) if settings.get("tda") else tdscf.TDDFT(mf)
         td.nstates = settings.get("nstates", 3)
         td.singlet = singlet
         td.kernel()
@@ -194,7 +194,7 @@ class software_pyscf(Software):
         image = instance.props.image
         mol = build_mol(image, params, workdir / self.output_file)
 
-        if params.get("run") == "optimization":
+        if params.get("run") in ("optimization", "transition-state"):
             # Needs the "geometric" package.
             from pyscf.geomopt import geometric_solver
 

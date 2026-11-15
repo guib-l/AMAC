@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import numpy as np
-from deMonPy.deMonNano import deMonNano
 
 import amac.asset.deMonNano.handler  # noqa: F401
 from amac.engine.software import Software
@@ -16,7 +15,9 @@ class software_deMonNano(Software):
     @time_limited
     def collect(self, instance):
         params = super().collect(instance)
-        if instance.props.module == "single-point" and "forces" in instance.props.handler:
+        # Set by equiv.json for single-point and its aliases; not a deMonPy argument.
+        module = params.pop("AMAC_MODULE", None)
+        if module == "single-point" and "forces" in instance.props.handler:
             params.setdefault("DEMON_MODULE", {}).setdefault("ACTIVE", {})["OPT"] = {"SP": True}
         params["DEMON_EXECUTABLE"] = str(self.executable)
         params["BASIS"]["SKFILE"] = self.options.get("basis")
@@ -58,6 +59,9 @@ class software_deMonNano(Software):
 
     @time_limited
     def calculate(self, instance):
+        # Imported here: AMAC must load without deMonPy installed.
+        from deMonPy.deMonNano import deMonNano
+
         objt = deMonNano(
             title="CALCULATION DEMONANO",
             workdir=instance.ctx.workdir,

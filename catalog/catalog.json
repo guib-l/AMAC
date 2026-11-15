@@ -13,7 +13,8 @@
         "optimization",
         "excited-states",
         "frequencies",
-        "molecular-dynamics"
+        "molecular-dynamics",
+        "transition-state"
     ],
     "options":[
         "solvation"

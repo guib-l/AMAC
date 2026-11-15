@@ -126,6 +126,17 @@
                     "target": "%tddft.Triplets",
                     "values": {"singlet": false, "both": true},
                     "strict-values": true
+                },
+                "tda": {"target": "%tddft.TDA"}
+            }
+        },
+        "transition-state": {
+            "set": {"!.run": "OptTS"},
+            "attributes": {
+                "max-step": {"target": "%geom.MaxIter"},
+                "hessian": {
+                    "target": "%geom.Calc_Hess",
+                    "values": {"calculate": true, "approximate": false}
                 }
             }
         }

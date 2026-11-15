@@ -18,6 +18,10 @@
                 "type":"str",
                 "choices":["arpack","stratmann"],
                 "description":"Diagonalizer of the linear-response eigenvalue problem"
+            },
+            "tda":{
+                "type":"bool",
+                "description":"Tamm-Dancoff approximation"
             }
         },
         "forbidden-attribute":null

@@ -109,7 +109,18 @@
             "set": {"run": "excited-states"},
             "attributes": {
                 "excitations": {"target": "td.nstates"},
-                "symmetry": {"target": "td.symmetry"}
+                "symmetry": {"target": "td.symmetry"},
+                "tda": {"target": "td.tda"}
+            }
+        },
+        "transition-state": {
+            "set": {"run": "transition-state", "opt.transition": true},
+            "attributes": {
+                "max-step": {"target": "opt.maxsteps"},
+                "hessian": {
+                    "target": "opt.hessian",
+                    "values": {"calculate": "first", "approximate": "never"}
+                }
             }
         }
     },

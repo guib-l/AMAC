@@ -85,7 +85,7 @@ To switch to deMonNano, change only `software` and `basis`. The rest of the
 description stays the same.
 
 More examples are in [`examples/`](examples/). For instance,
-`examples/compare_dftb.py` runs the same DFTB-2 calculation with both programs
+`examples/general/compare_dftb.py` runs the same DFTB-2 calculation with both programs
 and compares the energies.
 
 ## Raw software parameters
@@ -143,7 +143,7 @@ records[0]["lowest-energy"]
 whose values equal every filter. Geometries come back as `ase.Atoms`, arrays
 as lists, and SQLite returns booleans as `1`/`0`.
 
-See `examples/store.py`.
+See `examples/general/store.py`.
 
 ## Project layout
 

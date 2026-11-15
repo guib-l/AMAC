@@ -96,7 +96,11 @@
         "xTB":{"supported":false}
     },
     "module":{
+        "single-point":{
+            "set": {"AMAC_MODULE": "single-point"}
+        },
         "molecular-dynamics":{"supported":false},
+        "transition-state":{"supported":false},
         "optimization-geometry":{
             "set": {
                 "DEMON_MODULE.ACTIVE.OPT": {}

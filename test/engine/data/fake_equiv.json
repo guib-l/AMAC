@@ -1,0 +1,54 @@
+{
+    "software": "fake",
+    "version": "0",
+    "library": "",
+    "description": "Equivalence of the fake software used by the engine tests.",
+    "default": {"set": {"general.title": "fake", "general.level": 0}},
+    "methods": {
+        "hf": {
+            "set": {"method": "hf"},
+            "attributes": {
+                "basis": {"target": "basis"},
+                "charge": {"target": "system.charge"},
+                "multiplicity": {"target": "system.mult"},
+                "scf-max": {"target": "scf.max", "transform": "double"},
+                "reference": {
+                    "target": "scf.ref",
+                    "values": {"restricted": "R", "unrestricted": "U"},
+                    "strict-values": true
+                }
+            }
+        },
+        "dft": {"set": {"method": "dft"}, "attributes": {"functional": {"target": "xc"}}},
+        "mp2": {"supported": false},
+        "dftb": {
+            "dftb-1": {
+                "set": {"method": "dftb"},
+                "attributes": {"basis": {"directory": {"target": "sk.dir"}}}
+            },
+            "dftb-2": {
+                "set": {"scc": true},
+                "attributes": {
+                    "mixer": {
+                        "target": "mixer",
+                        "values": {"broyden": "Broyden"},
+                        "children": {"mixing-parameter": {"target": "Mixing"}}
+                    }
+                }
+            }
+        }
+    },
+    "module": {
+        "single-point": {"set": {"run": "sp"}},
+        "optimization-geometry": {"set": {"run": "opt"}, "attributes": {"max-step": {"target": "opt.step"}}},
+        "frequencies": {"supported": false}
+    },
+    "options": {
+        "solvation": {
+            "attributes": {
+                "model": {"target": "solv.model"},
+                "solvent": {"target": "solv.name"}
+            }
+        }
+    }
+}
