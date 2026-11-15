@@ -1,5 +1,10 @@
 # AMAC
 
+> **Experimental project.** AMAC is under active development and its API may
+> change. It does not replace the official documentation and tools of the
+> software it drives: check their manuals for the meaning, defaults and
+> limits of each method, and validate important results with them.
+
 **A**toms – **M**olecules – **A**ggregates **C**alculator: one Python syntax to
 describe and run quantum chemistry calculations, whatever the software behind
 them.
@@ -9,7 +14,31 @@ module, parameters). AMAC checks it against the canonical catalog, translates
 it for the chosen software, runs the program and extracts the requested
 results with *handlers*.
 
-Supported software: **DFTB+** (`dftb+`) and **deMonNano** (`deMonNano`).
+| Software | Name in AMAC | Runs as | Typical use |
+|---|---|---|---|
+| [DFTB+](https://dftbplus.org) | `dftb+` | executable | DFTB, xTB, TD-DFTB, MD, periodic |
+| deMonNano | `deMonNano` | executable (via `deMonPy`) | DFTB, CI-DFTB, periodic |
+| [PySCF](https://pyscf.org) | `pyscf` | in process | HF, DFT, MP2, CC, CASSCF |
+| [OpenMolcas](https://gitlab.com/Molcas/OpenMolcas) | `openmolcas` | executable (`pymolcas`) | HF, DFT, MP2, CC, CASSCF, CASPT2, NEVPT2 |
+
+## What can be computed
+
+The canonical catalog ([`catalog/`](catalog/README.md)) defines what a
+calculation can ask for; each software supports a subset of it.
+
+- **Methods**: `HF`, `DFT`, `MP2`, `CCSD`, `CCSD(T)`, `CASSCF`, `CASPT2`,
+  `NEVPT2`, `DFTB` (`DFTB-2`, `DFTB-3`, `CI-DFTB`), `xTB`.
+- **Modules**: `single-point`, `optimization-geometry`, `frequencies`,
+  `excited-states`, `transition-state`, `molecular-dynamics`.
+- **Options**: `solvation` (`cpcm`, `smd`, `gbsa`).
+
+Results are extracted by *handlers*, registered by name with
+`handler_register`. The common ones are `lowest-energy`, `energy-resume`,
+`forces`, `final-geometry`, `charges`, `dipole`, `frequencies`,
+`excited-states` and `trajectory`. An unsupported request is refused before
+any run.
+
+The coverage of each software is in [`examples/README.md`](examples/README.md).
 
 ## Installation
 
@@ -23,6 +52,9 @@ pip install -e ".[dev]"   # adds pytest and ruff
 deMonNano runs in process through the
 [`deMonPy`](https://github.com/guib-l/DeMonNanoPy) library, which you install
 from its own repository.
+
+PySCF runs in process and is not an AMAC dependency: install it with
+`pip install pyscf` to use `software="pyscf"`.
 
 ## Configuration
 
@@ -41,12 +73,19 @@ machine-specific settings come from a JSON file, `config-amac.json`:
       "basis": "/absolute/path/to/basis",
       "timeout": 60,
       "launcher": ["/usr/bin/mpirun", "-np", "{process_unit}"]
-    }
+    },
+    "openmolcas": {
+      "executable": "/absolute/path/to/pymolcas",
+      "env": {"MOLCAS": "/absolute/path/to/OpenMolcas/build"}
+    },
+    "pyscf": {}
   }
 }
 ```
 
-Executables must be absolute paths. Load the file once per process:
+Executables must be absolute paths. `env` adds variables to the environment
+of the program only; AMAC itself never reads them. Load the file once per
+process:
 
 ```python
 import amac
@@ -84,9 +123,42 @@ print(calc.instance.res.product["lowest-energy"])
 To switch to deMonNano, change only `software` and `basis`. The rest of the
 description stays the same.
 
+Wavefunction methods use the same syntax. This CASSCF(4,4) calculation runs
+with PySCF, in process, without any executable:
+
+```python
+calc = AMAC(software="pyscf", workdir=".run/casscf", label="water")
+calc.handler_register("lowest-energy")
+calc.parameters_register(
+    method="casscf",
+    method_args={"basis": "cc-pvdz", "active-orbitals": 4, "active-electrons": 4},
+    module="single-point",
+)
+calc.run(molecule("H2O"))
+print(calc.instance.res.product["lowest-energy"])
+```
+
 More examples are in [`examples/`](examples/). For instance,
 `examples/general/compare_dftb.py` runs the same DFTB-2 calculation with both programs
 and compares the energies.
+
+## Options
+
+Cross-cutting options apply to any method and module. They are checked
+against the catalog like a method:
+
+```python
+calc.parameters_register(
+    method="dft",
+    method_args={"functional": "b3lyp", "basis": "def2-svp"},
+    module="single-point",
+    options={"solvation": {"model": "cpcm", "solvent": "water"}},
+)
+```
+
+`solvation` takes a `model` (`cpcm`, `smd`, `gbsa`) and either a `solvent`
+name or an `epsilon` (cpcm only). Each software accepts only the models it
+implements.
 
 ## Raw software parameters
 
@@ -103,6 +175,7 @@ calc.parameters_register(
     software_args={
         "deMonNano": {"DEMON_PARAMETERS.ACTIVE.DFTB.TOL": 1e-7},
         "dftb+": {"Analysis.CalculateForces": True},
+        "openmolcas": {"scf.ITERations": 100},  # &SCF block, ITERations keyword
     },
 )
 ```
