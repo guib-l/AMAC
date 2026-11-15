@@ -96,7 +96,9 @@
                 "multiplicity": {"target": "*.mult"}
             }
         },
-        "DFTB": {"supported": false}
+        "DFTB": {"supported": false},
+        "CASPT2": {"supported": false},
+        "NEVPT2": {"supported": false}
     },
     "module": {
         "single-point": {

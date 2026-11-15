@@ -26,5 +26,59 @@
             }
         },
         "forbidden-attribute":[]
+    },
+    "CASPT2":{
+        "alias":[],
+        "inherits":["CASSCF"],
+        "mandatory-attribute":{},
+        "allowed-attribute":{
+            "multistate":{
+                "type":"str",
+                "choices":["single","ms","xms","rms"],
+                "description": "Treatment of the CASSCF roots: single-state, MS, XMS or RMS-CASPT2"
+            },
+            "ipea-shift":{
+                "type":"float",
+                "range":[0.0,null],
+                "description": "IPEA shift of the zeroth-order Hamiltonian (Hartree)"
+            },
+            "imaginary-shift":{
+                "type":"float",
+                "range":[0.0,null],
+                "description": "Imaginary level shift against intruder states (Hartree)"
+            },
+            "real-shift":{
+                "type":"float",
+                "range":[0.0,null],
+                "description": "Real level shift against intruder states (Hartree)"
+            },
+            "frozen-core":{
+                "type":"bool",
+                "description": "Freeze the core orbitals in the correlation treatment"
+            }
+        },
+        "forbidden-attribute":[]
+    },
+    "NEVPT2":{
+        "alias":[],
+        "inherits":["CASSCF"],
+        "mandatory-attribute":{},
+        "allowed-attribute":{
+            "variant":{
+                "type":"str",
+                "choices":["sc","pc"],
+                "description": "Strongly contracted (sc) or partially contracted (pc) NEVPT2"
+            },
+            "multistate":{
+                "type":"str",
+                "choices":["single","qd"],
+                "description": "Treatment of the CASSCF roots: single-state or quasi-degenerate (QD-NEVPT2)"
+            },
+            "frozen-core":{
+                "type":"bool",
+                "description": "Freeze the core orbitals in the correlation treatment"
+            }
+        },
+        "forbidden-attribute":[]
     }
 }

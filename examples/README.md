@@ -18,31 +18,33 @@ Executables, Slater-Koster directories, launcher and timeout come from
 | [`dftbplus/`](dftbplus/) | DFTB+ | `executable`, `basis` |
 | [`deMonNano/`](deMonNano/) | deMonNano | `executable`, `basis` (+ `launcher` for MPI) |
 | [`orca/`](orca/) | ORCA | `executable` |
+| [`openmolcas/`](openmolcas/) | OpenMolcas | `executable`, `env.MOLCAS` |
 | [`general/`](general/) | several | multi-software comparisons, benchmarks, `Store` |
 
 Shared structures live in [`data/`](data/).
 
 ## Coverage
 
-| | PySCF | DFTB+ | deMonNano | ORCA |
-|---|:-:|:-:|:-:|:-:|
-| HF | 01 | – | – | 01 |
-| DFT | 02 | – | – | 02 |
-| MP2, CCSD, CCSD(T) | 03 | – | – | 03 |
-| CASSCF | 04 | – | – | 04 |
-| DFTB-1/2/3 | – | 01, 02 | 01, 02 | – |
-| CI-DFTB | – | – | 09 | – |
-| xTB | – | 05 | – | 05 |
-| Properties | – | 03 | 03 | 06 |
-| Dispersion | 02 | 04 | 04 | 02 |
-| Optimization | 05 | 06 | 05 | 07 |
-| Frequencies | 06 | – | 06 | 08 |
-| Excited states | 07 | 07 | 07 | 09 |
-| Transition state | 08 | – | – | 10 |
-| Molecular dynamics | 09 | 08 | – | 11 |
-| Solvation | 10 | 09 | – | 12 |
-| Periodic (k-points) | – | 10 | 08 | – |
-| Parallel run | – | – | 10 | – |
+| | PySCF | DFTB+ | deMonNano | ORCA | OpenMolcas |
+|---|:-:|:-:|:-:|:-:|:-:|
+| HF | 01 | – | – | 01 | 01 |
+| DFT | 02 | – | – | 02 | 02 |
+| MP2, CCSD, CCSD(T) | 03 | – | – | 03 | 03, 09 |
+| CASSCF | 04 | – | – | 04 | 04, 05 |
+| CASPT2, NEVPT2 | – | – | – | – | 10, 11 |
+| DFTB-1/2/3 | – | 01, 02 | 01, 02 | – | – |
+| CI-DFTB | – | – | 09 | – | – |
+| xTB | – | 05 | – | 05 | – |
+| Properties | – | 03 | 03 | 06 | 06 |
+| Dispersion | 02 | 04 | 04 | 02 | – |
+| Optimization | 05 | 06 | 05 | 07 | 07 |
+| Frequencies | 06 | – | 06 | 08 | 12 |
+| Excited states | 07 | 07 | 07 | 09 | – |
+| Transition state | 08 | – | – | 10 | – |
+| Molecular dynamics | 09 | 08 | – | 11 | – |
+| Solvation | 10 | 09 | – | 12 | 08 |
+| Periodic (k-points) | – | 10 | 08 | – | – |
+| Parallel run | – | – | 10 | – | – |
 
 Numbers are the script prefixes; `–` means not supported by the asset
 (`"supported": false` or absent from its `equiv.json`).

@@ -1,0 +1,147 @@
+{
+    "software": "OpenMolcas",
+    "version": "26.10",
+    "library": "https://gitlab.com/Molcas/OpenMolcas",
+    "description": "Equivalence between the catalog and the OpenMolcas input; one node per program block (&GATEWAY, &SCF...), plus the 'system', 'active' and 'solvation' nodes resolved by the asset",
+    "execution": ["composerIO"],
+    "default": {
+        "set": {"method": "scf", "system.charge": 0, "system.multiplicity": 1}
+    },
+    "methods": {
+        "HF": {
+            "attributes": {
+                "basis": {"target": "gateway.Basis"},
+                "charge": {"target": "system.charge"},
+                "multiplicity": {"target": "system.multiplicity"},
+                "reference": {
+                    "target": "system.reference",
+                    "values": {"restricted": "restricted", "unrestricted": "unrestricted"},
+                    "strict-values": true
+                },
+                "scf-tol": {"target": "scf.THREsholds", "transform": "scf_thresholds"},
+                "scf-max": {"target": "scf.ITERations"},
+                "density-fitting": {"target": "gateway.RICD", "transform": "flag"}
+            }
+        },
+        "DFT": {
+            "attributes": {
+                "functional": {
+                    "target": "scf.KSDFT",
+                    "values": {
+                        "lda": "LDA5", "svwn3": "LDA",
+                        "blyp": "BLYP", "olyp": "OLYP", "pbe": "PBE", "m06-l": "M06L",
+                        "b3lyp": "B3LYP5", "b3lyp-g": "B3LYP", "o3lyp": "O3LYP", "pbe0": "PBE0",
+                        "m06": "M06", "m06-2x": "M062X"
+                    },
+                    "strict-values": true
+                },
+                "grid": {
+                    "target": "seward.Grid Input.GRID",
+                    "values": {"coarse": "COARSE", "default": "FINE", "fine": "ULTRAFINE"},
+                    "strict-values": true
+                }
+            }
+        },
+        "MP2": {
+            "set": {"method": "mp2"},
+            "attributes": {
+                "frozen-core": {"target": "mbpt2.Frozen", "transform": "frozen_core"}
+            }
+        },
+        "CCSD": {
+            "set": {"method": "ccsd"},
+            "attributes": {
+                "frozen-core": {"target": "correlation.frozen-core"},
+                "cc-tol": {"target": "chcc.THREshold"},
+                "cc-max": {"target": "chcc.MAXIterations"}
+            }
+        },
+        "CCSD(T)": {
+            "set": {"method": "ccsd(t)"}
+        },
+        "CASSCF": {
+            "set": {"method": "casscf"},
+            "attributes": {
+                "active-orbitals": {"target": "active.orbitals"},
+                "active-electrons": {"target": "active.electrons"},
+                "roots": {"target": "active.roots"},
+                "weights": {"target": "active.weights"}
+            }
+        },
+        "CASPT2": {
+            "set": {"method": "caspt2"},
+            "attributes": {
+                "multistate": {
+                    "target": "pt2.multistate",
+                    "values": {"single": "single", "ms": "MULTistate", "xms": "XMULtistate", "rms": "RMULtistate"},
+                    "strict-values": true
+                },
+                "ipea-shift": {"target": "caspt2.IPEAshift"},
+                "imaginary-shift": {"target": "caspt2.IMAGinary"},
+                "real-shift": {"target": "caspt2.SHIFt"},
+                "frozen-core": {"target": "caspt2.Frozen", "transform": "frozen_core"}
+            }
+        },
+        "NEVPT2": {
+            "set": {"method": "nevpt2", "pt2.variant": "SC-Nevpt2"},
+            "attributes": {
+                "variant": {
+                    "target": "pt2.variant",
+                    "values": {"sc": "SC-Nevpt2", "pc": "PC-Nevpt2"},
+                    "strict-values": true
+                },
+                "multistate": {
+                    "target": "pt2.multistate",
+                    "values": {"single": "single"},
+                    "strict-values": true
+                },
+                "frozen-core": {"target": "caspt2.Frozen", "transform": "frozen_core"}
+            }
+        },
+        "xTB": {"supported": false},
+        "DFTB": {"supported": false}
+    },
+    "module": {
+        "single-point": {
+            "set": {"task": "single-point"}
+        },
+        "optimization-geometry": {
+            "set": {"task": "optimization", "slapaf": {}},
+            "attributes": {"max-step": {"target": "slapaf.ITERations"}}
+        },
+        "frequencies": {
+            "set": {"task": "frequencies"}
+        },
+        "molecular-dynamics": {"supported": false},
+        "excited-states": {"supported": false},
+        "transition-state": {"supported": false}
+    },
+    "options": {
+        "solvation": {
+            "attributes": {
+                "model": {"target": "solvation.model"},
+                "epsilon": {"target": "solvation.epsilon"},
+                "solvent": {
+                    "target": "solvation.solvent",
+                    "values": {
+                        "water": "water",
+                        "dmso": "dimethylsulfoxide",
+                        "acetonitrile": "acetonitrile",
+                        "methanol": "methanol",
+                        "ethanol": "ethanol",
+                        "acetone": "acetone",
+                        "thf": "tetrahydrofuran",
+                        "toluene": "toluene",
+                        "benzene": "benzene",
+                        "chloroform": "chloroform",
+                        "dichloromethane": "methylenchloride",
+                        "diethyl-ether": "ethylether",
+                        "carbon-tetrachloride": "carbontetrachloride",
+                        "cyclohexane": "cyclohexane",
+                        "heptane": "heptane"
+                    }
+                }
+            }
+        }
+    }
+}
