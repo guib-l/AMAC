@@ -26,6 +26,7 @@ used by `10_parallel.py`; `timeout` is in seconds.
 | `08_periodic.py` | graphene with k-points |
 | `09_ci_dftb.py` | CI-DFTB on the water dimer cation, fragment charges |
 | `10_parallel.py` | serial vs MPI run |
+| `11_shell_dep.py` | DFTB-2 shell-resolved SCC, off vs on |
 
 Not available: HF, xTB, molecular dynamics, transition state, solvation.
 Mulliken charges are only read for CI-DFTB.

@@ -61,6 +61,7 @@ REQUIREMENTS: dict[str, Requirement] = {
         basis=True,
     ),
     "orca": Requirement(aliases=("ORCA",), executable=True),
+    "openmolcas": Requirement(aliases=("OpenMolcas","molcas"), executable=True),
     "pyscf": Requirement(aliases=("PySCF",), modules=("pyscf",)),
 }
 

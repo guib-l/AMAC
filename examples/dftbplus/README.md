@@ -24,6 +24,7 @@
 | `08_molecular_dynamics.py` | MD, Berendsen thermostat |
 | `09_solvation.py` | C-PCM (ddCOSMO) solvation energy |
 | `10_periodic.py` | graphene with k-points |
+| `11_shell_dep.py` | DFTB-2 shell-resolved SCC, off vs on |
 
 Not available: CI-DFTB, HF, frequencies, transition state. Solvation:
 `cpcm` model only.

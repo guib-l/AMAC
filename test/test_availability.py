@@ -134,7 +134,8 @@ def test_check_software_smoke(tmp_path):
 
 def test_check_all_names():
     """Every asset of AMAC is checked."""
-    assert set(check_all({})) == set(REQUIREMENTS) == {"deMonNano", "dftb+", "orca", "pyscf"}
+    assert set(check_all({})) == set(REQUIREMENTS) == {
+        "deMonNano", "dftb+", "orca", "pyscf", "openmolcas"}
 
 
 @pytest.mark.parametrize("name", sorted(REQUIREMENTS))

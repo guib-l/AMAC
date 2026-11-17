@@ -45,6 +45,7 @@ Shared structures live in [`data/`](data/).
 | Solvation | 10 | 09 | – | 12 | 08 |
 | Periodic (k-points) | – | 10 | 08 | – | – |
 | Parallel run | – | – | 10 | – | – |
+| DFTB shell-resolved SCC | – | 11 | 11 | – | – |
 
 Numbers are the script prefixes; `–` means not supported by the asset
 (`"supported": false` or absent from its `equiv.json`).

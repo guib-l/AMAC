@@ -90,7 +90,7 @@
                     "target": "Hamiltonian.DFTB.ReadInitialCharges"
                 },
                 "shell-dep": {
-                    "target": "Hamiltonian.DFTB.ShellResolvedScc"
+                    "target": "Hamiltonian.DFTB.ShellResolvedSCC"
                 },
                 "mixer":     {
                     "target": "Hamiltonian.DFTB.Mixer",
