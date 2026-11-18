@@ -32,12 +32,12 @@ from ase import Atoms
 import amac
 from amac.amac import AMAC
 
-NMAX = 1999
+NMAX = 20
 
 XYZ_PATH = Path("../ANI-1/xyz/ani1_xyz_01.xyz")
 
 SOFTWARES = ("deMonNano", "dftb+")
-METHODS = ("dftb-2", "dftb-3")
+METHODS = ("dftb-1", "dftb-2", "dftb-3")
 
 BASIS = {
     "deMonNano": {
@@ -169,9 +169,7 @@ for idx, (atoms, _) in enumerate(molecules[:NMAX]):
                 method_args={"basis": basis_args(software, method), **margs},
                 module="single-point",
                 module_args={},
-                software_args={
-                    "deMonNano": {"DEMON_PARAMETERS.ACTIVE.DFTB.FHUB": True},
-                },
+                software_args={},
             )
             try:
                 calc.run(atoms)
@@ -182,6 +180,10 @@ for idx, (atoms, _) in enumerate(molecules[:NMAX]):
                 print(f"{software} {method} molecule {idx}: failed ({error})")
                 continue
             energies[software][method][idx] = float(calc.instance.res.product["lowest-energy"])
+
+
+print(energies["deMonNano"]["dftb-1"])
+print(energies["dftb+"]["dftb-1"])
 
 for software in SOFTWARES:
     for method in METHODS:

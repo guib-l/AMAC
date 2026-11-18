@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 
 from ase.io import read
+import numpy as np
 
 import amac
 from amac.amac import AMAC
@@ -30,10 +31,28 @@ BASIS = {
 }
 SOFTWARES = ("dftb+", "deMonNano")
 
+hubbard = {
+    "off":{
+        "C" : 0.38330,
+        "H" : 0.4700,
+        "O" : 0.5222,
+        "N" : 0.4579
+    },
+    "on":{
+        "C" : (0.4175,0.38330),
+        "H" : 0.4700,
+        "O" : (0.55640,0.5222),
+        "N" : (0.49100,0.45790) 
+    }
+}
 
 def total_energy(software, label, dep, image):
     """Return the DFTB-2 total energy (Hartree) of ``image``, or NaN on failure."""
     scc = "on" if dep else "off"
+    hubbs = hubbard[scc]
+    hubbs = dict(
+        filter(lambda item: item[0] in np.unique(image.symbols), hubbs.items())
+    )
     calc = AMAC(
         software=software,
         workdir=f".run/general/shell_dep/{software}/{label}/{scc}",
@@ -42,10 +61,10 @@ def total_energy(software, label, dep, image):
     calc.handler_register("lowest-energy")
     calc.parameters_register(
         method="dftb-2",
-        method_args={"basis": BASIS[software], "shell-dep": dep},
+        method_args={"basis": BASIS[software],"scc-tol":1e-5,"scc-max":999, "shell-dep": dep},
         module="single-point",
         software_args={
-        #    "deMonNano": {"DEMON_PARAMETERS.ACTIVE.DFTB.FHUB": True},
+            "dftb+":{"Hamiltonian.DFTB.CustomisedHubbards": hubbs}
         },
     )
     try:
