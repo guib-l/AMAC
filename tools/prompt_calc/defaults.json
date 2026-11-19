@@ -1,0 +1,51 @@
+{
+  "software": "dftb+",
+  "scc": {
+    "scc-max": 999,
+    "filling": 50
+  },
+  "dftb-3-conventions": {
+    "h-correction": {
+      "value": "damping",
+      "exponent": 4.0
+    }
+  },
+  "sk-sets": {
+    "3ob": {
+      "match": [
+        "3ob",
+        "mio-1-1"
+      ],
+      "hubbard-derivs": {
+        "H": -0.1857,
+        "O": -0.1575
+      },
+      "dispersion-damping": {
+        "d3-bj": {
+          "s6": 1.0,
+          "s8": 0.49,
+          "a1": 0.5719,
+          "a2": 3.6017
+        },
+        "d4": {
+          "s6": 1.0,
+          "s8": 1.1948145,
+          "s9": 0.0,
+          "a1": 0.6074567,
+          "a2": 4.9336133
+        }
+      }
+    }
+  },
+  "molecule-aliases": {
+    "eau": "H2O",
+    "water": "H2O",
+    "h2o": "H2O",
+    "méthane": "CH4",
+    "methane": "CH4",
+    "ammoniac": "NH3",
+    "ammonia": "NH3",
+    "méthanol": "CH3OH",
+    "methanol": "CH3OH"
+  }
+}

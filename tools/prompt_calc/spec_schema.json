@@ -1,0 +1,3091 @@
+{
+  "aliases": {
+    "ccsd-t": "ccsd(t)",
+    "dftb-1": "dftb",
+    "dftb-ci": "ci-dftb",
+    "dftb3": "dftb-3",
+    "freq": "frequencies",
+    "ir": "frequencies",
+    "ks": "dft",
+    "md": "molecular-dynamics",
+    "opt": "optimization-geometry",
+    "optimization": "optimization-geometry",
+    "scc-dftb": "dftb-2",
+    "scc-dftb-ci": "ci-dftb",
+    "scf": "hf",
+    "single": "single-point",
+    "solvent": "solvation",
+    "sp": "single-point",
+    "td": "excited-states",
+    "td-dftb": "excited-states",
+    "ts": "transition-state"
+  },
+  "data": {
+    "basis-sets": {
+      "3-21g": [],
+      "6-31++g**": [
+        "6-31++g(d,p)"
+      ],
+      "6-31+g*": [
+        "6-31+g(d)"
+      ],
+      "6-31+g**": [
+        "6-31+g(d,p)"
+      ],
+      "6-311++g(2d,2p)": [],
+      "6-311++g**": [
+        "6-311++g(d,p)"
+      ],
+      "6-311+g**": [
+        "6-311+g(d,p)"
+      ],
+      "6-311g": [],
+      "6-311g*": [
+        "6-311g(d)"
+      ],
+      "6-311g**": [
+        "6-311g(d,p)"
+      ],
+      "6-31g": [],
+      "6-31g*": [
+        "6-31g(d)"
+      ],
+      "6-31g**": [
+        "6-31g(d,p)"
+      ],
+      "aug-cc-pv5z": [],
+      "aug-cc-pvdz": [],
+      "aug-cc-pvdz/c": [
+        "aug-cc-pvdz-ri"
+      ],
+      "aug-cc-pvqz": [],
+      "aug-cc-pvqz/c": [
+        "aug-cc-pvqz-ri"
+      ],
+      "aug-cc-pvtz": [],
+      "aug-cc-pvtz/c": [
+        "aug-cc-pvtz-ri"
+      ],
+      "aug-pcseg-1": [],
+      "aug-pcseg-2": [],
+      "cc-pv5z": [],
+      "cc-pvdz": [],
+      "cc-pvdz/c": [
+        "cc-pvdz-ri"
+      ],
+      "cc-pvqz": [],
+      "cc-pvqz/c": [
+        "cc-pvqz-ri"
+      ],
+      "cc-pvtz": [],
+      "cc-pvtz/c": [
+        "cc-pvtz-ri"
+      ],
+      "def2-qzvp": [],
+      "def2-qzvpp": [],
+      "def2-qzvpp/c": [],
+      "def2-qzvppd": [],
+      "def2-svp": [],
+      "def2-svp/c": [],
+      "def2-svpd": [],
+      "def2-tzvp": [],
+      "def2-tzvp/c": [],
+      "def2-tzvpd": [],
+      "def2-tzvpp": [],
+      "def2-tzvppd": [],
+      "def2/j": [
+        "weigend",
+        "def2-universal-jfit"
+      ],
+      "def2/jk": [
+        "def2-universal-jkfit"
+      ],
+      "pcseg-0": [],
+      "pcseg-1": [],
+      "pcseg-2": [],
+      "pcseg-3": [],
+      "pcseg-4": [],
+      "sto-3g": []
+    },
+    "functionals": {
+      "b2plyp": [],
+      "b3lyp": [],
+      "b3lyp-g": [],
+      "b3pw91": [],
+      "b97": [],
+      "b97-d3": [],
+      "bhandhlyp": [],
+      "blyp": [],
+      "bp86": [],
+      "cam-b3lyp": [],
+      "hse06": [],
+      "lc-wpbe": [],
+      "lda": [
+        "svwn5"
+      ],
+      "m06": [],
+      "m06-2x": [],
+      "m06-l": [],
+      "o3lyp": [],
+      "olyp": [],
+      "pbe": [],
+      "pbe0": [
+        "pbe1pbe",
+        "pbeh"
+      ],
+      "pw6b95": [],
+      "pw91": [],
+      "pwpb95": [],
+      "r2scan": [],
+      "revpbe": [],
+      "revpbe0": [],
+      "revtpss": [],
+      "rpbe": [],
+      "scan": [],
+      "scan0": [],
+      "svwn3": [],
+      "tpss": [],
+      "tpssh": [],
+      "wb97": [],
+      "wb97m-v": [],
+      "wb97x": [],
+      "wb97x-d3": [],
+      "wb97x-d4": [],
+      "wb97x-v": [],
+      "x3lyp": []
+    }
+  },
+  "methods": {
+    "caspt2": {
+      "alias": [],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "frozen-core": {
+          "description": "Freeze the core orbitals in the correlation treatment",
+          "type": "bool"
+        },
+        "imaginary-shift": {
+          "description": "Imaginary level shift against intruder states (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "ipea-shift": {
+          "description": "IPEA shift of the zeroth-order Hamiltonian (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "multistate": {
+          "choices": [
+            "single",
+            "ms",
+            "xms",
+            "rms"
+          ],
+          "description": "Treatment of the CASSCF roots: single-state, MS, XMS or RMS-CASPT2",
+          "type": "str"
+        },
+        "real-shift": {
+          "description": "Real level shift against intruder states (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "roots": {
+          "description": "Number of CI roots",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "weights": {
+          "description": "State-averaging weights, one per root",
+          "type": "list[float]"
+        }
+      },
+      "mandatory-attribute": {
+        "active-electrons": {
+          "description": "Number of active electrons",
+          "range": [
+            0,
+            null
+          ],
+          "type": "int"
+        },
+        "active-orbitals": {
+          "description": "Number of active orbitals",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        }
+      }
+    },
+    "casscf": {
+      "alias": [],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "roots": {
+          "description": "Number of CI roots",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "weights": {
+          "description": "State-averaging weights, one per root",
+          "type": "list[float]"
+        }
+      },
+      "mandatory-attribute": {
+        "active-electrons": {
+          "description": "Number of active electrons",
+          "range": [
+            0,
+            null
+          ],
+          "type": "int"
+        },
+        "active-orbitals": {
+          "description": "Number of active orbitals",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        }
+      }
+    },
+    "ccsd": {
+      "alias": [],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "cc-max": {
+          "description": "Maximum number of coupled-cluster iterations",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "cc-tol": {
+          "description": "Coupled-cluster energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "frozen-core": {
+          "description": "Freeze the core orbitals in the correlation treatment",
+          "type": "bool"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        }
+      }
+    },
+    "ccsd(t)": {
+      "alias": [
+        "CCSD-T"
+      ],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "cc-max": {
+          "description": "Maximum number of coupled-cluster iterations",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "cc-tol": {
+          "description": "Coupled-cluster energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "frozen-core": {
+          "description": "Freeze the core orbitals in the correlation treatment",
+          "type": "bool"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        }
+      }
+    },
+    "ci-dftb": {
+      "alias": [
+        "DFTB-CI",
+        "SCC-DFTB-CI"
+      ],
+      "allowed-attribute": {
+        "charge": {
+          "description": "Total charge of the system (e)",
+          "type": "float"
+        },
+        "constraints": {
+          "description": "To be confirmed (deMonNano CI.CONST)",
+          "type": "list[float]"
+        },
+        "diagonalizer": {
+          "choices": [
+            "qr",
+            "divide-and-conquer",
+            "relatively-robust"
+          ],
+          "description": "Dense eigensolver",
+          "type": "str"
+        },
+        "dispersion": {
+          "children": {
+            "allowed-attribute": {
+              "a1": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "a2": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "description": "Becke-Johnson damping (bohr)",
+                "type": "float"
+              },
+              "alpha6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              },
+              "hh-repulsion": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "description": "H-H repulsion of DFTB3-D3H5",
+                "type": "bool"
+              },
+              "s6": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s8": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s9": {
+                "authorized-with": [
+                  "d4"
+                ],
+                "description": "Three-body (non-additive) scaling",
+                "type": "float"
+              },
+              "sr6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "lj-uff",
+            "d3-bj",
+            "d3-zero",
+            "d4",
+            "model-1",
+            "model-2"
+          ],
+          "description": "Empirical dispersion correction",
+          "type": "str"
+        },
+        "filling": {
+          "description": "Electronic temperature of the level occupation (K)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "h-correction": {
+          "children": {
+            "allowed-attribute": {
+              "exponent": {
+                "authorized-with": [
+                  "damping"
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "damping",
+            "h5"
+          ],
+          "description": "Correction of the interactions involving hydrogen",
+          "type": "str"
+        },
+        "kpoints": {
+          "description": "Monkhorst-Pack grid l1 l2 l3 (periodic systems only)",
+          "type": "list[int]"
+        },
+        "level-shift": {
+          "description": "Level shifting applied during the SCC cycles",
+          "type": "float"
+        },
+        "mixer": {
+          "children": {
+            "allowed-attribute": {
+              "generations": {
+                "authorized-with": [
+                  "anderson",
+                  "diis"
+                ],
+                "description": "Number of previous iterations used by the mixer",
+                "type": "int"
+              },
+              "mixing-parameter": {
+                "authorized-with": [
+                  "simple",
+                  "broyden",
+                  "anderson"
+                ],
+                "range": [
+                  0.0,
+                  1.0
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "simple",
+            "broyden",
+            "anderson",
+            "diis"
+          ],
+          "type": "str"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "no-slater": {
+          "description": "To be confirmed (deMonNano CI.NOSLAT)",
+          "type": "bool"
+        },
+        "restart-charges": {
+          "description": "Build the first Hamiltonian from previously written charges",
+          "type": "bool"
+        },
+        "scc-max": {
+          "description": "Maximum number of SCC cycles",
+          "type": "int"
+        },
+        "scc-strict": {
+          "description": "Stop the calculation when the SCC cycle does not converge",
+          "type": "bool"
+        },
+        "scc-tol": {
+          "description": "Maximum charge difference between two SCC cycles",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "type": "float"
+        },
+        "smearing": {
+          "children": {
+            "allowed-attribute": {
+              "order": {
+                "authorized-with": [
+                  "methfessel-paxton"
+                ],
+                "description": "Order of the Methfessel-Paxton scheme",
+                "range": [
+                  0,
+                  null
+                ],
+                "type": "int"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "fermi",
+            "gaussian",
+            "methfessel-paxton"
+          ],
+          "description": "Occupation function of the one-electron levels",
+          "type": "str"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "children": {
+            "allowed-attribute": {
+              "format": {
+                "description": "",
+                "type": "str"
+              },
+              "lower-case": {
+                "description": "Element names written in lower case in the file names",
+                "type": "bool"
+              },
+              "ptype": {
+                "description": "",
+                "type": "str"
+              },
+              "separator": {
+                "description": "Separator between the two element names of a file",
+                "type": "str"
+              },
+              "suffix": {
+                "description": "Extension of the Slater-Koster files",
+                "type": "str"
+              }
+            },
+            "mandatory-attribute": {
+              "directory": {
+                "description": "Directory holding the Slater-Koster files",
+                "type": "str"
+              }
+            }
+          },
+          "description": "Slater-Koster parameter set",
+          "type": "str"
+        },
+        "fragments": {
+          "description": "Partition of the atoms into fragments",
+          "type": "list[int]"
+        },
+        "size-ci": {
+          "description": "Size of the configuration interaction space",
+          "type": "int"
+        }
+      }
+    },
+    "dft": {
+      "alias": [
+        "KS"
+      ],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "dispersion": {
+          "choices": [
+            "d3-bj",
+            "d3-zero",
+            "d4"
+          ],
+          "description": "Empirical dispersion correction",
+          "type": "str"
+        },
+        "grid": {
+          "choices": [
+            "coarse",
+            "default",
+            "fine"
+          ],
+          "description": "Integration grid quality",
+          "type": "str"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        },
+        "functional": {
+          "choices": [
+            "B2PLYP",
+            "B3LYP",
+            "B3LYP-G",
+            "B3PW91",
+            "B97",
+            "B97-D3",
+            "BHANDHLYP",
+            "BLYP",
+            "BP86",
+            "CAM-B3LYP",
+            "HSE06",
+            "LC-WPBE",
+            "LDA",
+            "M06",
+            "M06-2X",
+            "M06-L",
+            "O3LYP",
+            "OLYP",
+            "PBE",
+            "PBE0",
+            "PW6B95",
+            "PW91",
+            "PWPB95",
+            "R2SCAN",
+            "REVPBE",
+            "REVPBE0",
+            "REVTPSS",
+            "RPBE",
+            "SCAN",
+            "SCAN0",
+            "SVWN3",
+            "TPSS",
+            "TPSSH",
+            "WB97",
+            "WB97M-V",
+            "WB97X",
+            "WB97X-D3",
+            "WB97X-D4",
+            "WB97X-V",
+            "X3LYP"
+          ],
+          "choices-from": {
+            "list": "functionals",
+            "strict": true
+          },
+          "description": "Exchange-correlation functional name",
+          "type": "str"
+        }
+      }
+    },
+    "dftb": {
+      "alias": [
+        "DFTB-1"
+      ],
+      "allowed-attribute": {
+        "charge": {
+          "description": "Total charge of the system (e)",
+          "type": "float"
+        },
+        "diagonalizer": {
+          "choices": [
+            "qr",
+            "divide-and-conquer",
+            "relatively-robust"
+          ],
+          "description": "Dense eigensolver",
+          "type": "str"
+        },
+        "dispersion": {
+          "children": {
+            "allowed-attribute": {
+              "a1": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "a2": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "description": "Becke-Johnson damping (bohr)",
+                "type": "float"
+              },
+              "alpha6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              },
+              "hh-repulsion": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "description": "H-H repulsion of DFTB3-D3H5",
+                "type": "bool"
+              },
+              "s6": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s8": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s9": {
+                "authorized-with": [
+                  "d4"
+                ],
+                "description": "Three-body (non-additive) scaling",
+                "type": "float"
+              },
+              "sr6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "lj-uff",
+            "d3-bj",
+            "d3-zero",
+            "d4",
+            "model-1",
+            "model-2"
+          ],
+          "description": "Empirical dispersion correction",
+          "type": "str"
+        },
+        "filling": {
+          "description": "Electronic temperature of the level occupation (K)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "kpoints": {
+          "description": "Monkhorst-Pack grid l1 l2 l3 (periodic systems only)",
+          "type": "list[int]"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "smearing": {
+          "children": {
+            "allowed-attribute": {
+              "order": {
+                "authorized-with": [
+                  "methfessel-paxton"
+                ],
+                "description": "Order of the Methfessel-Paxton scheme",
+                "range": [
+                  0,
+                  null
+                ],
+                "type": "int"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "fermi",
+            "gaussian",
+            "methfessel-paxton"
+          ],
+          "description": "Occupation function of the one-electron levels",
+          "type": "str"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "children": {
+            "allowed-attribute": {
+              "format": {
+                "description": "",
+                "type": "str"
+              },
+              "lower-case": {
+                "description": "Element names written in lower case in the file names",
+                "type": "bool"
+              },
+              "ptype": {
+                "description": "",
+                "type": "str"
+              },
+              "separator": {
+                "description": "Separator between the two element names of a file",
+                "type": "str"
+              },
+              "suffix": {
+                "description": "Extension of the Slater-Koster files",
+                "type": "str"
+              }
+            },
+            "mandatory-attribute": {
+              "directory": {
+                "description": "Directory holding the Slater-Koster files",
+                "type": "str"
+              }
+            }
+          },
+          "description": "Slater-Koster parameter set",
+          "type": "str"
+        }
+      }
+    },
+    "dftb-2": {
+      "alias": [
+        "SCC-DFTB"
+      ],
+      "allowed-attribute": {
+        "charge": {
+          "description": "Total charge of the system (e)",
+          "type": "float"
+        },
+        "diagonalizer": {
+          "choices": [
+            "qr",
+            "divide-and-conquer",
+            "relatively-robust"
+          ],
+          "description": "Dense eigensolver",
+          "type": "str"
+        },
+        "dispersion": {
+          "children": {
+            "allowed-attribute": {
+              "a1": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "a2": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "description": "Becke-Johnson damping (bohr)",
+                "type": "float"
+              },
+              "alpha6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              },
+              "hh-repulsion": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "description": "H-H repulsion of DFTB3-D3H5",
+                "type": "bool"
+              },
+              "s6": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s8": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s9": {
+                "authorized-with": [
+                  "d4"
+                ],
+                "description": "Three-body (non-additive) scaling",
+                "type": "float"
+              },
+              "sr6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "lj-uff",
+            "d3-bj",
+            "d3-zero",
+            "d4",
+            "model-1",
+            "model-2"
+          ],
+          "description": "Empirical dispersion correction",
+          "type": "str"
+        },
+        "filling": {
+          "description": "Electronic temperature of the level occupation (K)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "h-correction": {
+          "children": {
+            "allowed-attribute": {
+              "exponent": {
+                "authorized-with": [
+                  "damping"
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "damping",
+            "h5"
+          ],
+          "description": "Correction of the interactions involving hydrogen",
+          "type": "str"
+        },
+        "kpoints": {
+          "description": "Monkhorst-Pack grid l1 l2 l3 (periodic systems only)",
+          "type": "list[int]"
+        },
+        "level-shift": {
+          "description": "Level shifting applied during the SCC cycles",
+          "type": "float"
+        },
+        "mixer": {
+          "children": {
+            "allowed-attribute": {
+              "generations": {
+                "authorized-with": [
+                  "anderson",
+                  "diis"
+                ],
+                "description": "Number of previous iterations used by the mixer",
+                "type": "int"
+              },
+              "mixing-parameter": {
+                "authorized-with": [
+                  "simple",
+                  "broyden",
+                  "anderson"
+                ],
+                "range": [
+                  0.0,
+                  1.0
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "simple",
+            "broyden",
+            "anderson",
+            "diis"
+          ],
+          "type": "str"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "restart-charges": {
+          "description": "Build the first Hamiltonian from previously written charges",
+          "type": "bool"
+        },
+        "scc-max": {
+          "description": "Maximum number of SCC cycles",
+          "type": "int"
+        },
+        "scc-strict": {
+          "description": "Stop the calculation when the SCC cycle does not converge",
+          "type": "bool"
+        },
+        "scc-tol": {
+          "description": "Maximum charge difference between two SCC cycles",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "type": "float"
+        },
+        "shell-dep": {
+          "description": "Shell-resolved Hubbard U in the SCC contributions",
+          "type": "bool"
+        },
+        "smearing": {
+          "children": {
+            "allowed-attribute": {
+              "order": {
+                "authorized-with": [
+                  "methfessel-paxton"
+                ],
+                "description": "Order of the Methfessel-Paxton scheme",
+                "range": [
+                  0,
+                  null
+                ],
+                "type": "int"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "fermi",
+            "gaussian",
+            "methfessel-paxton"
+          ],
+          "description": "Occupation function of the one-electron levels",
+          "type": "str"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "children": {
+            "allowed-attribute": {
+              "format": {
+                "description": "",
+                "type": "str"
+              },
+              "lower-case": {
+                "description": "Element names written in lower case in the file names",
+                "type": "bool"
+              },
+              "ptype": {
+                "description": "",
+                "type": "str"
+              },
+              "separator": {
+                "description": "Separator between the two element names of a file",
+                "type": "str"
+              },
+              "suffix": {
+                "description": "Extension of the Slater-Koster files",
+                "type": "str"
+              }
+            },
+            "mandatory-attribute": {
+              "directory": {
+                "description": "Directory holding the Slater-Koster files",
+                "type": "str"
+              }
+            }
+          },
+          "description": "Slater-Koster parameter set",
+          "type": "str"
+        }
+      }
+    },
+    "dftb-3": {
+      "alias": [
+        "DFTB3"
+      ],
+      "allowed-attribute": {
+        "charge": {
+          "description": "Total charge of the system (e)",
+          "type": "float"
+        },
+        "diagonalizer": {
+          "choices": [
+            "qr",
+            "divide-and-conquer",
+            "relatively-robust"
+          ],
+          "description": "Dense eigensolver",
+          "type": "str"
+        },
+        "dispersion": {
+          "children": {
+            "allowed-attribute": {
+              "a1": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "a2": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d4"
+                ],
+                "description": "Becke-Johnson damping (bohr)",
+                "type": "float"
+              },
+              "alpha6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              },
+              "hh-repulsion": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "description": "H-H repulsion of DFTB3-D3H5",
+                "type": "bool"
+              },
+              "s6": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s8": {
+                "authorized-with": [
+                  "d3-bj",
+                  "d3-zero",
+                  "d4"
+                ],
+                "type": "float"
+              },
+              "s9": {
+                "authorized-with": [
+                  "d4"
+                ],
+                "description": "Three-body (non-additive) scaling",
+                "type": "float"
+              },
+              "sr6": {
+                "authorized-with": [
+                  "d3-zero"
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "lj-uff",
+            "d3-bj",
+            "d3-zero",
+            "d4",
+            "model-1",
+            "model-2"
+          ],
+          "description": "Empirical dispersion correction",
+          "type": "str"
+        },
+        "filling": {
+          "description": "Electronic temperature of the level occupation (K)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "h-correction": {
+          "children": {
+            "allowed-attribute": {
+              "exponent": {
+                "authorized-with": [
+                  "damping"
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "damping",
+            "h5"
+          ],
+          "description": "Correction of the interactions involving hydrogen",
+          "type": "str"
+        },
+        "kpoints": {
+          "description": "Monkhorst-Pack grid l1 l2 l3 (periodic systems only)",
+          "type": "list[int]"
+        },
+        "level-shift": {
+          "description": "Level shifting applied during the SCC cycles",
+          "type": "float"
+        },
+        "mixer": {
+          "children": {
+            "allowed-attribute": {
+              "generations": {
+                "authorized-with": [
+                  "anderson",
+                  "diis"
+                ],
+                "description": "Number of previous iterations used by the mixer",
+                "type": "int"
+              },
+              "mixing-parameter": {
+                "authorized-with": [
+                  "simple",
+                  "broyden",
+                  "anderson"
+                ],
+                "range": [
+                  0.0,
+                  1.0
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "simple",
+            "broyden",
+            "anderson",
+            "diis"
+          ],
+          "type": "str"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "restart-charges": {
+          "description": "Build the first Hamiltonian from previously written charges",
+          "type": "bool"
+        },
+        "scc-max": {
+          "description": "Maximum number of SCC cycles",
+          "type": "int"
+        },
+        "scc-strict": {
+          "description": "Stop the calculation when the SCC cycle does not converge",
+          "type": "bool"
+        },
+        "scc-tol": {
+          "description": "Maximum charge difference between two SCC cycles",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "type": "float"
+        },
+        "shell-dep": {
+          "description": "Shell-resolved Hubbard U in the SCC contributions",
+          "type": "bool"
+        },
+        "smearing": {
+          "children": {
+            "allowed-attribute": {
+              "order": {
+                "authorized-with": [
+                  "methfessel-paxton"
+                ],
+                "description": "Order of the Methfessel-Paxton scheme",
+                "range": [
+                  0,
+                  null
+                ],
+                "type": "int"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "fermi",
+            "gaussian",
+            "methfessel-paxton"
+          ],
+          "description": "Occupation function of the one-electron levels",
+          "type": "str"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "children": {
+            "allowed-attribute": {
+              "format": {
+                "description": "",
+                "type": "str"
+              },
+              "lower-case": {
+                "description": "Element names written in lower case in the file names",
+                "type": "bool"
+              },
+              "ptype": {
+                "description": "",
+                "type": "str"
+              },
+              "separator": {
+                "description": "Separator between the two element names of a file",
+                "type": "str"
+              },
+              "suffix": {
+                "description": "Extension of the Slater-Koster files",
+                "type": "str"
+              }
+            },
+            "mandatory-attribute": {
+              "directory": {
+                "description": "Directory holding the Slater-Koster files",
+                "type": "str"
+              }
+            }
+          },
+          "description": "Slater-Koster parameter set",
+          "type": "str"
+        },
+        "hubbard-derivs": {
+          "description": "Hubbard U derivatives per element (a.u.), one per shell with shell-dep",
+          "type": "dict[str,float|list[float]]"
+        }
+      }
+    },
+    "hf": {
+      "alias": [
+        "SCF"
+      ],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        }
+      }
+    },
+    "mp2": {
+      "alias": [],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "frozen-core": {
+          "description": "Freeze the core orbitals in the correlation treatment",
+          "type": "bool"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        }
+      },
+      "mandatory-attribute": {
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        }
+      }
+    },
+    "nevpt2": {
+      "alias": [],
+      "allowed-attribute": {
+        "aux-basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "auxiliary-j",
+              "auxiliary-jk",
+              "auxiliary-c"
+            ],
+            "strict": false
+          },
+          "description": "Auxiliary basis set for density fitting",
+          "type": "str"
+        },
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "density-fitting": {
+          "description": "Density fitting (RI) of the two-electron integrals",
+          "type": "bool"
+        },
+        "frozen-core": {
+          "description": "Freeze the core orbitals in the correlation treatment",
+          "type": "bool"
+        },
+        "level-shift": {
+          "description": "Level shift of the virtual orbitals (Hartree)",
+          "type": "float"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "multistate": {
+          "choices": [
+            "single",
+            "qd"
+          ],
+          "description": "Treatment of the CASSCF roots: single-state or quasi-degenerate (QD-NEVPT2)",
+          "type": "str"
+        },
+        "reference": {
+          "choices": [
+            "restricted",
+            "unrestricted",
+            "restricted-open"
+          ],
+          "description": "Reference wavefunction",
+          "type": "str"
+        },
+        "roots": {
+          "description": "Number of CI roots",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-max": {
+          "description": "Maximum number of SCF cycles",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "scf-tol": {
+          "description": "SCF energy convergence threshold (Hartree)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "variant": {
+          "choices": [
+            "sc",
+            "pc"
+          ],
+          "description": "Strongly contracted (sc) or partially contracted (pc) NEVPT2",
+          "type": "str"
+        },
+        "weights": {
+          "description": "State-averaging weights, one per root",
+          "type": "list[float]"
+        }
+      },
+      "mandatory-attribute": {
+        "active-electrons": {
+          "description": "Number of active electrons",
+          "range": [
+            0,
+            null
+          ],
+          "type": "int"
+        },
+        "active-orbitals": {
+          "description": "Number of active orbitals",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "basis": {
+          "choices": [
+            "3-21G",
+            "6-31++G**",
+            "6-31+G*",
+            "6-31+G**",
+            "6-311++G(2D,2P)",
+            "6-311++G**",
+            "6-311+G**",
+            "6-311G",
+            "6-311G*",
+            "6-311G**",
+            "6-31G",
+            "6-31G*",
+            "6-31G**",
+            "AUG-CC-PV5Z",
+            "AUG-CC-PVDZ",
+            "AUG-CC-PVDZ/C",
+            "AUG-CC-PVQZ",
+            "AUG-CC-PVQZ/C",
+            "AUG-CC-PVTZ",
+            "AUG-CC-PVTZ/C",
+            "AUG-PCSEG-1",
+            "AUG-PCSEG-2",
+            "CC-PV5Z",
+            "CC-PVDZ",
+            "CC-PVDZ/C",
+            "CC-PVQZ",
+            "CC-PVQZ/C",
+            "CC-PVTZ",
+            "CC-PVTZ/C",
+            "DEF2-QZVP",
+            "DEF2-QZVPP",
+            "DEF2-QZVPP/C",
+            "DEF2-QZVPPD",
+            "DEF2-SVP",
+            "DEF2-SVP/C",
+            "DEF2-SVPD",
+            "DEF2-TZVP",
+            "DEF2-TZVP/C",
+            "DEF2-TZVPD",
+            "DEF2-TZVPP",
+            "DEF2-TZVPPD",
+            "DEF2/J",
+            "DEF2/JK",
+            "PCSEG-0",
+            "PCSEG-1",
+            "PCSEG-2",
+            "PCSEG-3",
+            "PCSEG-4",
+            "STO-3G"
+          ],
+          "choices-from": {
+            "list": "basis-sets",
+            "role": [
+              "orbital"
+            ],
+            "strict": false
+          },
+          "description": "Orbital basis set name",
+          "type": "str"
+        }
+      }
+    },
+    "xtb": {
+      "alias": [],
+      "allowed-attribute": {
+        "charge": {
+          "description": "Total charge of the system (e), converted to int by the software",
+          "type": "float"
+        },
+        "filling": {
+          "description": "Electronic temperature of the level occupation (K)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "level": {
+          "choices": [
+            "gfn1",
+            "gfn2"
+          ],
+          "description": "GFN-xTB parametrisation",
+          "type": "str"
+        },
+        "multiplicity": {
+          "description": "Spin multiplicity 2S+1",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        }
+      },
+      "mandatory-attribute": {}
+    }
+  },
+  "modules": {
+    "excited-states": {
+      "alias": [
+        "td-dftb",
+        "td"
+      ],
+      "allowed-attribute": {
+        "diagonalizer": {
+          "choices": [
+            "arpack",
+            "stratmann"
+          ],
+          "description": "Diagonalizer of the linear-response eigenvalue problem",
+          "type": "str"
+        },
+        "excitations": {
+          "description": "Number of excited states to calculate",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "symmetry": {
+          "choices": [
+            "singlet",
+            "triplet",
+            "both"
+          ],
+          "description": "Spin symmetry of the excited states",
+          "type": "str"
+        },
+        "tda": {
+          "description": "Tamm-Dancoff approximation",
+          "type": "bool"
+        }
+      },
+      "mandatory-attribute": {},
+      "mandatory-handler": [
+        "excited-states"
+      ]
+    },
+    "frequencies": {
+      "alias": [
+        "freq",
+        "ir"
+      ],
+      "allowed-attribute": {},
+      "mandatory-attribute": {},
+      "mandatory-handler": [
+        "frequencies"
+      ]
+    },
+    "molecular-dynamics": {
+      "alias": [
+        "md"
+      ],
+      "allowed-attribute": {
+        "temperature": {
+          "description": "Maxwell-Boltzmann initial velocities and thermostat target (K)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        },
+        "thermostat": {
+          "children": {
+            "allowed-attribute": {
+              "time-constant": {
+                "authorized-with": [
+                  "berendsen"
+                ],
+                "description": "Berendsen coupling time (fs), 100 if not given",
+                "range": [
+                  0.0,
+                  null
+                ],
+                "type": "float"
+              }
+            },
+            "mandatory-attribute": {}
+          },
+          "choices": [
+            "none",
+            "berendsen"
+          ],
+          "description": "Thermostat (none: NVE)",
+          "type": "str"
+        }
+      },
+      "mandatory-attribute": {
+        "steps": {
+          "description": "Number of MD steps",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        },
+        "time-step": {
+          "description": "Integration time step (fs)",
+          "range": [
+            0.0,
+            null
+          ],
+          "type": "float"
+        }
+      },
+      "mandatory-handler": [
+        "trajectory"
+      ]
+    },
+    "optimization-geometry": {
+      "alias": [
+        "Opt",
+        "optimization"
+      ],
+      "allowed-attribute": {
+        "algorithm": {
+          "type": "str"
+        },
+        "max-step": {
+          "type": "int"
+        }
+      },
+      "mandatory-attribute": {},
+      "mandatory-handler": [
+        "lowest-energy"
+      ]
+    },
+    "single-point": {
+      "alias": [
+        "sp",
+        "single"
+      ],
+      "allowed-attribute": {},
+      "mandatory-attribute": {},
+      "mandatory-handler": [
+        "lowest-energy"
+      ]
+    },
+    "transition-state": {
+      "alias": [
+        "ts"
+      ],
+      "allowed-attribute": {
+        "hessian": {
+          "choices": [
+            "calculate",
+            "approximate"
+          ],
+          "description": "Initial Hessian: exact (calculate) or model guess (approximate)",
+          "type": "str"
+        },
+        "max-step": {
+          "description": "Maximum number of optimisation steps",
+          "range": [
+            1,
+            null
+          ],
+          "type": "int"
+        }
+      },
+      "mandatory-attribute": {},
+      "mandatory-handler": [
+        "lowest-energy",
+        "final-geometry"
+      ]
+    }
+  },
+  "options": {
+    "solvation": {
+      "alias": [
+        "solvent"
+      ],
+      "allowed-attribute": {
+        "epsilon": {
+          "description": "Dielectric constant of a solvent not listed (cpcm only)",
+          "range": [
+            1.0,
+            null
+          ],
+          "type": "float"
+        },
+        "solvent": {
+          "description": "Solvent name; the names known by a software are listed in its equiv.json, any other name is passed as given",
+          "type": "str"
+        }
+      },
+      "mandatory-attribute": {
+        "model": {
+          "choices": [
+            "cpcm",
+            "smd",
+            "gbsa"
+          ],
+          "description": "Implicit solvent model",
+          "type": "str"
+        }
+      }
+    }
+  },
+  "software": {
+    "deMonNano": {
+      "alias": [
+        "demonano",
+        "demon_nano",
+        "demon-nano"
+      ],
+      "handlers": [
+        "charges",
+        "dipole",
+        "electronic-energy",
+        "energy-resume",
+        "excited-states",
+        "final-geometry",
+        "forces",
+        "frequencies",
+        "homo-lumo-gap",
+        "k-points",
+        "lowest-energy",
+        "n-electrons",
+        "properties",
+        "repulsive-energy"
+      ]
+    },
+    "dftb+": {
+      "alias": [
+        "dftbplus",
+        "DFTB+",
+        "DFTBplus"
+      ],
+      "handlers": [
+        "charges",
+        "dipole",
+        "eigenvalues",
+        "electronic-energy",
+        "energy-resume",
+        "excited-states",
+        "fermi-level",
+        "final-geometry",
+        "forces",
+        "k-points",
+        "lowest-energy",
+        "n-electrons",
+        "occupations",
+        "properties",
+        "repulsive-energy",
+        "trajectory"
+      ]
+    }
+  }
+}
