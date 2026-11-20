@@ -38,7 +38,7 @@ BASIS = {
         "directory": "~/Téléchargements/parameters_dftb/mio-1.1.0/skfiles",
     },
     "deMonNano": {
-        "directory": "/home/pguibourg/Téléchargements/deMonNano/basis",
+        "directory": "~/Téléchargements/deMonNano/basis",
         "ptype": "BIO",
     },
 }
