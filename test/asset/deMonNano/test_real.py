@@ -45,11 +45,6 @@ def test_optimization(demonnano_real, run_calc, water):
     assert not np.allclose(product["final-geometry"].positions, water.positions)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    raises=KeyError,
-    reason="known bug: deMonPy returns no TD-DFTB states for this output",
-)
 def test_td_dftb(demonnano_real, run_calc, water):
     """TD-DFTB: 4 singlet excitations."""
     instance = run_calc(

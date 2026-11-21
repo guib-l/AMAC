@@ -20,6 +20,9 @@ results with *handlers*.
 | deMonNano | `deMonNano` | executable (via `deMonPy`) | DFTB, CI-DFTB, periodic |
 | [PySCF](https://pyscf.org) | `pyscf` | in process | HF, DFT, MP2, CC, CASSCF |
 | [OpenMolcas](https://gitlab.com/Molcas/OpenMolcas) | `openmolcas` | executable (`pymolcas`) | HF, DFT, MP2, CC, CASSCF, CASPT2, NEVPT2 |
+| [ORCA](https://www.faccts.de/orca/) | `orca` | executable | HF, DFT, MP2, CC, CASSCF, xTB, TD-DFT, MD |
+
+The ORCA asset has not yet been validated on a real ORCA installation.
 
 ## What can be computed
 
@@ -77,6 +80,9 @@ machine-specific settings come from a JSON file, `config-amac.json`:
     "openmolcas": {
       "executable": "/absolute/path/to/pymolcas",
       "env": {"MOLCAS": "/absolute/path/to/OpenMolcas/build"}
+    },
+    "orca": {
+      "executable": "/absolute/path/to/orca"
     },
     "pyscf": {}
   }
