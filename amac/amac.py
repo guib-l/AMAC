@@ -19,7 +19,7 @@ class AMAC:
         self,
         *,
         software: str | None = None,
-        process_unit: int = 1,
+        process_unit: int | None = None,
         workdir: str | Path = ".",
         label: str | None = "AMAC.calculator",
         process: str | None = "inprocess",

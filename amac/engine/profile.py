@@ -1,17 +1,9 @@
 #!/usr/bin/env python3
-import os
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from amac.utils.exception import ExecuteFailed
-
-
-def _tail(path: Path, lines: int = 20) -> str:
-    """Return the last ``lines`` lines of ``path`` (empty if missing)."""
-    if not path.is_file():
-        return ""
-    return "\n".join(path.read_text(errors="replace").splitlines()[-lines:])
+from amac.engine.execute import Execute, ExecuteIO
 
 
 class ExecProcess:
@@ -29,6 +21,7 @@ class ExecProcess:
         output: File name receiving the standard output.
         timeout: Maximum wall time in seconds, ``None`` for no limit.
         prefix: Software name used in error messages.
+        backend: Where the command runs; local subprocess by default.
     """
 
     def __init__(
@@ -41,6 +34,7 @@ class ExecProcess:
         output: str = "output.log",
         timeout: float | None = None,
         prefix: str = "",
+        backend: Execute | None = None,
     ):
         self.executable = Path(executable)
         self.workdir = Path(workdir)
@@ -50,6 +44,7 @@ class ExecProcess:
         self.output = output
         self.timeout = timeout
         self.prefix = prefix
+        self.backend = backend if backend is not None else ExecuteIO()
 
     @property
     def command(self) -> list[str]:
@@ -71,37 +66,7 @@ class ExecProcess:
             ExecuteFailed: The program cannot start, times out or exits
                 with a non-zero code.
         """
-        if not self.workdir.is_dir():
-            raise ExecuteFailed(f"{self.prefix}: working directory missing: {self.workdir}")
-
-        try:
-            with (
-                open(self.output_path, "w") as out,
-                open(self.error_path, "w") as err,
-            ):
-                result = subprocess.run(
-                    self.command,
-                    cwd=self.workdir,
-                    env={**os.environ, **self.env},
-                    stdout=out,
-                    stderr=err,
-                    timeout=self.timeout,
-                    check=False,
-                )
-        except subprocess.TimeoutExpired as error:
-            raise ExecuteFailed(
-                f"{self.prefix}: exceeded {self.timeout} s in {self.workdir}"
-            ) from error
-        except OSError as error:
-            raise ExecuteFailed(f"{self.prefix}: cannot execute {self.command[0]}") from error
-
-        if result.returncode != 0:
-            raise ExecuteFailed(
-                f"{self.prefix}: return code {result.returncode} in "
-                f"{self.workdir} (see {self.output_path})\n"
-                f"{_tail(self.error_path) or _tail(self.output_path)}"
-            )
-        return result
+        return self.backend.run(self)
 
 
 def checked_executable(name: str, path, required: bool) -> Path | None:
@@ -131,6 +96,9 @@ class Program:
         env: Variables added to the environment of the process.
         launcher: MPI command; ``{process_unit}`` is replaced.
         timeout: Maximum wall time in seconds, ``None`` for no limit.
+        hpc: The ``hpc`` section of the configuration, ``None`` when absent.
+        execute_library: True when the software runs through a Python library.
+        backend: Where the command runs; selected in :meth:`__post_init__`.
     """
 
     name: str
@@ -140,6 +108,9 @@ class Program:
     env: dict[str, str] = field(default_factory=dict)
     launcher: list[str] = field(default_factory=list)
     timeout: float | None = None
+    hpc: dict | None = None
+    execute_library: bool = False
+    backend: Execute | None = None
 
     def __post_init__(self):
         """Check the settings as soon as the software is created."""
@@ -153,6 +124,14 @@ class Program:
             raise ValueError(
                 f"{self.name}: timeout must be a positive number of seconds, got {self.timeout!r}"
             )
+        if (
+            not isinstance(self.process_unit, int)
+            or isinstance(self.process_unit, bool)
+            or (self.process_unit < 1)
+        ):
+            raise ValueError(
+                f"{self.name}: process_unit must be a positive integer, got {self.process_unit!r}"
+            )
         if self.process == "mpi":
             self.launcher = [
                 str(part).format(process_unit=self.process_unit) for part in self.launcher
@@ -163,6 +142,13 @@ class Program:
                 )
         else:
             self.launcher = []
+        self.backend = Execute.select_profile(
+            self.hpc,
+            library=self.execute_library,
+            process=self.process,
+            process_unit=self.process_unit,
+            timeout=self.timeout,
+        )
 
     def execute(self, workdir, *args, output="output.log"):
         """Run the executable in ``workdir`` and return the finished process."""
@@ -178,6 +164,7 @@ class Program:
             launcher=self.launcher,
             env=env,
             output=output,
-            timeout=self.timeout,
+            timeout=None if self.backend.schedules else self.timeout,
             prefix=self.name,
+            backend=self.backend,
         ).execute()

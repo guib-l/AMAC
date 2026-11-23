@@ -9,7 +9,14 @@ from amac.verify.__main__ import main
 def test_empty_config_is_ready():
     report = check({"software": {}})
     assert not report.failed
-    assert [item.name for item in report.checks] == ["python", "numpy", "ase"]
+    assert [item.name for item in report.checks] == [
+        "python",
+        "numpy",
+        "ase",
+        "pip",
+        "amac",
+        "h5py",
+    ]
 
 
 def test_missing_software_section():

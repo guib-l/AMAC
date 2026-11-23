@@ -180,6 +180,7 @@ class software_pyscf(Software):
     name = "pyscf"
     alias = ("PySCF",)
     requires_executable = False
+    execute_library = True
 
     output_file = "output-pyscf.log"
 

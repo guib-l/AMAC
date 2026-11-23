@@ -11,6 +11,7 @@ class software_deMonNano(Software):
     name = "deMonNano"
     alias = ("demonano", "demon_nano", "demon-nano")
     requires_executable = True
+    execute_library = True
 
     @time_limited
     def collect(self, instance):

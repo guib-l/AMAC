@@ -25,6 +25,7 @@ class Software(ABC):
     driver: ClassVar[tuple[str, ...]] = ()
     composer: ClassVar[Any | None] = None
     requires_executable: ClassVar[bool] = False
+    execute_library: ClassVar[bool] = False
     equiv: ClassVar[str] = "equiv.json"
     transforms: ClassVar[Mapping[str, Callable]] = {}
 
@@ -58,12 +59,18 @@ class Software(ABC):
         self,
         *,
         process: str = "inprocess",
-        process_unit: int = 1,
+        process_unit: int | None = None,
         executable: str | Path | None = None,
         env: Mapping[str, str] | None = None,
         **options,
     ) -> None:
         section = self.config_section()
+        hpc = getattr(config, "CONFIGURE", {}).get("hpc") or None
+        if process_unit is None:
+            # A configured scheduler feeds the number of process units.
+            slurm = isinstance(hpc, dict) and hpc.get("scheduler") == "slurm"
+            defaults = (hpc or {}).get("defaults") or {}
+            process_unit = int(defaults.get("ntasks", 1)) if slurm else 1
         # Software-specific settings (e.g. deMonNano "basis"): config, then overrides.
         self.options = {**section, **options}
         self.parameters: dict = {}
@@ -80,6 +87,8 @@ class Software(ABC):
             env={key: str(value) for key, value in env.items()},
             launcher=list(self.options.get("launcher", [])),
             timeout=self.options.get("timeout"),
+            hpc=hpc,
+            execute_library=self.execute_library,
         )
         self.equivalence = Equivalence(self.equiv_path(), self.transforms)
         self.handler_set = HandlerSet((self.name, *self.alias))

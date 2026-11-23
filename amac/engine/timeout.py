@@ -14,7 +14,8 @@ def time_limited(method):
 
     The duration is recorded in ``instance.duree.steps`` under the name of
     the method, even if the method fails. The limit is
-    ``self.program.timeout``; it uses ``SIGALRM``, which interrupts Python
+    ``self.program.timeout``; it is disabled when the command is submitted
+    to a scheduler. It uses ``SIGALRM``, which interrupts Python
     code as well as the wait on a subprocess (which ``subprocess.run``
     then kills).
 
@@ -28,6 +29,11 @@ def time_limited(method):
     @functools.wraps(method)
     def wrapper(self, instance, *args, **kwargs):
         timeout = self.program.timeout
+        backend = getattr(self.program, "backend", None)
+        if getattr(backend, "schedules", False):
+            # The scheduler enforces the wall time (--time); a local alarm
+            # would also count the queue wait.
+            timeout = None
         start = time.perf_counter()
         try:
             if timeout is None:

@@ -6,6 +6,7 @@ import importlib
 import platform
 import sys
 
+from amac.verify.hpc import check_hpc
 from amac.verify.report import Report
 from amac.verify.software import check_software
 
@@ -18,6 +19,7 @@ def check_core(report: Report, config: dict) -> None:
     check_python(report)
     dependencies_ok = check_dependencies(report)
     check_schema(report, config, dependencies_ok)
+    check_hpc(report, config)
 
 
 def check_python(report: Report) -> None:

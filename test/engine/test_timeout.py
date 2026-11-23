@@ -71,3 +71,18 @@ def test_timeout_ignored_outside_main_thread(instance):
     thread.start()
     thread.join()
     assert outcome["value"] == "done"
+
+
+def test_timeout_disabled_when_scheduled(instance, tmp_path):
+    """A scheduled command is not limited locally: the scheduler enforces --time."""
+    sbatch = tmp_path / "sbatch"
+    sbatch.write_text("#!/bin/sh\nexit 0\n")
+    sbatch.chmod(0o755)
+    worker = Worker(timeout=0.05)
+    worker.program = Program(
+        name=worker.name,
+        timeout=0.05,
+        hpc={"scheduler": "slurm", "sbatch": str(sbatch)},
+    )
+    assert worker.collect(instance, 0.2) == "done"
+    assert instance.duree.steps["collect"] >= 0.2
