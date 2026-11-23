@@ -36,6 +36,9 @@ dev = [
     "ruff>=0.15",
 ]
 
+[project.scripts]
+amac-check = "amac.verify.__main__:main"
+
 [tool.setuptools.dynamic]
 version = { attr = "amac.__version__" }
 

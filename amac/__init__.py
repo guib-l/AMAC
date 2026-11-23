@@ -1,9 +1,11 @@
 from amac.config import configure, configure_from_file
+from amac.verify import check
 
 __version__ = "0.0.1"
 
 __all__ = [
     "AMAC",
+    "check",
     "configure",
     "configure_from_file",
 ]

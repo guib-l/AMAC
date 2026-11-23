@@ -101,6 +101,29 @@ amac.configure_from_file("config-amac.json")  # or amac.configure(config=dict)
 
 If you don't load a file, the configuration is empty.
 
+## Checking the installation
+
+`amac-check` verifies the Python environment, the configuration file and each
+configured software. It prints one line per check:
+
+```bash
+amac-check                     # reads config-amac.json
+amac-check path/to/config.json
+amac-check --json              # machine-readable report
+python -m amac.verify          # same, without installing the script
+```
+
+```
+core        ✔  python      3.12.3
+dftb+       ✔  executable  /opt/dftb+/dftb+
+openmolcas  ⚠  executable  not configured
+```
+
+Exit codes: `0` nothing failed (warnings are allowed), `1` at least one ✘,
+`2` the configuration file is missing or is not a JSON object. The check never
+searches `PATH`. With `--json`, the report is `{"ready", "summary",
+"software", "checks"}`.
+
 ## Quickstart
 
 ```python
@@ -232,6 +255,7 @@ See `examples/general/store.py`.
 | [`amac/asset/`](amac/asset/README.md) | One adapter per software, including its `equiv.json` translation table |
 | `amac/engine/` | Shared machinery: catalog loading, validation, translation, handlers, execution |
 | `amac/amac.py` | The `AMAC` user class |
+| `amac/verify/` | Installation check: the `amac-check` command and `amac.check()` |
 | `amac/store/` | The `Store` class: save and read results (txt, JSON, SQLite) |
 | `examples/` | Runnable scripts |
 
