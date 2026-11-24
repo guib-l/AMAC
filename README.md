@@ -110,19 +110,40 @@ configured software. It prints one line per check:
 amac-check                     # reads config-amac.json
 amac-check path/to/config.json
 amac-check --json              # machine-readable report
+amac-check --run               # also run one H2 single point per software
 python -m amac.verify          # same, without installing the script
 ```
 
 ```
-core        ✔  python      3.12.3
-dftb+       ✔  executable  /opt/dftb+/dftb+
-openmolcas  ⚠  executable  not configured
+AMAC installation check — config-amac.json
+
+✔ core
+    ✔ python      3.12.3
+
+✔ dftb+
+    ✔ executable  /opt/dftb+/dftb+
+
+⚠ openmolcas
+    ⚠ executable  not configured
+
+─────────────────────────────────────────────
+2 ✔   1 ⚠   0 ✘   0 –     ready
 ```
+
+Checks are grouped by software, each block headed by its worst status. Colors
+are used when the output is a terminal (`--no-color` disables them).
 
 Exit codes: `0` nothing failed (warnings are allowed), `1` at least one ✘,
 `2` the configuration file is missing or is not a JSON object. The check never
 searches `PATH`. With `--json`, the report is `{"ready", "summary",
-"software", "checks"}`.
+"software", "checks"}`. A missing Python module comes with the `pip` command
+that installs it; nothing is installed by the check itself.
+
+With `--run`, each software that passed its static checks runs an H2 single
+point (same settings as its `examples/<software>/01_*.py`) and reports the
+energy. The runs go in a hidden `.amac-check-*` directory of the current
+directory, or of `--workdir`; failed runs are kept there for inspection. With a
+scheduler configured, the runs are submitted as jobs with a 10-minute wall time.
 
 ## Quickstart
 

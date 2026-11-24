@@ -46,8 +46,36 @@ next to the `software` sections:
 | `defaults.ntasks` | Default number of process units (threads or MPI ranks) | No, 1 |
 | `prologue` | Shell lines run before the command, e.g. `module load` | No |
 
-The block is **global**: no per-software or per-calculation override.
 `"scheduler": "local"`, or no `hpc` block, keeps local execution.
+
+### Per-software override
+
+A software section may hold its own `hpc` key, merged over the global block:
+its top-level keys replace the global ones, except `defaults`, merged key by
+key; `prologue` is replaced, not extended.
+
+```json
+{
+  "hpc": {
+    "scheduler": "slurm",
+    "sbatch": "/usr/bin/sbatch",
+    "defaults": {"partition": "standard", "time": "02:00:00", "ntasks": 4}
+  },
+  "software": {
+    "orca": {
+      "executable": "/opt/orca/6.0/orca",
+      "hpc": {
+        "defaults": {"time": "10:00:00", "ntasks": 8},
+        "prologue": ["module load orca/6.0"]
+      }
+    },
+    "pyscf": {"hpc": {"scheduler": "local"}}
+  }
+}
+```
+
+Here ORCA runs on `standard` for 10 hours on 8 units, and PySCF stays local.
+The override is per software only, never per calculation.
 
 ## How resources are chosen
 
@@ -96,14 +124,15 @@ export OMP_NUM_THREADS=4
 `amac-check` adds these lines when the block enables Slurm:
 
 ```
-core        ✔  hpc         scheduler: slurm
-core        ✔  sbatch      /usr/bin/sbatch
-core        ✔  squeue      /usr/bin/squeue
+✔ core
+    ✔ hpc         scheduler: slurm
+    ✔ sbatch      /usr/bin/sbatch
+    ✔ squeue      /usr/bin/squeue
 ```
 
-These lines are excerpts: in a full report the two columns are padded to the
-widest scope and the widest check name, which depend on the configured
-software, so the spacing differs from a real run.
+These lines are an excerpt of the `core` block: in a full report the check
+names are padded to the widest one, so the spacing differs from a real run.
+A software with its own `hpc` key gets the same lines in its own block.
 
 A missing, relative or non-executable `sbatch` is a ✘, and so is a scheduler
 other than `slurm`. A missing `squeue` is only a ⚠, since the submission path
@@ -163,8 +192,10 @@ stops with `working directory missing`.
 - Synchronous only: nothing is tracked after submission, and `squeue` is
   never polled.
 - Slurm only; PBS and SGE are not supported.
-- The `hpc` block is global, never per software or per calculation.
+- The `hpc` block is global or per software, never per calculation.
 - Software driven by a Python library (`deMonNano`, `pyscf`) is refused when
-  the object is created: it would otherwise run on the login node.
+  the object is created if its effective block enables a scheduler: it would
+  otherwise run on the login node. Add `"hpc": {"scheduler": "local"}` to its
+  section to keep it local.
 - With a scheduler, the local wall-clock timeout is disabled (the queue wait
   would count against it) and `#SBATCH --time` enforces the wall time.

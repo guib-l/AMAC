@@ -24,6 +24,34 @@ def _tail(path: Path, lines: int = 20) -> str:
     return "\n".join(path.read_text(errors="replace").splitlines()[-lines:])
 
 
+def merge_hpc(base: dict | None, override: dict | None, *, name: str = "") -> dict | None:
+    """Merge the ``hpc`` block of a software section over the global one.
+
+    Top-level keys of ``override`` replace those of ``base``, except
+    ``defaults``, merged key by key (``prologue`` is replaced, not extended).
+
+    Args:
+        base: The global ``hpc`` block, ``None`` when absent.
+        override: The ``hpc`` key of the software section, ``None`` when absent.
+        name: Software name used in error messages.
+
+    Returns:
+        The effective block; ``base`` unchanged when there is no override.
+
+    Raises:
+        ValueError: ``override`` is not a JSON object.
+    """
+    if override is None:
+        return base
+    if not isinstance(override, dict):
+        raise ValueError(f"software.{name}.hpc: must be a JSON object, got {override!r}")
+    base = base if isinstance(base, dict) else {}
+    merged = {**base, **override}
+    if isinstance(base.get("defaults"), dict) and isinstance(override.get("defaults"), dict):
+        merged["defaults"] = {**base["defaults"], **override["defaults"]}
+    return merged
+
+
 def format_wall_time(seconds: float) -> str:
     """Format a duration in seconds as a Slurm ``HH:MM:SS`` wall time."""
     total = int(seconds)
@@ -81,7 +109,8 @@ class Execute:
         if library:
             raise ValueError(
                 f"hpc.scheduler: {scheduler!r} cannot submit a software that runs "
-                "through a Python library; leave hpc.scheduler unset for it"
+                'through a Python library; add "hpc": {"scheduler": "local"} to its '
+                "software section"
             )
         return backend(hpc, process=process, process_unit=process_unit, timeout=timeout)
 

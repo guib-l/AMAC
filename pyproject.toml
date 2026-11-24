@@ -32,8 +32,14 @@ test = [
     "pytest>=8.0",
 ]
 dev = [
-    "amac[test]",
     "ruff>=0.15",
+]
+# One extra per software driven by a Python library (read by amac-check).
+pyscf = [
+    "pyscf",
+]
+all = [
+    "",
 ]
 
 [project.scripts]

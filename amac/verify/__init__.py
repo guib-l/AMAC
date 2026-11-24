@@ -13,6 +13,7 @@ from pathlib import Path
 from amac.utils.exception import ConfigError
 from amac.verify.core import check_core
 from amac.verify.report import Check, Report
+from amac.verify.smoke import run_smoke
 
 __all__ = ["Check", "Report", "check", "load_config"]
 
@@ -37,12 +38,22 @@ def load_config(path: str | Path = DEFAULT_PATH) -> dict:
     return config
 
 
-def check(config: dict | None = None, *, path: str | Path = DEFAULT_PATH) -> Report:
+def check(
+    config: dict | None = None,
+    *,
+    path: str | Path = DEFAULT_PATH,
+    run: bool = False,
+    workdir: str | Path | None = None,
+) -> Report:
     """Run the installation checks and return the report.
 
     Args:
         config: AMAC configuration dict; read from ``path`` when None.
         path: Configuration file used when ``config`` is None.
+        run: Also run one H2 single point per software that passed the
+            static checks (submitted to the scheduler when one is configured).
+        workdir: Parent directory of those runs; a new hidden directory in
+            the current one when None.
 
     Raises:
         ConfigError: ``config`` is None and ``path`` cannot be read.
@@ -51,4 +62,9 @@ def check(config: dict | None = None, *, path: str | Path = DEFAULT_PATH) -> Rep
         config = load_config(path)
     report = Report()
     check_core(report, config)
+    if run:
+        if any(c.scope == "core" and c.status == "fail" for c in report.checks):
+            report.add("core", "run", "skip", "core checks failed")
+        else:
+            run_smoke(report, config, workdir=workdir)
     return report

@@ -6,9 +6,9 @@ import importlib
 import platform
 import sys
 
-from amac.verify.hpc import check_hpc
+from amac.verify.hpc import check_hpc, check_software_hpc
 from amac.verify.report import Report
-from amac.verify.software import check_software
+from amac.verify.software import check_software, install_hint
 
 PYTHON_MIN = (3, 12)
 DEPENDENCIES = ("numpy", "ase", "pip", "amac", "h5py")
@@ -39,7 +39,7 @@ def check_dependencies(report: Report) -> bool:
         try:
             module = importlib.import_module(name)
         except ImportError as error:
-            report.add("core", name, "fail", f"not importable ({error})")
+            report.add("core", name, "fail", f"not importable ({error}) → {install_hint(name)}")
             ok = False
         else:
             report.add("core", name, "ok", getattr(module, "__version__", "unknown version"))
@@ -61,10 +61,10 @@ def check_schema(report: Report, config: dict, dependencies_ok: bool) -> None:
     if not dependencies_ok:
         report.add("core", "config", "skip", "software names not checked (missing dependency)")
         return
-    check_sections(report, sections)
+    check_sections(report, sections, config)
 
 
-def check_sections(report: Report, sections: dict) -> None:
+def check_sections(report: Report, sections: dict, config: dict) -> None:
     """Check each ``software.<name>`` section against the registered assets."""
     # Importing amac.asset registers every asset; it needs numpy and ase.
     from amac.asset import Software
@@ -84,3 +84,4 @@ def check_sections(report: Report, sections: dict) -> None:
             continue
 
         check_software(report, soft, section)
+        check_software_hpc(report, soft, config, section)

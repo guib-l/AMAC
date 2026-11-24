@@ -7,6 +7,11 @@ from dataclasses import asdict, dataclass, field
 ICONS = {"ok": "✔", "warn": "⚠", "fail": "✘", "skip": "–"}
 STATUSES = tuple(ICONS)
 
+# ANSI styles used by Report.render(color=True).
+COLORS = {"ok": "\033[32m", "warn": "\033[33m", "fail": "\033[31m", "skip": "\033[2m"}
+BOLD = "\033[1m"
+RESET = "\033[0m"
+
 
 def worst_status(checks: list[Check]) -> str:
     """Worst status of a group: ``fail`` > ``warn`` > ``ok`` > ``skip``."""
@@ -75,17 +80,47 @@ class Report:
             "checks": [asdict(check) for check in self.checks],
         }
 
-    def render(self) -> str:
-        """Return the human-readable table, one line per check."""
+    def render(self, *, color: bool = False, title: str | None = None) -> str:
+        """Return the human-readable report: one block per scope, then a summary.
+
+        Each block starts with the worst status of the scope and its name;
+        its checks are indented below. A hint after `` → `` in a message
+        (e.g. an install command) goes on its own line.
+
+        Args:
+            color: Use ANSI colors (only for a terminal).
+            title: First line of the report, omitted when None.
+        """
         if not self.checks:
             return "no checks"
-        scope_width = max(len(check.scope) for check in self.checks)
+
+        def paint(text: str, status: str) -> str:
+            return f"{COLORS[status]}{text}{RESET}" if color else text
+
+        def bold(text: str) -> str:
+            return f"{BOLD}{text}{RESET}" if color else text
+
         name_width = max(len(check.name) for check in self.checks)
-        lines = [
-            (
-                f"{check.scope:<{scope_width}}  {ICONS[check.status]}  "
-                f"{check.name:<{name_width}}  {check.message}"
-            ).rstrip()
-            for check in self.checks
-        ]
+        indent = " " * (4 + 2 + name_width + 2)
+        lines = [bold(title), ""] if title else []
+        for scope, checks in self.scopes().items():
+            status = worst_status(checks)
+            lines.append(f"{paint(ICONS[status], status)} {bold(scope)}")
+            for check in checks:
+                message, _, hint = check.message.partition(" → ")
+                lines.append(
+                    f"    {paint(ICONS[check.status], check.status)} "
+                    f"{check.name:<{name_width}}  {message}".rstrip()
+                )
+                if hint:
+                    lines.append(f"{indent}{paint('→ ' + hint, 'skip')}")
+            lines.append("")
+
+        counts = self.counts()
+        summary = "   ".join(
+            paint(f"{counts[status]} {ICONS[status]}", status) for status in STATUSES
+        )
+        verdict = paint("not ready", "fail") if self.failed else paint("ready", "ok")
+        lines.append("─" * 45)
+        lines.append(f"{summary}     {verdict}")
         return "\n".join(lines)

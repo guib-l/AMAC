@@ -9,6 +9,7 @@ from typing import Any, Callable, ClassVar, Mapping, Self, Sequence
 
 from amac import config
 from amac.engine.equiv import Equivalence, set_path
+from amac.engine.execute import merge_hpc
 from amac.engine.handler import HandlerSet, HandlerSpec
 from amac.engine.profile import Program, checked_executable
 
@@ -65,7 +66,12 @@ class Software(ABC):
         **options,
     ) -> None:
         section = self.config_section()
-        hpc = getattr(config, "CONFIGURE", {}).get("hpc") or None
+        # The software "hpc" key overrides the global block; it is not an option.
+        hpc = merge_hpc(
+            getattr(config, "CONFIGURE", {}).get("hpc") or None,
+            section.pop("hpc", None),
+            name=self.name,
+        )
         if process_unit is None:
             # A configured scheduler feeds the number of process units.
             slurm = isinstance(hpc, dict) and hpc.get("scheduler") == "slurm"
