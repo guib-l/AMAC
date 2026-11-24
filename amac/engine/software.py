@@ -5,13 +5,16 @@ import sys
 from abc import ABC, abstractmethod
 from dataclasses import fields
 from pathlib import Path
-from typing import Any, Callable, ClassVar, Mapping, Self, Sequence
+from typing import TYPE_CHECKING, Any, Callable, ClassVar, Mapping, Sequence
 
 from amac import config
 from amac.engine.equiv import Equivalence, set_path
 from amac.engine.execute import merge_hpc
 from amac.engine.handler import HandlerSet, HandlerSpec
 from amac.engine.profile import Program, checked_executable
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class Software(ABC):

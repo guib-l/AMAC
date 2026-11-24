@@ -3,11 +3,11 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeAlias
 
 from amac.engine.catalog import CATALOG_DIR, canonical_name, load_catalog
 
-type HandlerFunction = Callable[[dict[str, Any]], Any]
+HandlerFunction: TypeAlias = Callable[[dict[str, Any]], Any]
 
 
 @dataclass(frozen=True)

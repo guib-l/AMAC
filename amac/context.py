@@ -7,13 +7,16 @@ import time
 from dataclasses import dataclass, field, fields
 from datetime import date
 from pathlib import Path
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any
 
 from ase import Atoms
 
 from amac.asset import resolved_software
 from amac.engine.execute import Execute
 from amac.engine.software import Software
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 @dataclass

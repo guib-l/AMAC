@@ -7,7 +7,7 @@ name = "amac"
 dynamic = ["version"]
 description = "Python wrapper for preparing inputs, launching calculations, and parsing results."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
@@ -18,12 +18,16 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Chemistry",
 ]
 dependencies = [
-    "numpy>=2.5",
+    # NumPy 2.2 is the last series supporting Python 3.10.
+    "numpy>=2.2; python_version < '3.12'",
+    "numpy>=2.5; python_version >= '3.12'",
     "ase>=3.23",
 ]
 
@@ -33,13 +37,6 @@ test = [
 ]
 dev = [
     "ruff>=0.15",
-]
-# One extra per software driven by a Python library (read by amac-check).
-pyscf = [
-    "pyscf",
-]
-all = [
-    "",
 ]
 
 [project.scripts]
@@ -55,7 +52,7 @@ include = ["amac*"]
 "*" = ["*.json"]
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py310"
 line-length = 100
 
 [tool.ruff.lint]
